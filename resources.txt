@@ -1,0 +1,7 @@
+Resources
+
+Calendar/Scheduling Functionality:
+Timeboard - Library
+https://www.freecodecamp.org/news/introducing-timeboard-a-python-business-calendar-package-a2335898c697/
+https://timeboard.readthedocs.io/en/latest/
+

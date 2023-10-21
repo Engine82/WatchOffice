@@ -1,0 +1,102 @@
+GOALS:
+
+1.  MVP: Automate hiring with manual inputs for on-shift members - simple fill-in for openings
+2.  SMS feature for automated off-shift hiring
+3.  Calendar/digital pad to pull staffing from
+4.  Activity reports - track vacation, P-days, sick, OT shifts worked
+
+
++------------------------------------------------------------------------------------------------------------------------------+
+
+
+HIRING FUNCTIONALITY MODULE:
+Automated hiring steps:
+- Create firefighter, captain, lt objects:
+    Attributes:
+    - tag (bool: flipped/not)
+    - available/elligible for OT (bool)
+    - seniority (use dept-wide seniority, and continue adding up for new members) (int)
+    - shift/platoon (have feature to change) (int)
+    - Station assignment
+
+- Create shift object:
+    Attributes:
+    - Date
+    - 24/Day/Night/Partial
+    - Firefighter/Officer
+    - Future/Current/Past - for hiring changes to determine which shifts to be filled and which stay as they were
+
+- Create list of shifts to be filled
+    - Central Officer
+    - Weirs Officer
+    - Central Firefighters
+    - Weirs Firefighters
+    - Detail/Other
+    - Hours - how to implement..?
+        - Option to desigante partial shift, automatically recognizes how to handle splits with hours
+
+- Hiring Protocol:
+    Loop through each slot, officers then firefghters, and if vacant, hire for the shift
+
+- Input Menus:
+    - Platoon dropdown - table w/ html select
+        - Auto-fill each shift with firefighter's name, based on seniority & station assignment
+        - Designate available/unavailable
+    - Initial or Update/Revision
+    - 1st/2nd cover days - table
+        - Auto-populate with members
+        - Designate on/off/partial status (default: on) & reason (radio buttons w/ text option for hours & dropdown for reason)
+
+- Output: formatted rundown of the hiring.
+    - Officer and firefighter next up
+    - When hiring on the 96 off, state enter from "96 off" - officer does manually
+    - Override feature: manually override output w/ html select
+
+
++------------------------------------------------------------------------------------------------------------------------------+
+
+
+REPORTS:
+-
+
+
++------------------------------------------------------------------------------------------------------------------------------+
+
+
+SMS Feature:
+- Text member when they are hired for an OT shift, or with entire hiring
+
+- When covering-shift is exhausted, hire from 96 off:
+    - Send SMS message to one firefighter/officer at a time with 1(?) minute timer
+    - If they do not accept shift within that time, it goes to the next person
+    - Cycle through all personnel until shift is finished, or lowest man is forced
+
+
++------------------------------------------------------------------------------------------------------------------------------+
+
+
+Calendar/Digital Pad:
+- Monthly Calendar w/ changes to normal staffing
+- Select each date to see that day's detailed staffing (including normal staffing)
+- On days you are working, can put yourself out vacation/personal/sick
+
+- Specifics of implementation: requires further research
+
+Fully automate hiring:
+- Hiring is automatically done at 8:59AM every first-day
+- If a change is made after hiring is done, it is automatically updated, and members are texted with update
+
+- Specifics are going to depend on implementation of calendar
+
+
++------------------------------------------------------------------------------------------------------------------------------+
+
+
+UI:
+Pages:
+- Login
+- Home page - ???
+- Hiring function
+    - Post-hiring display
+- Monthly calendar
+- Day view
