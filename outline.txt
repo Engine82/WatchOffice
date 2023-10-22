@@ -114,12 +114,21 @@ Fully automate hiring:
 - Specifics are going to depend on implementation of calendar
 
 
+- ROUTES:
+    - Calendar:
+        - GET: Current calendar
+    - Add shift page
+        - GET: Form for what shift to change
+        - POST: update db's, display updated calendar
+
+
 +------------------------------------------------------------------------------------------------------------------------------+
 
 
 UI:
 Pages:
 - Login
+- Register
 - Home page - ???
 - Hiring function
     - Post-hiring display
