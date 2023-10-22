@@ -53,11 +53,29 @@ Automated hiring steps:
     - Override feature: manually override output w/ html select
 
 
+- ROUTES:
+    - Home
+        - GET: Login
+        - POST: List of upcoming shifts
+    - Hiring
+        - GET: empty page
+        - POST: assigned shifts - printable
+    - Admin
+        - GET: current privelidges
+        - POST: update privelidges, return same page, updated
+        
+
 +------------------------------------------------------------------------------------------------------------------------------+
 
 
 REPORTS:
 - Hours OT worked for the year
+
+
+- ROUTES:
+    - Reports
+        - GET: Report options
+        - POST: Report output
 
 
 +------------------------------------------------------------------------------------------------------------------------------+
@@ -70,6 +88,13 @@ SMS Feature:
     - Send SMS message to one firefighter/officer at a time with 1(?) minute timer
     - If they do not accept shift within that time, it goes to the next person
     - Cycle through all personnel until shift is finished, or lowest man is forced
+
+
+- ROUTES:
+    - Hiring - Update:
+        - POST: go through SMS protocol if needed, display results w/o off-shift hiring
+                then 
+        - POST?: after off-shift hiring is done, update with completed hiring
 
 
 +------------------------------------------------------------------------------------------------------------------------------+
