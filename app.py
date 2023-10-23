@@ -9,7 +9,7 @@ app = Flask(__name__)
 # HOME
 # Login / List upcoming shifts
 @app.route("/", methods=["GET", "POST"])
-    
+def index():    
     # If logged in, display schedule
     if request.method == "POST":
         return render_template("index.html")
@@ -22,7 +22,7 @@ app = Flask(__name__)
 # HIRING
 # Hiring form / completed hiring
 @app.route("/hiring", methods=["GET", "POST"])
-
+def hire():
     # After hiring is submitted
     if request.method == "POST":
         return render_template("hired.html")

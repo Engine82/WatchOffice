@@ -1,9 +1,10 @@
 GOALS:
 
 1.  MVP: Automate hiring with manual inputs for on-shift members - simple fill-in for openings
-2.  SMS feature for automated off-shift hiring
-3.  Calendar/digital pad to pull staffing from
-4.  Activity reports - track vacation, P-days, sick, OT shifts worked
+2.  Tagboard feature
+3.  SMS feature for automated off-shift hiring
+4.  Calendar/digital pad to pull staffing from
+5.  Activity reports - track vacation, P-days, sick, OT shifts worked
 
 
 +------------------------------------------------------------------------------------------------------------------------------+
@@ -64,6 +65,22 @@ Automated hiring steps:
         - GET: current privelidges
         - POST: update privelidges, return same page, updated
         
+
++------------------------------------------------------------------------------------------------------------------------------+
+
+
+TAGBOARD:
+Digital tag board
+- Have flipped/unflipped attribute to FF/Officer
+- Table:
+    - Columns are shifts
+    - Rows are people
+    - Graphical copper/black tag for flipped status
+
+- ROUTES:
+    - Tagboard
+        - GET: Tagboard
+
 
 +------------------------------------------------------------------------------------------------------------------------------+
 
