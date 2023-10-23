@@ -56,15 +56,17 @@ Automated hiring steps:
 
 
 - ROUTES:
-    - Home
-        - GET: Login
+    - /
+        - GET: Login page
         - POST: List of upcoming shifts
-    - Hiring
+    - /hiring
         - GET: empty page
         - POST: assigned shifts - printable
-    - Admin
+    - /admin
         - GET: current privelidges
         - POST: update privelidges, return same page, updated
+    - /logout
+        > Log out
         
 
 +------------------------------------------------------------------------------------------------------------------------------+
