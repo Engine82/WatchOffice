@@ -1,5 +1,4 @@
 from flask import Flask, redirect, render_template, request, session
-from flask_session import session
 
 app = Flask(__name__)
 

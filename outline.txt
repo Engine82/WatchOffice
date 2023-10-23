@@ -5,6 +5,7 @@ GOALS:
 3.  SMS feature for automated off-shift hiring
 4.  Calendar/digital pad to pull staffing from
 5.  Activity reports - track vacation, P-days, sick, OT shifts worked
+6.  Links page
 
 
 +------------------------------------------------------------------------------------------------------------------------------+
@@ -85,19 +86,6 @@ Digital tag board
 +------------------------------------------------------------------------------------------------------------------------------+
 
 
-REPORTS:
-- Hours OT worked for the year
-
-
-- ROUTES:
-    - Reports
-        - GET: Report options
-        - POST: Report output
-
-
-+------------------------------------------------------------------------------------------------------------------------------+
-
-
 SMS Feature:
 - Text member when they are hired for an OT shift, or with entire hiring
 
@@ -137,6 +125,29 @@ Fully automate hiring:
     - Add shift page
         - GET: Form for what shift to change
         - POST: update db's, display updated calendar
+
+
++------------------------------------------------------------------------------------------------------------------------------+
+
+
+REPORTS:
+- Hours OT worked for the year
+
+
+- ROUTES:
+    - Reports
+        - GET: Report options
+        - POST: Report output
+
++------------------------------------------------------------------------------------------------------------------------------+
+
+
+LINKS:
+    ESO
+    IAFF L-1153
+    TEMSIS
+    Protocols
+    
 
 
 +------------------------------------------------------------------------------------------------------------------------------+
