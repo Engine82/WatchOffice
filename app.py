@@ -8,7 +8,7 @@ app = Flask(__name__)
 # HOME
 # Login / List upcoming shifts
 @app.route("/", methods=["GET", "POST"])
-def index():    
+def index():
     # If logged in, display schedule
     if request.method == "POST":
         return render_template("index.html")
