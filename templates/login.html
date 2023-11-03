@@ -5,10 +5,13 @@
 {% endblock %}
 
 {% block main %}
-    <img src="static/">
-    <form class="centered">
-        <input class="mx-auto w-auto" id="username" name="username" placeholder="Username" type="text">
-        <input class="mx-auto w-auto" id="password" name="password" placeholder="Password" type="text">
-        <button class="button" type="submit">Log in</button>
-    </form>
+    <div class="container">
+        <img src="static/patch.jpg">
+        <form class="centered">
+            <input autocomplete="off" class="mx-auto w-auto" id="username" name="username" placeholder="Username" type="text">
+            <input autocomplete="off" class="mx-auto w-auto" id="password" name="password" placeholder="Password" type="text">
+            <button class="button" type="submit">Log in</button>
+        </form>
+    </div>
+
 {% endblock %}

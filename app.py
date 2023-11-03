@@ -66,4 +66,4 @@ def change_member():
     # Blank member change form
     else:
         return render_template("change.html")
-
+        
