@@ -1,5 +1,6 @@
 from flask import Flask, redirect, render_template, request, session
 from flask_session import Session
+from werkzeug.security import check_password_hash, generate_passroed_hash
 
 from helpers import login_required
 
@@ -14,6 +15,13 @@ app.secret_key = '5b80b04e505142179ddb441c2a2cd1e067038e3b422e1fd6add2e8c9961fe4
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
+
+# Configure db
+""" DB HERE """
+
+
+# Global variables
+PLATOON_SIZE = 10
 
 
 # HOME
@@ -72,6 +80,14 @@ def hiring_c():
 def add_member():
     # Add member to db
     if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+
+        # Check username
+        if not username:
+            render_template(apology.html, type="username")
+        
+
         return render_template("added.html")
 
     # Blank add member form
@@ -105,11 +121,40 @@ def change_member():
         return render_template("change.html")
         
 
+# Session
 # Login
 @app.route("/login", methods=["GET", "POST"])
 def login():
+
+    # Forget any user_id
+    session.clear()
+
     if request.method == "POST":
-        session["name"] = request.form.get("name")
+
+        # Check for username and password
+        username = request.form.get("username")
+        password = request.form.get("password")
+        if not username:
+            render_template(apology.html, type="username")
+        
+        elif not password:
+            render_template(apology.html, type="password")
+        
+        # Query db for username
+        user_data = db.execute(
+            "SELECT * FROM users WHERE username = (?)", request.form.get("username")        
+        )
+
+        # Verify username in db and password is correct
+        if len(user_data) != 1 or not check_password_hash(
+            user_data[0]["hash"], password
+        ):
+            render_template(apology.html, type="user input")
+
+        # 
+        session["user_id"] = user_data[0]["id"]
+
+        # Send to homepage
         return redirect("/")
     else:
         return render_template("login.html")
