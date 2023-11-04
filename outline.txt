@@ -10,6 +10,15 @@ GOALS:
 
 +------------------------------------------------------------------------------------------------------------------------------+
 
+    Create different functions for
+        - 1st hiring
+        - re-hiring during 1st day
+        - re-hiring after 1st day
+        - hiring from 96 off
+    Then, once the calendar is implemented, just have a simple algorithm for selecting which hiring function to use.
+
++------------------------------------------------------------------------------------------------------------------------------+
+
 
 HIRING FUNCTIONALITY MODULE:
 Automated hiring steps:
