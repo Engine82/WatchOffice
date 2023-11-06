@@ -1,6 +1,7 @@
+from sqlalchemy import create_engine, text
 from flask import Flask, redirect, render_template, request, session
 from flask_session import Session
-from werkzeug.security import check_password_hash, generate_passroed_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 
 from helpers import login_required
 
@@ -17,7 +18,8 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Configure db
-""" DB HERE """
+engine = create_engine("sqlite:///database.db", echo=True)
+connection = engine.connect()
 
 
 # Global variables
@@ -76,16 +78,22 @@ def hiring_c():
 # SETTINGS
 # Add member
 @app.route("/add_member", methods=["GET", "POST"])
-@login_required
+# @login_required
 def add_member():
+
     # Add member to db
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
 
-        # Check username
+        # Check username & password
         if not username:
             render_template(apology.html, type="username")
+        if not password:
+            render_template(apology.html, type="password")
+
+        # Check availability of username
+        
         
 
         return render_template("added.html")
@@ -129,6 +137,7 @@ def login():
     # Forget any user_id
     session.clear()
 
+    # When login form is submitted
     if request.method == "POST":
 
         # Check for username and password
@@ -141,9 +150,12 @@ def login():
             render_template(apology.html, type="password")
         
         # Query db for username
-        user_data = db.execute(
+        """user_data = db.execute(
             "SELECT * FROM users WHERE username = (?)", request.form.get("username")        
         )
+
+        with engine.begin() as conn:
+            conn.execute(text("SELECT * FROM users WHERE username = (?)"))"""
 
         # Verify username in db and password is correct
         if len(user_data) != 1 or not check_password_hash(
@@ -156,6 +168,8 @@ def login():
 
         # Send to homepage
         return redirect("/")
+    
+    # 
     else:
         return render_template("login.html")
 
