@@ -19,7 +19,6 @@ Session(app)
 
 # Configure db
 engine = create_engine("sqlite:///database.db", echo=True)
-connection = engine.connect()
 
 
 # Global variables
@@ -152,10 +151,10 @@ def login():
         # Query db for username
         """user_data = db.execute(
             "SELECT * FROM users WHERE username = (?)", request.form.get("username")        
-        )
-
-        with engine.begin() as conn:
-            conn.execute(text("SELECT * FROM users WHERE username = (?)"))"""
+        )"""
+        # .connect() because nothing to commit - don't need .begin()
+        with engine.connect() as connection:
+            connection.execute(text("SELECT * FROM users WHERE username = (?)")).all()
 
         # Verify username in db and password is correct
         if len(user_data) != 1 or not check_password_hash(

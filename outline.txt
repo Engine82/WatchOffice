@@ -1,6 +1,7 @@
 GOALS:
 
 1.  MVP: Automate hiring with manual inputs for on-shift members - simple fill-in for openings
+        a. Be able to set global variables - shift staffing (running down?), number officers/ff's per shift
 2.  Tagboard feature
 3.  SMS feature for automated off-shift hiring
 4.  Calendar/digital pad to pull staffing from
