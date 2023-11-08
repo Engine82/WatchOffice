@@ -5,5 +5,22 @@
 {% endblock %}
 
 {% block main %}
-    Add member form
+    <div class="container">
+        <img src="static/patch.jpg">
+        <form class="centered">
+            <input autocomplete="off" class="mx-auto w-auto" id="username" name="username" placeholder="Username" type="text"><br>
+            <input autocomplete="off" class="mx-auto w-auto" id="password" name="password" placeholder="Password" type="text"><br>
+            <input id="1" name="platoon" type="radio" value="1">
+            <label for="1">Platoon 1 &nbsp;&nbsp;</label>
+            <input id="2" name="platoon" type="radio" value="2">
+            <label for="2">Platoon 2 </label><br>
+            <input id="3" name="platoon" type="radio" value="3">
+            <label for="3">Platoon 3 &nbsp;&nbsp;</label>
+            <input id="4" name="platoon" type="radio" value="4">
+            <label for="4">Platoon 4 </label><br>
+            <input id="admin" name="platoon" type="radio" value="Admin">
+            <label for="admin">Admin </label><br>
+            <button class="button" type="submit">Log in</button>
+        </form>
+    </div>
 {% endblock %}

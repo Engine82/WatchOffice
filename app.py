@@ -4,6 +4,7 @@ from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from helpers import login_required
+from helpers import Base, User
 
 
 # Configure app
@@ -84,6 +85,7 @@ def add_member():
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
+        platoon = request.form.get("platoon")
 
         # Check username & password
         if not username:
@@ -92,8 +94,19 @@ def add_member():
             render_template(apology.html, type="password")
 
         # Check availability of username
+
+        # Hash password
+        hashword = generate_password_hash(password)
+        print(hashword)
         
-        
+        # Insert username & password into db
+        with engine.begin() as conn:
+            conn.execute(
+                insert(User),
+                [
+                    {"username": username, "hash": hashword, "platoon": platoon}
+                ],
+            )
 
         return render_template("added.html")
 
