@@ -29,7 +29,7 @@ class Base(MappedAsDataclass, DeclarativeBase):
 
 # SQLAlchemy User class for users table
 class User (Base):
-    __tablename__ = "user_account"
+    __tablename__ = "users"
 
     id: Mapped[int] = mapped_column(primary_key=True, init=False)
     username: Mapped[str]
