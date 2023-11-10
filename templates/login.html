@@ -7,7 +7,7 @@
 {% block main %}
     <div class="container">
         <img src="static/patch.jpg">
-        <form class="centered">
+        <form action="/login" class="centered" method="post">
             <input autocomplete="off" class="mx-auto w-auto" id="username" name="username" placeholder="Username" type="text">
             <input autocomplete="off" class="mx-auto w-auto" id="password" name="password" placeholder="Password" type="text">
             <button class="button" type="submit">Log in</button>

@@ -174,15 +174,25 @@ def login():
         """user_data = db.execute(
             "SELECT * FROM users WHERE username = (?)", request.form.get("username")        
         )"""
-        # .connect() because nothing to commit - don't need .begin()
+
+        stmt = select(User.username, User.hash, User.id).where(User.username.in_([username]))
         with engine.connect() as connection:
-            connection.execute()
+            for row in connection.execute(stmt):
+                print(row)
+                check = check_password_hash(row, password)
+                print("check")
+        
+        
+            
+
+                
+                    
 
         # Verify username in db and password is correct
 
 
         # Save user in session
-        session["user_id"] = user_data[0]["id"]
+        # session["user_id"] = user_data[0]["id"]
 
         # Send to homepage
         return redirect("/")
