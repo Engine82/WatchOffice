@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, insert, text
+from sqlalchemy import create_engine, insert, select, text
 from flask import Flask, redirect, render_template, request, session
 from flask_session import Session
 
@@ -85,21 +85,27 @@ def add_member():
 
     # Add member to db
     if request.method == "POST":
+        if not request.form.get("username"):
+            return render_template("apology.html", type="username")
+        if not request.form.get("password"):
+            return render_template("apology.html", type="password")
+        if not request.form.get("platoon"):
+            return render_template("apology.html", type="platoon")
+
+        # Check for username, password and platoon
         username = request.form.get("username")
         password = request.form.get("password")
         platoon = request.form.get("platoon")
 
-        # Check username & password
-        if not username:
-            render_template(apology.html, type="username")
-        if not password:
-            render_template(apology.html, type="password")
-
         # Check availability of username
+        stmt = select(User.username)
+        with engine.connect() as conn:
+            for row in conn.execute(stmt):
+                if row.username == username:
+                    return render_template("apology.html", type="username taken")
 
-        # Hash password
+       # Hash password
         hashword = generate_password_hash(password)
-        print(hashword)
         
         # Insert username & password into db
         with engine.begin() as conn:
@@ -158,10 +164,10 @@ def login():
         username = request.form.get("username")
         password = request.form.get("password")
         if not username:
-            render_template(apology.html, type="username")
+            render_template("apology.html", type="username")
         
         elif not password:
-            render_template(apology.html, type="password")
+            render_template("apology.html", type="password")
         
         # Query db for username
         """user_data = db.execute(
@@ -175,7 +181,7 @@ def login():
         if len(user_data) != 1 or not check_password_hash(
             user_data[0]["hash"], password
         ):
-            render_template(apology.html, type="user input")
+            C
 
         # 
         session["user_id"] = user_data[0]["id"]
