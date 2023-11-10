@@ -104,7 +104,7 @@ def add_member():
                 if row.username == username:
                     return render_template("apology.html", type="username taken")
 
-       # Hash password
+        # Hash password
         hashword = generate_password_hash(password)
         
         # Insert username & password into db
@@ -161,29 +161,27 @@ def login():
     if request.method == "POST":
 
         # Check for username and password
-        username = request.form.get("username")
-        password = request.form.get("password")
-        if not username:
+        if not request.form.get("username"):
             render_template("apology.html", type="username")
-        
-        elif not password:
+
+        elif not request.form.get("password"):
             render_template("apology.html", type="password")
         
         # Query db for username
+        username = request.form.get("username")
+        password = request.form.get("password")
+
         """user_data = db.execute(
             "SELECT * FROM users WHERE username = (?)", request.form.get("username")        
         )"""
         # .connect() because nothing to commit - don't need .begin()
         with engine.connect() as connection:
-            connection.execute(text("SELECT * FROM users WHERE username = (?)")).all()
+            connection.execute()
 
         # Verify username in db and password is correct
-        if len(user_data) != 1 or not check_password_hash(
-            user_data[0]["hash"], password
-        ):
-            C
 
-        # 
+
+        # Save user in session
         session["user_id"] = user_data[0]["id"]
 
         # Send to homepage
