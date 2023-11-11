@@ -1,4 +1,5 @@
-from sqlalchemy import create_engine, insert, select, text
+from sqlalchemy import create_engine, insert, select
+from sqlalchemy.orm import sessionmaker
 from flask import Flask, redirect, render_template, request, session
 from flask_session import Session
 
@@ -15,14 +16,15 @@ app = Flask(__name__)
 # Configure secret key
 app.secret_key = '5b80b04e505142179ddb441c2a2cd1e067038e3b422e1fd6add2e8c9961fe4aa'
 
-# Configure session
+# Configure login session
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Configure db
 engine = create_engine("sqlite:///database.db", echo=True)
-
+session_factory = sessionmaker(bind=engine)
+db = session_factory()
 
 # Global variables
 PLATOON_SIZE = 10
@@ -98,24 +100,19 @@ def add_member():
         platoon = request.form.get("platoon")
 
         # Check availability of username
-        stmt = select(User.username)
-        with engine.connect() as conn:
-            for row in conn.execute(stmt):
-                if row.username == username:
-                    return render_template("apology.html", type="username taken")
+        result = db.execute(select(User.username))
+        users = result.mappings().all()
+
+        for user in users:
+            if user.username == username:
+                return render_template("apology.html", type="username taken")
 
         # Hash password
         hashword = generate_password_hash(password)
         
         # Insert username & password into db
-        with engine.begin() as conn:
-            conn.execute(
-                insert(User),
-                [
-                    {"username": username, "hash": hashword, "platoon": platoon}
-                ],
-            )
-
+        db.execute(insert(User), {"username": username, "hash": hashword, "platoon": platoon})
+        db.commit()
         return render_template("added.html")
 
     # Blank add member form
@@ -171,6 +168,7 @@ def login():
         username = request.form.get("username")
         password = request.form.get("password")
 
+        
         """user_data = db.execute(
             "SELECT * FROM users WHERE username = (?)", request.form.get("username")        
         )"""
@@ -182,7 +180,10 @@ def login():
                 check = check_password_hash(row, password)
                 print("check")
         
-        
+
+        """!!!!!!!!!!!!! NEW BELOW !!!!!!!!!!!!!!!!!!!!!!"""
+        result = db.execute(select(User.username, User.hash, User.platoon).where(User.username == username))
+        user_dict = result.mappings().first()
             
 
                 
