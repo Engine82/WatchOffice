@@ -171,7 +171,7 @@ def login():
         
         """user_data = db.execute(
             "SELECT * FROM users WHERE username = (?)", request.form.get("username")        
-        )"""
+        )
 
         stmt = select(User.username, User.hash, User.id).where(User.username.in_([username]))
         with engine.connect() as connection:
@@ -181,19 +181,17 @@ def login():
                 print("check")
         
 
-        """!!!!!!!!!!!!! NEW BELOW !!!!!!!!!!!!!!!!!!!!!!"""
-        result = db.execute(select(User.username, User.hash, User.platoon).where(User.username == username))
+        ````1!!!!!!!!!!!!!!!! NEW BELOW !!!!!!!!!!!!!!!!!!!!!!"""
+        result = db.execute(select(User.id, User.username, User.hash).where(User.username == username))
         user_dict = result.mappings().first()
-            
-
-                
-                    
+        print(user_dict)
+        print(user_dict.id)
 
         # Verify username in db and password is correct
 
 
         # Save user in session
-        # session["user_id"] = user_data[0]["id"]
+        session['username'] = user_dict.username
 
         # Send to homepage
         return redirect("/")
