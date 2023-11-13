@@ -26,8 +26,9 @@ engine = create_engine("sqlite:///database.db", echo=True)
 session_factory = sessionmaker(bind=engine)
 db = session_factory()
 
-# Global variables
+# Constants & Global variables
 PLATOON_SIZE = 10
+platoon = 0
 
 
 # HOME
@@ -41,13 +42,18 @@ def index():
         return render_template("index.html")
 
 
+
+
+
 # HIRING
 # Hiring form / completed hiring
+"""Select which platoon is covering OT"""
 @app.route("/hiring_a", methods=["GET", "POST"])
 @login_required
 def hiring_a():
     # After hiring is submitted
     if request.method == "POST":
+        platoon = request.form.get("platoon")
         return redirect("/hiring_b")
 
     # If starting new hiring
@@ -55,6 +61,7 @@ def hiring_a():
         return render_template("hiring_a.html")
 
 
+"""Select any members that are not available on cover days"""
 @app.route("/hiring_b", methods=["GET", "POST"])
 @login_required
 def hiring_b():
@@ -64,19 +71,35 @@ def hiring_b():
 
     # If starting new hiring
     else:
+
         return render_template("hiring_b.html")
 
 
+"""Load the two platoons to be covered for; select which members are out"""
 @app.route("/hiring_c", methods=["GET", "POST"])
 @login_required
 def hiring_c():
+    # After hiring is submitted
+    if request.method == "POST":
+        return render_template("hiring_d.html")
+
+    # If starting new hiring
+    else:
+        return render_template("hiring_c.html")
+
+
+"""Hire for shifts, return hiring list"""
+@app.route("/hiring_c", methods=["GET", "POST"])
+@login_required
+def hiring_d():
     # After hiring is submitted
     if request.method == "POST":
         return render_template("hired.html")
 
     # If starting new hiring
     else:
-        return render_template("hiring_c.html")
+
+        return render_template("hiring_d.html")
 
 
 # SETTINGS
