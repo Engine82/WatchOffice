@@ -164,38 +164,26 @@ def login():
         elif not request.form.get("password"):
             render_template("apology.html", type="password")
         
-        # Query db for username
+        # Query db for username 
         username = request.form.get("username")
         password = request.form.get("password")
 
-        
-        """user_data = db.execute(
-            "SELECT * FROM users WHERE username = (?)", request.form.get("username")        
-        )
-
-        stmt = select(User.username, User.hash, User.id).where(User.username.in_([username]))
-        with engine.connect() as connection:
-            for row in connection.execute(stmt):
-                print(row)
-                check = check_password_hash(row, password)
-                print("check")
-        
-
-        ````1!!!!!!!!!!!!!!!! NEW BELOW !!!!!!!!!!!!!!!!!!!!!!"""
         result = db.execute(select(User.id, User.username, User.hash).where(User.username == username))
-        user_dict = result.mappings().first()
-        print(user_dict)
-        print(user_dict.id)
+        result_dict = result.mappings().first()
 
-        # Verify username in db and password is correct
+        # Verify username in db
+        if result_dict == None:
+            return render_template("apology.html", type="incorrect username")
 
-
+        # Verify password is correct
+        if check_password_hash(result_dict.hash, password) == False:
+            return render_template("apology.html", type="incorrect password")
+        
         # Save user in session
-        session["user_id"] = user_dict.id
+        session["user_id"] = result_dict.id
 
         # Send to homepage
-        return redirect("/")
-    
+        return redirect("/") 
     # 
     else:
         return render_template("login.html")
