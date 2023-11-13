@@ -72,8 +72,9 @@ def hiring_b():
 
     # If starting new hiring
     else:
+        # query db for list of elligible firefighters
         result = db.execute(select(User.id, User.username, User.hash).where(User.platoon == session['platoon']))
-        result = result.mappings().first()
+        result = result.mappings()
         print(result)
         
         return render_template("hiring_b.html")
@@ -114,17 +115,24 @@ def add_member():
 
     # Add member to db
     if request.method == "POST":
+
+        # Check for inputs
         if not request.form.get("username"):
             return render_template("apology.html", type="username")
         if not request.form.get("password"):
             return render_template("apology.html", type="password")
         if not request.form.get("platoon"):
             return render_template("apology.html", type="platoon")
+        if not request.form.get("active"):
+            return render_template("apology.html", type="active status")
+        if not request.form.get("elligibility"):
+            return render_template("apology.html", type="elligibility")
 
-        # Check for username, password and platoon
         username = request.form.get("username")
         password = request.form.get("password")
         platoon = request.form.get("platoon")
+        active = request.form.get("active")
+        elligibility = request.form.get("elligibility")
 
         # Check availability of username
         result = db.execute(select(User.username))
@@ -138,7 +146,7 @@ def add_member():
         hashword = generate_password_hash(password)
         
         # Insert username & password into db
-        db.execute(insert(User), {"username": username, "hash": hashword, "platoon": platoon})
+        db.execute(insert(User), {"username": username, "hash": hashword, "platoon": platoon, "active": active, "elligible": elligibility})
         db.commit()
         return render_template("added.html")
 

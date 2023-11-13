@@ -35,4 +35,7 @@ class User (Base):
     username: Mapped[str]
     hash: Mapped[str]
     platoon: Mapped[int]
+    seniority: Mapped[int]
+    active: Mapped[int]
+    elligible: Mapped[int]
     created_at: Mapped[datetime] = mapped_column(init=False, server_default=func.now())
