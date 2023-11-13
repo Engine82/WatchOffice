@@ -28,7 +28,6 @@ db = session_factory()
 
 # Constants & Global variables
 PLATOON_SIZE = 10
-platoon = 0
 
 
 # HOME
@@ -53,7 +52,9 @@ def index():
 def hiring_a():
     # After hiring is submitted
     if request.method == "POST":
-        platoon = request.form.get("platoon")
+        # Save platoon choice for next route
+        session["platoon"] = request.form.get("platoon")
+
         return redirect("/hiring_b")
 
     # If starting new hiring
@@ -71,7 +72,10 @@ def hiring_b():
 
     # If starting new hiring
     else:
-
+        result = db.execute(select(User.id, User.username, User.hash).where(User.platoon == session['platoon']))
+        result = result.mappings().first()
+        print(result)
+        
         return render_template("hiring_b.html")
 
 
@@ -192,18 +196,18 @@ def login():
         password = request.form.get("password")
 
         result = db.execute(select(User.id, User.username, User.hash).where(User.username == username))
-        result_dict = result.mappings().first()
+        result = result.mappings().first()
 
         # Verify username in db
-        if result_dict == None:
+        if result == None:
             return render_template("apology.html", type="incorrect username")
 
         # Verify password is correct
-        if check_password_hash(result_dict.hash, password) == False:
+        if check_password_hash(result.hash, password) == False:
             return render_template("apology.html", type="incorrect password")
         
         # Save user in session
-        session["user_id"] = result_dict.id
+        session["user_id"] = result.id
 
         # Send to homepage
         return redirect("/") 
