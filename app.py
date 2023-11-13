@@ -35,7 +35,6 @@ PLATOON_SIZE = 10
 @app.route("/", methods=["GET", "POST"])
 def index():
     # If logged in, display schedule
-    print(session.get("user_id"))
     if not session.get("user_id"):
         return redirect("/login")
     else:
