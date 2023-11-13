@@ -205,5 +205,5 @@ def login():
 # Log out
 @app.route("/logout")
 def logout():
-    session["name"] = None
+    session["user_id"] = None
     return redirect("/")
