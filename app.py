@@ -14,7 +14,7 @@ from helpers import Base, User
 app = Flask(__name__)
 
 # Configure secret key
-app.secret_key = '5b80b04e505142179ddb441c2a2cd1e067038e3b422e1fd6add2e8c9961fe4aa'
+app.secret_key = ")\xd9%q\xdb\xae(`hg\x1f\xe1\x9e\x99=y"
 
 # Configure login session
 app.config["SESSION_PERMANENT"] = False
@@ -35,7 +35,8 @@ PLATOON_SIZE = 10
 @app.route("/", methods=["GET", "POST"])
 def index():
     # If logged in, display schedule
-    if not session.get("name"):
+    print(session.get("user_id"))
+    if not session.get("user_id"):
         return redirect("/login")
     else:
         return render_template("index.html")
@@ -191,7 +192,7 @@ def login():
 
 
         # Save user in session
-        session['username'] = user_dict.username
+        session["user_id"] = user_dict.id
 
         # Send to homepage
         return redirect("/")
