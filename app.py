@@ -73,11 +73,11 @@ def hiring_b():
     # If starting new hiring
     else:
         # query db for list of elligible firefighters
-        result = db.execute(select(User.id, User.username, User.hash).where(User.platoon == session['platoon']))
-        result = result.mappings()
-        print(result)
-        
-        return render_template("hiring_b.html")
+        firefighters = db.execute(select(User.username).where(User.platoon == session['platoon']).where(User.elligible == "1").order_by(User.id))
+        firefighters = firefighters.mappings().all()
+        print(f"result dict: {firefighters}")
+
+        return render_template("hiring_b.html", firefighters=firefighters, platoon=session['platoon'])
 
 
 """Load the two platoons to be covered for; select which members are out"""

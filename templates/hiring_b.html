@@ -5,5 +5,76 @@
 {% endblock %}
 
 {% block main %}
-    Hiring B
+    <script src="jquery.js"></script>
+    <script>
+        $(document).ready(function(){ 
+            $('#1st_day').on('change',function(){
+                if( $(this).val()==="hours"){
+                    $("#hours").show()
+                }
+                else{
+                    $("#hours").hide()
+                }
+            });
+        });
+    </script>
+    
+    <h1>Platoon {{ platoon }} Hiring</h1>
+    <table>
+        <tr>
+            <td>Firefighter</td>
+            <td>1st Cover Day</td>
+            <td style="display:none;">Hours</td>
+            <td>2nd Cover Day</td>
+            <td style="display:none;">Hours</td>
+        </tr>
+            <form>  
+                {% for firefighter in firefighters %}              
+                <tr>
+                    <td>
+                        {{ firefighter['username'] }}
+                    </td>
+                    <td>
+                        <select class="day" id="1st_day" name="1st_day" required>
+                            <option value="available">Available</option>
+                            <option value="24">Unavailable 24</option>
+                            <option value="day">Unavailable Day</option>
+                            <option value="night">Unavailable Night</option>
+                            <option value="hours">Unavailable Hours</option>
+                        </select>
+                    </td>
+                    <td>
+                        <div id="hours_input_1" style="display:none;">
+                            <label for="hours_input_1">Hours unavailable:</label>
+                            <input type="time" name="hours_start_1">
+                        </div>
+                    </td>
+                    <td>
+                        <select class="day" id="2nd_day" name="2nd_day" required>
+                            <option value="available">Available</option>
+                            <option value="24">Unavailable 24</option>
+                            <option value="day">Unavailable Day</option>
+                            <option value="night">Unavailable Night</option>
+                            <option value="hours">Unavailable Hours</option>
+                        </select>
+                    </td>
+                    <td>
+                        <div id="hours_input_2" style="display:none;">
+                            <label for="hours_input_2">Hours unavailable:</label>
+                            <input type="time" name="hours_start_2">
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+
+                <tr>
+                    <td>
+                        <button type="submit">Submit</button>
+                    </td>
+                </tr>
+            </form>
+    </table>
+
+        
+        
 {% endblock %}
