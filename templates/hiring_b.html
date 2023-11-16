@@ -6,26 +6,15 @@
 
 {% block main %}
     <script src="scripts/hours.js"></script>
-    <!-- <script>
-            $('#1st_day').on('change',function(){
-                if( $(this).val()==="hours"){
-                    $(".hours_1").show()
-                }
-                else{
-                    $(".hours_1").hide()
-                }
-            });
-    </script>
-    -->
 
     <h1>Platoon {{ platoon }} Hiring</h1>
     <table>
         <tr>
             <td>Firefighter</td>
             <td>1st Cover Day</td>
-            <td class="hours_1" style="display:none;">Hours</td>
+            <td>Hours</td>
             <td>2nd Cover Day</td>
-            <td class="hours_2" style="display:none;">Hours</td>
+            <td>Hours</td>
         </tr>
             <form>  
                 {% for firefighter in firefighters %}              
@@ -43,7 +32,7 @@
                         </select>
                     </td>
                     <td>
-                        <div class="hours_1" id="hours_input_1" style="display:none;">
+                        <div class="hours_1" id="hours_input_1">
                             <label for="hours_input_1">Hours unavailable:</label>
                             <input type="time" name="hours_start_1">
                         </div>
@@ -58,7 +47,7 @@
                         </select>
                     </td>
                     <td>
-                        <div class="hours_2" id="hours_input_2" style="display:none;">
+                        <div class="hours_2" id="hours_input_2">
                             <label for="hours_input_2">Hours unavailable:</label>
                             <input type="time" name="hours_start_2">
                         </div>
