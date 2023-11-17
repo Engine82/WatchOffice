@@ -11,6 +11,73 @@ GOALS:
 
 +------------------------------------------------------------------------------------------------------------------------------+
 
+    HIRING B - covering shift availability
+    Lists:
+    everyone: [{'username':'kyle', 'elligible':'1', 'avail_1':'1', 'avail_2':'3'}, ... ]
+        key: 0 = unavailable, 1 = available, 2 = avail. day, 3 = avail. night, 4 = hours
+    hours: [{'username':'kyle', 'hours_1_start':'07:30', hours_1_end':'12:00'}, ... ]
+    - On POST submit save input in ^ dicts
+        -create 1 per ff in everyone
+        -create 1 per ff with hours off/unavailable in hours
+    - Save dicts in session for next ROUTES
+
+    HIRING C - Absences
+    - On GET: 
+        - db query for 2 covered shifts
+        -> Display HTML forms
+    - On POST:
+        - For each covered platoon,
+            - create a list of dicts: [{'username':'kyle', 'off_day':'1', 'off_night':'0'}, ] 
+              w/ firefighters who are out full shifts (12's)
+                - automatically include vacancies to make up to shift size
+            - create two lists of dicts: [{'user':'kyle', 'hours_1_start':'0730', 'hours_1_end':'1200'}, ]
+              (same as previous page)
+                - split hours shifts at 1900 - one dict for day, one for night
+        - save all lists in session
+
+    HIRED
+    In session we have: 
+        - ff's availableshifts to be covered
+
+    To add to db: 
+    - station
+    - tag
+    - ntw
+    - medic
+
+    Hire for Full Shifts:
+    For each cover day:
+        For each full shift (12 hrs)
+            Hire from NTW's
+            Hire from available
+                - if no one available:
+                    hire of 96 off
+        for each partial shift (hours)
+            Hire from NTW's
+            Hire from available
+                - if no one available:
+                    hire of 96 off
+
+    Hire means:
+        - save in list (one list per day of all things hired for)
+        - if > 6 hours
+            - user to be flipped
+                - if all are flipped: unflip all
+
+    Once all hiring done/All shifts filled:
+    - loop through each dictin lists:
+        - enter into covered_shifts db
+            - date, shift/hours, covered ff, covering ff, hiring version, active, timestamp
+    - Check list for next-up firefghter
+    - Print/display Hiring:
+        HTML?:
+            Date
+            Hiring
+            Date
+            Hiring
+            Next Up
+
+
     Create different functions for
         - 1st hiring
         - re-hiring during 1st day
