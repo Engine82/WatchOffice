@@ -17,7 +17,7 @@
             <td>Hours</td>
         </tr>
             <form action="/hiring_b" class="centered" method="post">  
-                {% for firefighter in firefighters %}              
+                {% for firefighter in session['firefighters'] %}              
                 <tr>
                     <td>
                         {{ firefighter['username'] }}
@@ -32,12 +32,17 @@
                         </select>
                     </td>
                     <td>
-                        <div class="hours_1" id="hours_input_1">
-                            <label for="hours_input_1">Hours unavailable:</label>
+                        <div class="hours_1" id="hours_start_1">
+                            <label for="hours_start_1">Hours unavailable:</label>
                             <input type="time" name="hours_start_1">
                         </div>
                     </td>
                     <td>
+                        <div class="hours_1" id="hours_end_1">
+                            <label for="hours_end_1">:</label>
+                            <input type="time" name="hours_end_1">
+                        </div>
+                    </td>                    <td>
                         <select class="day" id="2nd_day" name="2nd_day" required>
                             <option value="available">Available</option>
                             <option value="24">Unavailable 24</option>
@@ -50,6 +55,12 @@
                         <div class="hours_2" id="hours_input_2">
                             <label for="hours_input_2">Hours unavailable:</label>
                             <input type="time" name="hours_start_2">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="hours_1" id="hours_end_2">
+                            <label for="hours_end_2">:</label>
+                            <input type="time" name="hours_end_2">
                         </div>
                     </td>
                 </tr>
