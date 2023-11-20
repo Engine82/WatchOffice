@@ -66,16 +66,28 @@ def hiring_a():
 @app.route("/hiring_b", methods=["GET", "POST"])
 @login_required
 def hiring_b():
+
     # After hiring is submitted
+    firefighters_availability = []
+    firefighters_hours = []
     if request.method == "POST":
         for firefighter in session['firefighters']:
-            print(firefighter)
+            results = {
+                'username': firefighter['username'],
+                'avail_1': request.form.get("1st_day")
+            }
+            print(results)
+            firefighters_availability.append(results)
+            print(results['avail_1'])
+            if results['avail_1'] == "hours":
+                print("hours input recieved")
+        print(firefighters_availability)
         return redirect("/hiring_c")
 
-    # If starting new hiring
+    # If starting new hiring via GET
     else:
         # query db for list of elligible firefighters
-        firefighters = db.execute(select(User.username).where(User.platoon == session['platoon']).where(User.elligible == "1").order_by(User.id))
+        firefighters = db.execute(select(User.id, User.username).where(User.platoon == session['platoon']).where(User.elligible == "1").where(User.active == "1").order_by(User.id))
         firefighters = firefighters.mappings().all()
         print(f"result dict: {firefighters}")
         session['firefighters'] = firefighters
