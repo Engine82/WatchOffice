@@ -68,6 +68,8 @@ def hiring_a():
 def hiring_b():
     # After hiring is submitted
     if request.method == "POST":
+        for firefighter in session['firefighters']:
+            print(firefighter)
         return redirect("/hiring_c")
 
     # If starting new hiring
@@ -76,7 +78,8 @@ def hiring_b():
         firefighters = db.execute(select(User.username).where(User.platoon == session['platoon']).where(User.elligible == "1").order_by(User.id))
         firefighters = firefighters.mappings().all()
         print(f"result dict: {firefighters}")
-
+        session['firefighters'] = firefighters
+        print(session['firefighters'])
         return render_template("hiring_b.html", firefighters=firefighters, platoon=session['platoon'])
 
 
