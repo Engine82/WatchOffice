@@ -91,23 +91,33 @@ def hiring_b():
             # Add results to firefighters list
             firefighters_availability.append(results_avail)
 
-                # If the firefighter is unavailable for hours, add the hours to the hours list - Day 1
-                if results_avail['avail_1'] == "hours":
+            # If the firefighter is unavailable for hours, add the hours to the hours list
+            # Loop through each day
+            day = 1
+            while day <= DAYS_COVERED:
+                
+                # Create html tag for this cover day
+                avail_tag = 'avail_' + str(day)
+
+                # If firefighter is unavailable for hours
+                if results_avail[avail_tag] == "hours":
 
                     # Create html tag id's
-                    start_id = "hours_1_start_" + str(counter)
-                    end_id = "hours_1_end_" + str(counter)
+                    start_id = "hours_" + str(day) + "_start_" + str(counter)
+                    end_id = "hours_" + str(day) + "_end_" + str(counter)
 
                     # Get start & end hours
                     results_hours = {
-                        'day': 1,
+                        'day': day,
                         'username': firefighter['username'],
-                        'hours_1_start': request.form.get(start_id),
-                        'hours_1_end': request.form.get(end_id)
+                        'hours_start': request.form.get(start_id),
+                        'hours_end': request.form.get(end_id)
                     }
 
                     # Add results to hours list
                     firefighters_hours.append(results_hours)
+                
+                day += 1
 
             counter += 1
 
