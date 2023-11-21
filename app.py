@@ -80,28 +80,30 @@ def hiring_b():
             form_id = "1st_day_" + str(counter)
 
             # Collect this firefighter's availability
-            results = {
+            results_avail = {
                 'username': firefighter['username'],
                 'avail_1': request.form.get(form_id)
             }
 
             # Add results to firefighters list
-            firefighters_availability.append(results)
-            print(results['avail_1'])
+            firefighters_availability.append(results_avail)
 
             # If the firefighter is unavailable for hours, add the hours to the hours list
-            if results['avail_1'] == "hours":
-                print("hours input recieved")
+            if results_avail['avail_1'] == "hours":
 
+                # Create html tag id's
                 start_id = "hours_1_start_" + str(counter)
                 end_id = "hours_1_end_" + str(counter)
-                results = {
+
+                # Get start & end hours
+                results_hours = {
                     'username': firefighter['username'],
                     'hours_1_start': request.form.get(start_id),
-                    'hours_2_start': request.form.get(start_id)
+                    'hours_1_end': request.form.get(end_id)
                 }
 
-                print(results)
+                # Add results to hours list
+                firefighters_hours.append(results_hours)
 
             counter += 1
 
