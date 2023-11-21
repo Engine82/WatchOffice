@@ -31,6 +31,7 @@ PLATOON_SIZE = 10
 DAYS_COVERED = 2
 
 
+
 # HOME
 # Login / List upcoming shifts
 @app.route("/", methods=["GET", "POST"])
