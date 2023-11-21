@@ -68,20 +68,45 @@ def hiring_a():
 def hiring_b():
 
     # After hiring is submitted
-    firefighters_availability = []
-    firefighters_hours = []
     if request.method == "POST":
+        # Create lists & variables outside of loop 
+        firefighters_availability = []
+        firefighters_hours = []
+        counter = 1
+
+        # Loop through each firefighter
         for firefighter in session['firefighters']:
+            # Create html tag id
+            form_id = "1st_day_" + str(counter)
+
+            # Collect this firefighter's availability
             results = {
                 'username': firefighter['username'],
-                'avail_1': request.form.get("1st_day")
+                'avail_1': request.form.get(form_id)
             }
-            print(results)
+
+            # Add results to firefighters list
             firefighters_availability.append(results)
             print(results['avail_1'])
+
+            # If the firefighter is unavailable for hours, add the hours to the hours list
             if results['avail_1'] == "hours":
                 print("hours input recieved")
+
+                start_id = "hours_1_start_" + str(counter)
+                end_id = "hours_1_end_" + str(counter)
+                results = {
+                    'username': firefighter['username'],
+                    'hours_1_start': request.form.get(start_id),
+                    'hours_2_start': request.form.get(start_id)
+                }
+
+                print(results)
+
+            counter += 1
+
         print(firefighters_availability)
+        print(firefighters_hours)
         return redirect("/hiring_c")
 
     # If starting new hiring via GET
