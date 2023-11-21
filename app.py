@@ -28,6 +28,7 @@ db = session_factory()
 
 # Constants & Global variables
 PLATOON_SIZE = 10
+DAYS_COVERED = 2
 
 
 # HOME
@@ -77,48 +78,50 @@ def hiring_b():
         # Loop through each firefighter
         for firefighter in session['firefighters']:
             # Create html tag id
-            form_id = "1st_day_" + str(counter)
+            form_id_1 = "1st_day_" + str(counter)
+            form_id_2 = "2nd_day_" + str(counter)
 
             # Collect this firefighter's availability
             results_avail = {
                 'username': firefighter['username'],
-                'avail_1': request.form.get(form_id)
+                'avail_1': request.form.get(form_id_1),
+                'avail_2': request.form.get(form_id_2)
             }
 
             # Add results to firefighters list
             firefighters_availability.append(results_avail)
 
-            # If the firefighter is unavailable for hours, add the hours to the hours list
-            if results_avail['avail_1'] == "hours":
+                # If the firefighter is unavailable for hours, add the hours to the hours list - Day 1
+                if results_avail['avail_1'] == "hours":
 
-                # Create html tag id's
-                start_id = "hours_1_start_" + str(counter)
-                end_id = "hours_1_end_" + str(counter)
+                    # Create html tag id's
+                    start_id = "hours_1_start_" + str(counter)
+                    end_id = "hours_1_end_" + str(counter)
 
-                # Get start & end hours
-                results_hours = {
-                    'username': firefighter['username'],
-                    'hours_1_start': request.form.get(start_id),
-                    'hours_1_end': request.form.get(end_id)
-                }
+                    # Get start & end hours
+                    results_hours = {
+                        'day': 1,
+                        'username': firefighter['username'],
+                        'hours_1_start': request.form.get(start_id),
+                        'hours_1_end': request.form.get(end_id)
+                    }
 
-                # Add results to hours list
-                firefighters_hours.append(results_hours)
+                    # Add results to hours list
+                    firefighters_hours.append(results_hours)
 
             counter += 1
 
-        print(firefighters_availability)
-        print(firefighters_hours)
+        print(f" availability: {firefighters_availability}")
+        print(f" hours: {firefighters_hours}")
         return redirect("/hiring_c")
 
     # If starting new hiring via GET
     else:
-        # query db for list of elligible firefighters
+        # query db for list of elligible firefighters and save as dict in session
         firefighters = db.execute(select(User.id, User.username).where(User.platoon == session['platoon']).where(User.elligible == "1").where(User.active == "1").order_by(User.id))
         firefighters = firefighters.mappings().all()
-        print(f"result dict: {firefighters}")
         session['firefighters'] = firefighters
-        print(session['firefighters'])
+        print(f"session firefighters: {session['firefighters']}")
         return render_template("hiring_b.html", firefighters=firefighters, platoon=session['platoon'])
 
 
