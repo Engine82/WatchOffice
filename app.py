@@ -30,6 +30,11 @@ db = session_factory()
 PLATOON_SIZE = 10
 DAYS_COVERED = 2
 
+# Shifts covered:
+PLT_1 = [4, 2]
+PLT_2 = [1, 3]
+PLT_3 = [2, 4]
+PLT_4 = [3, 1]
 
 
 # HOME
@@ -41,9 +46,6 @@ def index():
         return redirect("/login")
     else:
         return render_template("index.html")
-
-
-
 
 
 # HIRING
@@ -146,6 +148,7 @@ def hiring_c():
 
     # If starting new hiring
     else:
+        
         return render_template("hiring_c.html")
 
 
