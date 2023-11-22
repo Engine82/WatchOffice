@@ -9,11 +9,11 @@
     <form action="/hiring_b" class="centered" method="post">  
         <table>
             <tr>
-                <th>Firefighter</td>
-                <th>1st Cover Day</td>
-                <th>Hours</td>
-                <th>2nd Cover Day</td>
-                <th>Hours</td>
+                <th>Firefighter</th>
+                <th>1st Cover Day</th>
+                <th>Hours</th>
+                <th>2nd Cover Day</th>
+                <th>Hours</th>
             </tr>
             {% for firefighter in session['firefighters'] %}              
                 <tr>
@@ -40,7 +40,8 @@
                             <label for="hours_1_end_{{ loop.index }}">to</label>
                             <input type="time" name="hours_1_end_{{ loop.index }}">
                         </div>
-                    </td>                    <td>
+                    </td>                    
+                    <td>
                         <select class="day" id="2nd_day_{{ loop.index }}" name="2nd_day_{{ loop.index }}" required>
                             <option value="available">Available</option>
                             <option value="24">Unavailable 24</option>
