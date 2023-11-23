@@ -11,7 +11,7 @@
             <table>
                 <tr>
                     <th>Firefighter</th>
-                    <th>1st Cover Day</th>
+                    <th>Status</th>
                     <th>Hours</th>
                 </tr>
                 {% for firefighter in session['firefighters'] %}              
@@ -21,7 +21,7 @@
                     </td>
                     <td>
                         <select class="day" id="1st_day_{{ loop.index }}" name="1st_day_{{ loop.index }}" required>
-                            <option value="available">Available</option>
+                            <option value="Available">Available</option>
                             <option value="24">Unavailable 24</option>
                             <option value="day">Unavailable Day</option>
                             <option value="night">Unavailable Night</option>
@@ -50,7 +50,7 @@
             </tr>
             <tr>
                 <th>Firefighter</th>
-                <th>2nd Cover Day</th>
+                <th>Status</th>
                 <th>Hours</th>
             </tr>
             {% for firefighter in session['firefighters'] %}  
