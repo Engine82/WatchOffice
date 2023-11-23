@@ -166,7 +166,7 @@ def hiring_c():
             cover_2 = 1
         
         print(cover_1, cover_2)
-        days_covered = [{'day_1': cover_1}, {'day_2': cover_2}]
+        days_covered = {'day_1': cover_1, 'day_2': cover_2}
         print(days_covered)
         # Get firefighters list for each cover platoon
         cover_1_firefighters = db.execute(select(User.username).where(User.platoon == cover_1).order_by(User.id))
