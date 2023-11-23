@@ -28,13 +28,15 @@ db = session_factory()
 
 # Constants & Global variables
 PLATOON_SIZE = 10
+PLATOON_OFFICERS = 2
+PLATOON_FIREFIGHTERS = 8
 DAYS_COVERED = 2
 
 # Shifts covered:
-PLT_1 = [4, 2]
-PLT_2 = [1, 3]
-PLT_3 = [2, 4]
-PLT_4 = [3, 1]
+PLT_1 = {'first_day': '4', 'second_day': '2'}
+PLT_2 = {'first_day': '1', 'second_day': '3'}
+PLT_3 = {'first_day': '2', 'second_day': '4'}
+PLT_4 = {'first_day': '3', 'second_day': '1'}
 
 
 # HOME
@@ -148,8 +150,41 @@ def hiring_c():
 
     # If starting new hiring
     else:
+        print(session['platoon'])
+        # Get cover platoons
+        if session['platoon'] == '1':
+            cover_1 = 4
+            cover_2 = 2
+        elif session['platoon'] == '2':
+            cover_1 = 1
+            cover_2 = 3
+        elif session['platoon'] == '3':
+            cover_1 = 2
+            cover_2 = 4
+        elif session['platoon'] == '4':
+            cover_1 = 3
+            cover_2 = 1
         
-        return render_template("hiring_c.html")
+        print(cover_1, cover_2)
+        days_covered = [{'day_1': cover_1}, {'day_2': cover_2}]
+        print(days_covered)
+        # Get firefighters list for each cover platoon
+        cover_1_firefighters = db.execute(select(User.username).where(User.platoon == cover_1).order_by(User.id))
+        cover_1_firefighters = cover_1_firefighters.mappings().all()
+        cover_2_firefighters = db.execute(select(User.username).where(User.platoon == cover_2).order_by(User.id))
+        cover_2_firefighters = cover_2_firefighters.mappings().all()
+
+        # Add vacancies to shifts up to full-size
+        while len(cover_1_firefighters) < PLATOON_FIREFIGHTERS:
+            cover_1_firefighters.append({'username': 'vacancy'})
+        while len(cover_2_firefighters) < PLATOON_FIREFIGHTERS:
+            cover_2_firefighters.append({'username': 'vacancy'})
+        session['cover_1_firefighters'] = cover_1_firefighters
+        session['cover_2_firefighters'] = cover_2_firefighters
+
+        print(session['cover_1_firefighters'])
+        print(session['cover_2_firefighters'])
+        return render_template("hiring_c.html", days_covered=days_covered, platoon=session['platoon'])
 
 
 """Hire for shifts, return hiring list"""
@@ -174,6 +209,7 @@ def add_member():
 
     # Add member to db
     if request.method == "POST":
+
 
         # Check for inputs
         if not request.form.get("username"):

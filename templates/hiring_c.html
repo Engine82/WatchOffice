@@ -1,9 +1,93 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Hiring - Select Absences
+    Hiring: Open Shifts
 {% endblock %}
 
 {% block main %}
-    Hiring C
+    <h1>Platoon {{ platoon }} Hiring</h1>
+    <form action="/hiring_c" class="centered" method="post">  
+        <h2>Platoon {{ days_covered['day_1'] }}</h2>
+            <table>
+                <tr>
+                    <th>Firefighter</th>
+                    <th>1st Cover Day</th>
+                    <th>Hours</th>
+                </tr>
+                {% for firefighter in session['firefighters'] %}              
+                <tr>
+                    <td>
+                        {{ firefighter['username'] }}
+                    </td>
+                    <td>
+                        <select class="day" id="1st_day_{{ loop.index }}" name="1st_day_{{ loop.index }}" required>
+                            <option value="available">Available</option>
+                            <option value="24">Unavailable 24</option>
+                            <option value="day">Unavailable Day</option>
+                            <option value="night">Unavailable Night</option>
+                            <option value="hours">Unavailable Hours</option>
+                        </select>
+                    </td>
+                    <td>
+                        <div class="hours_1" id="hours_1_start_{{ loop.index }}">
+                            <label for="hours_1_start_{{ loop.index }}">Hours unavailable:</label>
+                            <input type="time" name="hours_1_start_{{ loop.index }}">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="hours_1" id="hours_1_end_{{ loop.index }}">
+                            <label for="hours_1_end_{{ loop.index }}">to</label>
+                            <input type="time" name="hours_1_end_{{ loop.index }}">
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+            <br/>
+        <table>
+            <tr>
+                <h2>Platoon {{ days_covered['day_2'] }}</h2>
+            </tr>
+            <tr>
+                <th>Firefighter</th>
+                <th>2nd Cover Day</th>
+                <th>Hours</th>
+            </tr>
+            {% for firefighter in session['firefighters'] %}  
+                <tr>            
+                    <td>
+                        {{ firefighter['username'] }}
+                    </td>
+                    <td>
+                        <select class="day" id="2nd_day_{{ loop.index }}" name="2nd_day_{{ loop.index }}" required>
+                            <option value="available">Available</option>
+                            <option value="24">Unavailable 24</option>
+                            <option value="day">Unavailable Day</option>
+                            <option value="night">Unavailable Night</option>
+                            <option value="hours">Unavailable Hours</option>
+                        </select>
+                    </td>
+                    <td>
+                        <div class="hours_2" id="hours_2_start_{{ loop.index }}">
+                            <label for="hours_2_start_{{ loop.index }}">Hours unavailable:</label>
+                            <input type="time" name="hours_2_start_{{ loop.index }}">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="hours_1" id="hours_2_end_{{ loop.index }}">
+                            <label for="hours_2_end_{{ loop.index }}">to</label>
+                            <input type="time" name="hours_2_end_{{ loop.index }}">
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td>
+                    <button type="submit">Submit</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+
+
 {% endblock %}
