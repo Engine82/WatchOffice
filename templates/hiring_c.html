@@ -14,7 +14,7 @@
                     <th>Status</th>
                     <th>Hours</th>
                 </tr>
-                {% for firefighter in session['firefighters'] %}              
+                {% for firefighter in session['cover_1_firefighters'] %}              
                 <tr>
                     <td>
                         {{ firefighter['username'] }}
@@ -53,7 +53,7 @@
                 <th>Status</th>
                 <th>Hours</th>
             </tr>
-            {% for firefighter in session['firefighters'] %}  
+            {% for firefighter in session['cover_2_firefighters'] %}  
                 <tr>            
                     <td>
                         {{ firefighter['username'] }}
