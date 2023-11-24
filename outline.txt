@@ -10,6 +10,10 @@ GOALS:
 
 
 +------------------------------------------------------------------------------------------------------------------------------+
+Things to Fix/Change:
+- Merge active/inactive with platoon assitnments
+- Add to db: tag flipped/unflipped status, NTW (use number for order of NTW, not as a bool(?))
++------------------------------------------------------------------------------------------------------------------------------+
 
     HIRING B - covering shift availability
     Lists:
