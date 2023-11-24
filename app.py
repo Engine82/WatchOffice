@@ -136,7 +136,7 @@ def hiring_b():
         firefighters = db.execute(select(User.id, User.username).where(User.platoon == session['platoon']).where(User.elligible == "1").where(User.active == "1").order_by(User.id))
         firefighters = firefighters.mappings().all()
         session['firefighters'] = firefighters
-        print(f"session firefighters: {session['firefighters']}")
+
         return render_template("hiring_b.html", firefighters=firefighters, platoon=session['platoon'])
 
 
@@ -150,7 +150,6 @@ def hiring_c():
 
     # If starting new hiring
     else:
-        print(session['platoon'])
         # Get cover platoons
         if session['platoon'] == '1':
             cover_1 = 4
@@ -165,25 +164,26 @@ def hiring_c():
             cover_1 = 3
             cover_2 = 1
         
-        print(cover_1, cover_2)
         days_covered = {'day_1': cover_1, 'day_2': cover_2}
-        print(days_covered)
+
         # Get firefighters list for each cover platoon
         cover_1_firefighters = db.execute(select(User.username).where(User.platoon == cover_1).order_by(User.id))
         cover_1_firefighters = cover_1_firefighters.mappings().all()
+
         cover_2_firefighters = db.execute(select(User.username).where(User.platoon == cover_2).order_by(User.id))
         cover_2_firefighters = cover_2_firefighters.mappings().all()
 
         # Add vacancies to shifts up to full-size
         while len(cover_1_firefighters) < PLATOON_FIREFIGHTERS:
             cover_1_firefighters.append({'username': 'vacancy'})
+        session['cover_1_firefighters'] = cover_1_firefighters
+
         while len(cover_2_firefighters) < PLATOON_FIREFIGHTERS:
             cover_2_firefighters.append({'username': 'vacancy'})
-        session['cover_1_firefighters'] = cover_1_firefighters
         session['cover_2_firefighters'] = cover_2_firefighters
 
-        print(session['cover_1_firefighters'])
-        print(session['cover_2_firefighters'])
+        print(f"Cover 1: {session['cover_1_firefighters']}")
+        print(f"Cover 2: {session['cover_2_firefighters']}")
         return render_template("hiring_c.html", days_covered=days_covered, platoon=session['platoon'])
 
 
