@@ -56,7 +56,8 @@ def index():
 @app.route("/hiring_a", methods=["GET", "POST"])
 @login_required
 def hiring_a():
-    # After hiring is submitted
+
+    # After platoon is selected
     if request.method == "POST":
         # Save platoon choice for next route
         session["platoon"] = request.form.get("platoon")
@@ -73,8 +74,9 @@ def hiring_a():
 @login_required
 def hiring_b():
 
-    # After hiring is submitted
+    # After availability is submitted
     if request.method == "POST":
+
         # Create lists & variables outside of loop 
         firefighters_availability = []
         firefighters_hours = []
@@ -130,8 +132,9 @@ def hiring_b():
         print(f" hours: {firefighters_hours}")
         return redirect("/hiring_c")
 
-    # If starting new hiring via GET
+    # Display the availability form
     else:
+
         # query db for list of elligible firefighters and save as dict in session
         firefighters = db.execute(select(User.id, User.username).where(User.platoon == session['platoon']).where(User.elligible == "1").where(User.active == "1").order_by(User.id))
         firefighters = firefighters.mappings().all()
@@ -144,11 +147,61 @@ def hiring_b():
 @app.route("/hiring_c", methods=["GET", "POST"])
 @login_required
 def hiring_c():
-    # After hiring is submitted
-    if request.method == "POST":
-        return render_template("hiring_d.html")
 
-    # If starting new hiring
+    # Fill empty shifts with available firefighters
+    if request.method == "POST":
+        
+        # Create lists of empty shifts to be filled
+        cover_1_openings = []
+        cover_2_openings = []
+
+        # Loop through each cover day
+        day = 1
+        while day <= 2:
+
+            # 
+            covered_shift = "cover_" + str(day) + "_firefighters"
+            counter = 1
+
+            # Loop through each firefighter (or vacancy)
+            for firefighter in session[covered_shift]:
+                
+                # Create form identifier
+                if day == 1:
+                    place = "1st_"
+                elif day == 2:
+                    place = "2nd_"
+                
+                identifier = place + "day_" + str(counter)
+
+                # Get firefighter's status from html
+                availability = request.form.get(identifier)
+
+                # Add open shift to list of shifts to be filled:
+                print(firefighter)
+                if not firefighter.username:
+                    print("vacancy")
+                elif availability != "Available":
+
+                    open_shift = {
+                        'day': day,
+                        'username': firefighter.username,
+                        'shift': availability
+                    }
+                    print(open_shift)
+                    
+                # Add to counter for next firefighter
+                counter += 1
+
+            # Add to counter for next cover day
+            day += 1
+
+        #
+
+        
+        return redirect("/hired")
+
+    # Display the covered shifts form
     else:
         # Get cover platoons
         if session['platoon'] == '1':
@@ -188,17 +241,17 @@ def hiring_c():
 
 
 """Hire for shifts, return hiring list"""
-@app.route("/hiring_c", methods=["GET", "POST"])
+@app.route("/hired", methods=["GET", "POST"])
 @login_required
-def hiring_d():
-    # After hiring is submitted
+def hired():
+    
+    # 
     if request.method == "POST":
         return render_template("hired.html")
 
-    # If starting new hiring
-    else:
-
-        return render_template("hiring_d.html")
+    # Display completed hiring
+    if request.method == "GET":
+        return render_template("hired.html")
 
 
 # SETTINGS
