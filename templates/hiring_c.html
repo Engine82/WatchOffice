@@ -21,16 +21,16 @@
                     </td>
                     <td>
                         <select class="day" id="1st_day_{{ loop.index }}" name="1st_day_{{ loop.index }}" required>
-                            <option value="Available">Available</option>
-                            <option value="24">Unavailable 24</option>
-                            <option value="day">Unavailable Day</option>
-                            <option value="night">Unavailable Night</option>
-                            <option value="hours">Unavailable Hours</option>
+                            <option value="Working">Woring</option>
+                            <option value="24">Out 24</option>
+                            <option value="day">Out Day</option>
+                            <option value="night">Out Night</option>
+                            <option value="hours">Out Hours</option>
                         </select>
                     </td>
                     <td>
                         <div class="hours_1" id="hours_1_start_{{ loop.index }}">
-                            <label for="hours_1_start_{{ loop.index }}">Hours unavailable:</label>
+                            <label for="hours_1_start_{{ loop.index }}">Hours out:</label>
                             <input type="time" name="hours_1_start_{{ loop.index }}">
                         </div>
                     </td>
@@ -60,16 +60,16 @@
                     </td>
                     <td>
                         <select class="day" id="2nd_day_{{ loop.index }}" name="2nd_day_{{ loop.index }}" required>
-                            <option value="available">Available</option>
-                            <option value="24">Unavailable 24</option>
-                            <option value="day">Unavailable Day</option>
-                            <option value="night">Unavailable Night</option>
-                            <option value="hours">Unavailable Hours</option>
+                            <option value="available">Working</option>
+                            <option value="24">Out 24</option>
+                            <option value="day">Out Day</option>
+                            <option value="night">Out Night</option>
+                            <option value="hours">Out Hours</option>
                         </select>
                     </td>
                     <td>
                         <div class="hours_2" id="hours_2_start_{{ loop.index }}">
-                            <label for="hours_2_start_{{ loop.index }}">Hours unavailable:</label>
+                            <label for="hours_2_start_{{ loop.index }}">Hours out:</label>
                             <input type="time" name="hours_2_start_{{ loop.index }}">
                         </div>
                     </td>
