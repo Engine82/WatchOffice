@@ -220,11 +220,13 @@ def hiring_c():
         days_covered = {'day_1': cover_1, 'day_2': cover_2}
 
         # Get firefighters list for each cover platoon
-        cover_1_firefighters = db.execute(select(User.username).where(User.platoon == cover_1).order_by(User.id))
+        cover_1_firefighters = db.execute(select(User.username).where(User.platoon == cover_1).where(User.active == '1').order_by(User.id))
         cover_1_firefighters = cover_1_firefighters.mappings().all()
+        print(f"cover 1 FF's: {cover_1_firefighters}")
 
-        cover_2_firefighters = db.execute(select(User.username).where(User.platoon == cover_2).order_by(User.id))
+        cover_2_firefighters = db.execute(select(User.username, User.active).where(User.platoon == cover_2).where(User.active == '1').order_by(User.id))
         cover_2_firefighters = cover_2_firefighters.mappings().all()
+        print(f"cover 2 FF's: {cover_2_firefighters}")
 
         # Add vacancies to shifts up to full-size
         while len(cover_1_firefighters) < PLATOON_FIREFIGHTERS:
