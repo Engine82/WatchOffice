@@ -97,20 +97,22 @@ def hiring_b():
                 for person in rank:
                     
                     # Create html tag id
-                    form_id = "day_" + str(day) + "_" + session['hiring_tiers'][tier - 1]['tier'] + "_" + str(person_counter)
+                    if day == 1:
+                        form_id_1 = "day_1_" + session['hiring_tiers'][tier - 1]['tier'] + "_" + str(person_counter)
+                        form_id_2 = "day_2_" + session['hiring_tiers'][tier - 1]['tier'] + "_" + str(person_counter)
 
-                    # Collect this firefighter's availability
-                    results_avail = {
-                        'username': person['username'],
-                        'avail_1': request.form.get(form_id),
-                        'avail_2': request.form.get(form_id)
-                    }
+                        # Collect this firefighter's availability
+                        results_avail = {
+                            'username': person['username'],
+                            'avail_1': request.form.get(form_id_1),
+                            'avail_2': request.form.get(form_id_2)
+                        }
 
-                    # Add results to firefighters list
-                    if tier == 1:
-                        officers_availability.append(results_avail)
-                    elif tier  == 2:
-                        firefighters_availability.append(results_avail)
+                        # Add results to firefighters list
+                        if tier == 1:
+                            officers_availability.append(results_avail)
+                        elif tier  == 2:
+                            firefighters_availability.append(results_avail)
 
                     # If the firefighter is unavailable for hours, add the hours to the hours list
                     # Create html tag for this cover day
@@ -142,8 +144,15 @@ def hiring_b():
                 tier += 1
 
             day += 1
+
+        session['officers_avail'] = officers_availability
+        session['officers_hours'] = officers_hours
+        session['firefighters_avail'] = firefighters_availability
+        session['firefighters_hours'] = firefighters_hours
+        print(f"officers avail: {officers_availability}")
+        print(f"officers hours: {officers_hours}")
         print(f"firefighters avail: {firefighters_availability}")
-        print(f"firefightyers hours: {firefighters_hours}")
+        print(f"firefighters hours: {firefighters_hours}")
         return redirect("/hiring_c")
 
     # Display the availability form
@@ -157,10 +166,6 @@ def hiring_b():
         firefighters = firefighters.mappings().all()
 
         session['personnel'] = [officers, firefighters]
-        print(session['personnel'])
-        print(session['personnel'][0])
-        print(session['personnel'][1])
-
 
         # Create list of titles for HTML
         session['cover_days'] = [{"day": "First Cover Day"}, {"day": "Second Cover Day"}]
