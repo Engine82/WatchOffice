@@ -78,53 +78,52 @@ def hiring_b():
     # After availability is submitted
     if request.method == "POST":
 
-        # Create lists & variables outside of loop 
+        # Create lists & variables outside of loops
         officers_availability = []
         officers_hours = []
         firefighters_availability = []
         firefighters_hours = []
 
-        # Loop through each day
-        day = 1
-        while day <= DAYS_COVERED:
+        #Loop through each rank - Officer and Firefighter
+        tier = 1
+        for rank in session['personnel']:
 
-            #Loop through each rank - Officer and Firefighter
-            tier = 1
-            for rank in session['personnel']:
+            # Loop through each person at that rank
+            person_counter = 1
+            for person in rank:
+                
+                # Create html tag id and collect this firefighter's availability
+                form_id_1 = "day_1_" + session['hiring_tiers'][tier - 1]['tier'] + "_" + str(person_counter)
+                form_id_2 = "day_2_" + session['hiring_tiers'][tier - 1]['tier'] + "_" + str(person_counter)
 
-                # Loop through each firefighter
-                person_counter = 1
-                for person in rank:
-                    
-                    # Create html tag id
-                    if day == 1:
-                        form_id_1 = "day_1_" + session['hiring_tiers'][tier - 1]['tier'] + "_" + str(person_counter)
-                        form_id_2 = "day_2_" + session['hiring_tiers'][tier - 1]['tier'] + "_" + str(person_counter)
+                results_avail = {
+                    'username': person['username'],
+                    'avail_1': request.form.get(form_id_1),
+                    'avail_2': request.form.get(form_id_2)
+                }
 
-                        # Collect this firefighter's availability
-                        results_avail = {
-                            'username': person['username'],
-                            'avail_1': request.form.get(form_id_1),
-                            'avail_2': request.form.get(form_id_2)
-                        }
+                # Add results to firefighters list
+                if tier == 1:
+                    officers_availability.append(results_avail)
+                elif tier  == 2:
+                    firefighters_availability.append(results_avail)
 
-                        # Add results to firefighters list
-                        if tier == 1:
-                            officers_availability.append(results_avail)
-                        elif tier  == 2:
-                            firefighters_availability.append(results_avail)
+                # Handle hours unavailability
+                # Loop through each day
+                day = 1
+                while day <= DAYS_COVERED:
 
-                    # If the firefighter is unavailable for hours, add the hours to the hours list
-                    # Create html tag for this cover day
+                    # Create the tag to check for hours with
                     avail_tag = 'avail_' + str(day)
 
-                    # If firefighter is unavailable for hours
+                    # If person is out Hours
                     if results_avail[avail_tag] == "hours":
 
                         # Create html tag id's
                         start_id = "hours_" + str(day) + "_" + session['hiring_tiers'][tier - 1]['tier'] + "_start_" + str(person_counter)
                         end_id = "hours_" + str(day) + "_" + session['hiring_tiers'][tier - 1]['tier'] + "_end_" + str(person_counter)
-                        # Get start & end hours
+
+                        # Get start and end hours, and save in dict
                         results_hours = {
                             'day': day,
                             'username': person['username'],
@@ -132,23 +131,25 @@ def hiring_b():
                             'hours_end': request.form.get(end_id)
                         }
 
-                        # Add results to hours list
+                        # Add results to appropriate hours list
                         if tier == 1:
                             officers_hours.append(results_hours)
 
                         elif tier == 2:
                             firefighters_hours.append(results_hours)
-                        
-                    person_counter += 1
 
-                tier += 1
+                    day += 1
 
-            day += 1
+                person_counter += 1
 
+            tier += 1
+
+        # Save all availability in session
         session['officers_avail'] = officers_availability
         session['officers_hours'] = officers_hours
         session['firefighters_avail'] = firefighters_availability
         session['firefighters_hours'] = firefighters_hours
+
         print(f"officers avail: {officers_availability}")
         print(f"officers hours: {officers_hours}")
         print(f"firefighters avail: {firefighters_availability}")
