@@ -6,83 +6,53 @@
 
 {% block main %}
     <h1>Platoon {{ platoon }} Hiring</h1>
-    <form action="/hiring_b" class="centered" method="post">  
+    <form action="/hiring_b" class="centered" method="post">
         <table>
-            <tr>
-                <h2>First Cover Day</h2>
-            </tr>
-            <tr>
-                <th>Firefighter</th>
-                <th>1st Cover Day</th>
-                <th>Hours</th>
-            </tr>
-            {% for firefighter in session['firefighters'] %}              
+            <!-- Loop through each day and display title -->
+            {% for i in range(days_covered) %}
                 <tr>
-                    <td>
-                        {{ firefighter['username'] }}
-                    </td>
-                    <td>
-                        <select class="day" id="1st_day_{{ loop.index }}" name="1st_day_{{ loop.index }}" required>
-                            <option value="available">Available</option>
-                            <option value="24">Unavailable 24</option>
-                            <option value="day">Unavailable Day</option>
-                            <option value="night">Unavailable Night</option>
-                            <option value="hours">Unavailable Hours</option>
-                        </select>
-                    </td>
-                    <td>
-                        <div class="hours_1" id="hours_1_start_{{ loop.index }}">
-                            <label for="hours_1_start_{{ loop.index }}">Hours unavailable:</label>
-                            <input type="time" name="hours_1_start_{{ loop.index }}">
-                        </div>
-                    </td>
-                    <td>
-                        <div class="hours_1" id="hours_1_end_{{ loop.index }}">
-                            <label for="hours_1_end_{{ loop.index }}">to</label>
-                            <input type="time" name="hours_1_end_{{ loop.index }}">
-                        </div>
-                    </td>                    
+                    <th>{{ cover_days[i]['day'] }}</th>
                 </tr>
+                
+                <!-- Loop through each tier of hiring (officer and firefighter) -->
+                {% for rank in hiring_tiers %}
+                    <tr>
+                        <th>{{ rank['tier'] }}</th>
+                        <th>Availability</th>
+                        <th>Hours</th>
+                    </tr>
+                    <!-- Loop through each person in this tier of hiring (officer of firefighter) -->
+                    {% for person in session['personnel'][loop.index - 1] %}
+                        <tr>
+                            <td>
+                                {{ person['username'] }}
+                            </td>
+                            <td>
+                                <select class="day" id="day_{{ i + 1 }}_{{ rank['tier'] }}_{{ loop.index }}" name="day_{{ i + 1 }}_{{ rank['tier'] }}_{{ loop.index }}" required>
+                                    <option value="available">Available</option>
+                                    <option value="24">Unavailable 24</option>
+                                    <option value="day">Unavailable Day</option>
+                                    <option value="night">Unavailable Night</option>
+                                    <option value="hours">Unavailable Hours</option>
+                                </select>
+                            </td>
+                            <td>
+                                <div class="hours_1" id="hours_{{ i + 1 }}_start_{{ loop.index }}">
+                                    <label for="hours_{{ i + 1 }}_start_{{ loop.index }}">Hours unavailable:</label>
+                                    <input type="time" name="hours_{{ i + 1 }}_start_{{ loop.index }}">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="hours_1" id="hours_{{ i + 1 }}_end_{{ loop.index }}">
+                                    <label for="hours_{{ i + 1 }}_end_{{ loop.index }}">to</label>
+                                    <input type="time" name="hours_{{ i + 1 }}_end_{{ loop.index }}">
+                                </div>
+                            </td>                    
+                        </tr>
+                    {% endfor %}
+                {% endfor %}
             {% endfor %}
         </table>
-        <br/>
-        <table>
-            <tr>
-                <h2>Second Cover Day</h2>
-            </tr>
-            <tr>
-                <th>Firefighter</th>
-                <th>1st Cover Day</th>
-                <th>Hours</th>
-            </tr>
-            {% for firefighter in session['firefighters'] %}              
-            <tr>
-                <td>
-                    {{ firefighter['username'] }}
-                </td>
-                <td>
-                    <select class="day" id="2nd_day_{{ loop.index }}" name="2nd_day_{{ loop.index }}" required>
-                        <option value="available">Available</option>
-                        <option value="24">Unavailable 24</option>
-                        <option value="day">Unavailable Day</option>
-                        <option value="night">Unavailable Night</option>
-                        <option value="hours">Unavailable Hours</option>
-                    </select>
-                </td>
-                <td>
-                    <div class="hours_2" id="hours_2_start_{{ loop.index }}">
-                        <label for="hours_2_start_{{ loop.index }}">Hours unavailable:</label>
-                        <input type="time" name="hours_2_start_{{ loop.index }}">
-                    </div>
-                </td>
-                <td>
-                    <div class="hours_2" id="hours_2_end_{{ loop.index }}">
-                        <label for="hours_2_end_{{ loop.index }}">to</label>
-                        <input type="time" name="hours_2_end_{{ loop.index }}">
-                    </div>
-                </td>
-            </tr>   
-            {% endfor %}
             <tr>
                 <td>
                     <button type="submit">Submit</button>

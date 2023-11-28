@@ -34,7 +34,9 @@ class User (Base):
     id: Mapped[int] = mapped_column(primary_key=True, init=False)
     username: Mapped[str]
     hash: Mapped[str]
+    rank: Mapped[str]
     platoon: Mapped[int]
     active: Mapped[int]
     elligible: Mapped[int]
+    tag_flipped: Mapped[int]
     created_at: Mapped[datetime] = mapped_column(init=False, server_default=func.now())
