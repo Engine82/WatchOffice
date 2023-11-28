@@ -37,15 +37,15 @@
                                 </select>
                             </td>
                             <td>
-                                <div class="hours_1" id="hours_{{ i + 1 }}_start_{{ loop.index }}">
-                                    <label for="hours_{{ i + 1 }}_start_{{ loop.index }}">Hours unavailable:</label>
-                                    <input type="time" name="hours_{{ i + 1 }}_start_{{ loop.index }}">
+                                <div class="hours_1" id="hours_{{ i + 1 }}_{{ rank['tier'] }}_start_{{ loop.index }}">
+                                    <label for="hours_{{ i + 1 }}_{{ rank['tier'] }}_start_{{ loop.index }}">Hours unavailable:</label>
+                                    <input type="time" name="hours_{{ i + 1 }}_{{ rank['tier'] }}_start_{{ loop.index }}">
                                 </div>
                             </td>
                             <td>
-                                <div class="hours_1" id="hours_{{ i + 1 }}_end_{{ loop.index }}">
-                                    <label for="hours_{{ i + 1 }}_end_{{ loop.index }}">to</label>
-                                    <input type="time" name="hours_{{ i + 1 }}_end_{{ loop.index }}">
+                                <div class="hours_1" id="hours_{{ i + 1 }}_{{ rank['tier'] }}_end_{{ loop.index }}">
+                                    <label for="hours_{{ i + 1 }}_{{ rank['tier'] }}_end_{{ loop.index }}">to</label>
+                                    <input type="time" name="hours_{{ i + 1 }}_{{ rank['tier'] }}_end_{{ loop.index }}">
                                 </div>
                             </td>                    
                         </tr>
