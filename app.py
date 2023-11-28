@@ -31,6 +31,7 @@ PLATOON_SIZE = 10
 PLATOON_OFFICERS = 2
 PLATOON_FIREFIGHTERS = 8
 DAYS_COVERED = 2
+HIRING_TIERS = 2
 
 # Shifts covered:
 PLT_1 = {'first_day': '4', 'second_day': '2'}
@@ -133,12 +134,21 @@ def hiring_b():
     # Display the availability form
     else:
 
-        # query db for list of elligible firefighters and save as dict in session
-        firefighters = db.execute(select(User.id, User.username).where(User.platoon == session['platoon']).where(User.elligible == "1").where(User.active == "1").order_by(User.id))
-        firefighters = firefighters.mappings().all()
-        session['firefighters'] = firefighters
+        # query db for list of elligible officers & firefighters and save as dicts
+        officers = db.execute(select(User.id, User.username, User.rank).where(User.platoon == session['platoon']).where(User.elligible == "1").where(User.active == "1").where(User.rank != "firefighter").order_by(User.id))
+        officers = officers.mappings().all()
 
-        return render_template("hiring_b.html", firefighters=firefighters, platoon=session['platoon'])
+        firefighters = db.execute(select(User.id, User.username, User.rank).where(User.platoon == session['platoon']).where(User.elligible == "1").where(User.active == "1").where(User.rank == "firefighter").order_by(User.id))
+        firefighters = firefighters.mappings().all()
+
+        session['personnel'] = [officers, firefighters]
+        print(session['personnel'])
+
+        # Create list of titles for HTML
+        session['cover_days'] = [{"day": "First Cover Day"}, {"day": "Second Cover Day"}]
+        hiring_tiers = [{"tier": "Officers"}, {"tier": "Firefighters"}]
+
+        return render_template("hiring_b.html", cover_days=session['cover_days'], days_covered=DAYS_COVERED, firefighters=session['personnel'], hiring_tiers=hiring_tiers, platoon=session['platoon'])
 
 
 """Load the two platoons to be covered for; select which members are out"""
@@ -187,14 +197,14 @@ def hiring_c():
                         'shift': availability
                     }
                     print(open_shift)
-        """ ^ ^ ^ ^ CONTINUE WORK HERE ^ ^ ^ ^ """
+#         ^ ^ ^ ^ CONTINUE WORK HERE ^ ^ ^ ^ 
                 # Add to counter for next firefighter
                 counter += 1
 
             # Add to counter for next cover day
             day += 1
 
-        #
+
 
         
         return redirect("/hired")
@@ -276,6 +286,7 @@ def add_member():
 
         username = request.form.get("username")
         password = request.form.get("password")
+        rank = request.form.get("rank")
         platoon = request.form.get("platoon")
         active = request.form.get("active")
         elligibility = request.form.get("elligibility")
@@ -292,7 +303,7 @@ def add_member():
         hashword = generate_password_hash(password)
         
         # Insert username & password into db
-        db.execute(insert(User), {"username": username, "hash": hashword, "platoon": platoon, "active": active, "elligible": elligibility})
+        db.execute(insert(User), {"username": username, "hash": hashword, "rank": rank, "platoon": platoon, "active": active, "elligible": elligibility})
         db.commit()
         return render_template("added.html")
 
