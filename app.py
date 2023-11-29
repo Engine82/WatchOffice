@@ -185,16 +185,11 @@ def hiring_c():
     if request.method == "POST":
         
         # Create lists of empty shifts to be filled
-        cover_1_openings = []
-        cover_2_openings = []
+        ff_openings_1 = []
+        ff_openings_2 = []
+        officer_openings_1 = []
+        officer_openings_2 = []
 
-        # Loop through each cover day
-        day = 1
-        while day <= 2:
-
-            # 
-            covered_shift = "cover_" + str(day) + "_firefighters"
-            counter = 1
 
             # Loop through each firefighter (or vacancy)
             for firefighter in session[covered_shift]:
