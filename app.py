@@ -150,6 +150,7 @@ def hiring_b():
         session['firefighters_avail'] = firefighters_availability
         session['firefighters_hours'] = firefighters_hours
 
+
         print(f"officers avail: {officers_availability}")
         print(f"officers hours: {officers_hours}")
         print(f"firefighters avail: {firefighters_availability}")
@@ -251,25 +252,43 @@ def hiring_c():
         
         days_covered = {'day_1': cover_1, 'day_2': cover_2}
 
-        # Get firefighters list for each cover platoon
-        cover_1_firefighters = db.execute(select(User.username).where(User.platoon == cover_1).where(User.active == '1').order_by(User.id))
+        # Get officers & firefighters list for each cover platoon
+        cover_1_firefighters = db.execute(select(User.username).where(User.platoon == cover_1).where(User.active == '1').where(User.rank == "firefighter").order_by(User.id))
         cover_1_firefighters = cover_1_firefighters.mappings().all()
 
-        cover_2_firefighters = db.execute(select(User.username, User.active).where(User.platoon == cover_2).where(User.active == '1').order_by(User.id))
+        cover_1_officers = db.execute(select(User.username).where(User.platoon == cover_1).where(User.active == '1').where(User.rank != "firefighter").order_by(User.id))
+        cover_1_officers = cover_1_officers.mappings().all()
+
+        cover_2_firefighters = db.execute(select(User.username).where(User.platoon == cover_2).where(User.active == '1').where(User.rank == "firefighter").order_by(User.id))
         cover_2_firefighters = cover_2_firefighters.mappings().all()
+
+        cover_2_officers = db.execute(select(User.username).where(User.platoon == cover_2).where(User.active == '1').where(User.rank != "firefighter").order_by(User.id))
+        cover_2_officers = cover_2_officers.mappings().all()
+
 
         # Add vacancies to shifts up to full-size
         while len(cover_1_firefighters) < PLATOON_FIREFIGHTERS:
             cover_1_firefighters.append({'username': 'vacancy'})
         session['cover_1_firefighters'] = cover_1_firefighters
 
+        while len(cover_1_officers) < PLATOON_OFFICERS:
+            cover_1_officers.append({'username': 'vacancy'})
+        session['cover_1_officers'] = cover_1_officers
+
         while len(cover_2_firefighters) < PLATOON_FIREFIGHTERS:
             cover_2_firefighters.append({'username': 'vacancy'})
         session['cover_2_firefighters'] = cover_2_firefighters
 
+        while len(cover_2_officers) < PLATOON_OFFICERS:
+            cover_2_officers.append({'username': 'vacancy'})
+        session['cover_2_officers'] = cover_2_officers
+
         print(f"Cover 1: {session['cover_1_firefighters']}")
         print(f"Cover 2: {session['cover_2_firefighters']}")
-        return render_template("hiring_c.html", days_covered=days_covered, platoon=session['platoon'])
+        print(f"Cover 1: {session['cover_1_officers']}")
+        print(f"Cover 2: {session['cover_2_officers']}")
+
+        return render_template("hiring_c.html", cover_1_firefighters=cover_1_firefighters, cover_1_officers=cover_1_officers, cover_2_firefighters=cover_2_firefighters, cover_2_officers=cover_2_officers, days_covered=days_covered, platoon=session['platoon'])
 
 
 """Hire for shifts, return hiring list"""
