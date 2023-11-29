@@ -184,55 +184,114 @@ def hiring_c():
     # Fill empty shifts with available firefighters
     if request.method == "POST":
         
-        # Create lists of empty shifts to be filled
+        # Create lists of empty shifts & hours to be filled
         ff_openings_1 = []
+        ff_hours_1 = []
         ff_openings_2 = []
+        ff_hours_2 = []
         officer_openings_1 = []
+        officer_hours_1 = []
         officer_openings_2 = []
+        officer_hours_2 = []
 
         # Get openings for shifts in order:
+        # 1st cover day officers:
         counter_officer_1 = 1
+
+        # Loop through each officer and get status
         for officer in session['cover_1_officers']:
             form_id = "officer_1st_day_" + str(counter_officer_1)
             result = request.form.get(form_id)
+
+            # If officer is not working a 24, save their status
             if result != "working":
                 officer_openings_1.append({
                     'username': officer['username'],
                     'availability': result
                 })
+
+                # If officer is out hours, save the hours in a separate list
+                if result == "hours":
+                    start_id = "officer_hours_1_start_" + str(counter_officer_1)
+                    end_id = "officer_hours_1_end_" + str(counter_officer_1)
+                    officer_hours_1.append({
+                        'username': officer['username'],
+                        'start': request.form.get(start_id),
+                        'end': request.form.get(end_id)
+                    })
+
             counter_officer_1 += 1
-        
+
+        # Loop through each firefighter and get status
         counter_firefighter_1 = 1
         for firefighter in session['cover_1_firefighters']:
             form_id = "ff_1st_day_" + str(counter_firefighter_1)
             result = request.form.get(form_id)
+
+            # If ff is not working a 24, save their status
             if result != "working":
                 ff_openings_1.append({
                     'username': firefighter['username'],
                     'availability': result
                 })
+
+                # If ff is out hours, save the hours in a separate list
+                if result == "hours":
+                    start_id = "ff_hours_1_start_" + str(counter_firefighter_1)
+                    end_id = "ff_hours_1_end_" + str(counter_firefighter_1)
+                    ff_hours_1.append({
+                        'username': firefighter['username'],
+                        'start': request.form.get(start_id),
+                        'end': request.form.get(end_id)
+                    })
             counter_firefighter_1 += 1
 
+        # Loop through each officer and get status
         counter_officer_2 = 1
         for officer in session['cover_2_officers']:
             form_id = "officer_2nd_day_" + str(counter_officer_2)
             result = request.form.get(form_id)
+
+            # If officer is not working a 24, save their status
             if result != "working":
                 officer_openings_2.append({
                     'username': officer['username'],
                     'availability': result
-                })     
+                })
+
+                # If officer is out hours, save the hours in a separate list
+                if result == "hours":
+                    start_id = "officer_hours_2_start_" + str(counter_officer_2)
+                    end_id = "officer_hours_2_end_" + str(counter_officer_2)
+                    officer_hours_2.append({
+                        'username': officer['username'],
+                        'start': request.form.get(start_id),
+                        'end': request.form.get(end_id)
+                    })
             counter_officer_2 += 1
 
+        # Loop through each firefighter and get status
         counter_firefighter_2 = 1
         for firefighter in session['cover_2_firefighters']:
             form_id = "ff_2nd_day_" + str(counter_firefighter_2)
             result = request.form.get(form_id)
+
+            # If ff is not working a 24, save their status
             if result != "working":
                 ff_openings_2.append({
                     'username': firefighter['username'],
                     'availability': result
                 })
+
+                # If ff is out hours, save the hours in a separate list
+                if result == "hours":
+                    start_id = "ff_hours_2_start_" + str(counter_firefighter_2)
+                    end_id = "ff_hours_2_end_" + str(counter_firefighter_2)
+                    ff_hours_2.append({
+                        'username': firefighter['username'],
+                        'start': request.form.get(start_id),
+                        'end': request.form.get(end_id)
+                    })
             counter_firefighter_2 += 1
         
         print(f"Officer 1: {officer_openings_1}")
@@ -240,6 +299,10 @@ def hiring_c():
         print(f"Officer 2: {officer_openings_2}")
         print(f"FF 2: {ff_openings_2}")
 
+        print(f"Officer 1: {officer_hours_1}")
+        print(f"FF 1: {ff_hours_1}")
+        print(f"Officer 2: {officer_hours_2}")
+        print(f"FF 2: {ff_hours_2}")
     
         return redirect("/hired")
 
