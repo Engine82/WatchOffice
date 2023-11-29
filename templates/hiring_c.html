@@ -10,6 +10,40 @@
         <h2>Platoon {{ days_covered['day_1'] }}</h2>
             <table>
                 <tr>
+                    <th>Officer</th>
+                    <th>Status</th>
+                    <th>Hours</th>
+                </tr>
+                {% for officer in session['cover_1_officers'] %}              
+                    <tr>
+                        <td>
+                            {{ officer['username'] }}
+                        </td>
+                        <td>
+                            <select class="day" id="officer_1st_day_{{ loop.index }}" name="officer_1st_day_{{ loop.index }}" required>
+                                <option value="Working">Working</option>
+                                <option value="24">Out 24</option>
+                                <option value="day">Out Day</option>
+                                <option value="night">Out Night</option>
+                                <option value="hours">Out Hours</option>
+                            </select>
+                        </td>
+                        <td>
+                            <div class="hours_1" id="officer_hours_1_start_{{ loop.index }}">
+                                <label for="officer_hours_1_start_{{ loop.index }}">Hours out:</label>
+                                <input type="time" name="officer_hours_1_start_{{ loop.index }}">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="hours_1" id="officer_hours_1_end_{{ loop.index }}">
+                                <label for="officer_hours_1_end_{{ loop.index }}">to</label>
+                                <input type="time" name="officer_hours_1_end_{{ loop.index }}">
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+
+                <tr>
                     <th>Firefighter</th>
                     <th>Status</th>
                     <th>Hours</th>
@@ -20,7 +54,7 @@
                         {{ firefighter['username'] }}
                     </td>
                     <td>
-                        <select class="day" id="1st_day_{{ loop.index }}" name="1st_day_{{ loop.index }}" required>
+                        <select class="day" id="ff_1st_day_{{ loop.index }}" name="ff_1st_day_{{ loop.index }}" required>
                             <option value="Working">Working</option>
                             <option value="24">Out 24</option>
                             <option value="day">Out Day</option>
@@ -29,15 +63,15 @@
                         </select>
                     </td>
                     <td>
-                        <div class="hours_1" id="hours_1_start_{{ loop.index }}">
-                            <label for="hours_1_start_{{ loop.index }}">Hours out:</label>
-                            <input type="time" name="hours_1_start_{{ loop.index }}">
+                        <div class="hours_1" id="ff_hours_1_start_{{ loop.index }}">
+                            <label for="ff_hours_1_start_{{ loop.index }}">Hours out:</label>
+                            <input type="time" name="ff_hours_1_start_{{ loop.index }}">
                         </div>
                     </td>
                     <td>
-                        <div class="hours_1" id="hours_1_end_{{ loop.index }}">
-                            <label for="hours_1_end_{{ loop.index }}">to</label>
-                            <input type="time" name="hours_1_end_{{ loop.index }}">
+                        <div class="hours_1" id="ff_hours_1_end_{{ loop.index }}">
+                            <label for="ff_hours_1_end_{{ loop.index }}">to</label>
+                            <input type="time" name="ff_hours_1_end_{{ loop.index }}">
                         </div>
                     </td>
                 </tr>
@@ -49,6 +83,39 @@
                 <h2>Platoon {{ days_covered['day_2'] }}</h2>
             </tr>
             <tr>
+                <th>Officer</th>
+                <th>Status</th>
+                <th>Hours</th>
+            </tr>
+            {% for officer in session['cover_2_officers'] %}  
+                <tr>            
+                    <td>
+                        {{ officer['username'] }}
+                    </td>
+                    <td>
+                        <select class="day" id="officer_2nd_day_{{ loop.index }}" name="officer_2nd_day_{{ loop.index }}" required>
+                            <option value="available">Working</option>
+                            <option value="24">Out 24</option>
+                            <option value="day">Out Day</option>
+                            <option value="night">Out Night</option>
+                            <option value="hours">Out Hours</option>
+                        </select>
+                    </td>
+                    <td>
+                        <div class="hours_2" id="officer_hours_2_start_{{ loop.index }}">
+                            <label for="officer_hours_2_start_{{ loop.index }}">Hours out:</label>
+                            <input type="time" name="officer_hours_2_start_{{ loop.index }}">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="hours_1" id="officer_hours_2_end_{{ loop.index }}">
+                            <label for="officer_hours_2_end_{{ loop.index }}">to</label>
+                            <input type="time" name="officer_hours_2_end_{{ loop.index }}">
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+            <tr>
                 <th>Firefighter</th>
                 <th>Status</th>
                 <th>Hours</th>
@@ -59,7 +126,7 @@
                         {{ firefighter['username'] }}
                     </td>
                     <td>
-                        <select class="day" id="2nd_day_{{ loop.index }}" name="2nd_day_{{ loop.index }}" required>
+                        <select class="day" id="ff_2nd_day_{{ loop.index }}" name="ff_2nd_day_{{ loop.index }}" required>
                             <option value="available">Working</option>
                             <option value="24">Out 24</option>
                             <option value="day">Out Day</option>
@@ -68,15 +135,15 @@
                         </select>
                     </td>
                     <td>
-                        <div class="hours_2" id="hours_2_start_{{ loop.index }}">
-                            <label for="hours_2_start_{{ loop.index }}">Hours out:</label>
-                            <input type="time" name="hours_2_start_{{ loop.index }}">
+                        <div class="hours_2" id="ff_hours_2_start_{{ loop.index }}">
+                            <label for="ff_hours_2_start_{{ loop.index }}">Hours out:</label>
+                            <input type="time" name="ff_hours_2_start_{{ loop.index }}">
                         </div>
                     </td>
                     <td>
-                        <div class="hours_1" id="hours_2_end_{{ loop.index }}">
-                            <label for="hours_2_end_{{ loop.index }}">to</label>
-                            <input type="time" name="hours_2_end_{{ loop.index }}">
+                        <div class="hours_1" id="ff_hours_2_end_{{ loop.index }}">
+                            <label for="ff_hours_2_end_{{ loop.index }}">to</label>
+                            <input type="time" name="ff_hours_2_end_{{ loop.index }}">
                         </div>
                     </td>
                 </tr>
