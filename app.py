@@ -190,43 +190,57 @@ def hiring_c():
         officer_openings_1 = []
         officer_openings_2 = []
 
-
-            # Loop through each firefighter (or vacancy)
-            for firefighter in session[covered_shift]:
-                
-                # Create form identifier
-                if day == 1:
-                    place = "1st_"
-                elif day == 2:
-                    place = "2nd_"
-                
-                identifier = place + "day_" + str(counter)
-
-                # Get firefighter's status from html
-                availability = request.form.get(identifier)
-
-                # Add open shift to list of shifts to be filled:
-                print(firefighter)
-                if not firefighter.username:
-                    print("vacancy")
-                elif availability != "Available":
-
-                    open_shift = {
-                        'day': day,
-                        'username': firefighter.username,
-                        'shift': availability
-                    }
-                    print(open_shift)
-#         ^ ^ ^ ^ CONTINUE WORK HERE ^ ^ ^ ^ 
-                # Add to counter for next firefighter
-                counter += 1
-
-            # Add to counter for next cover day
-            day += 1
-
-
-
+        # Get openings for shifts in order:
+        counter_officer_1 = 1
+        for officer in session['cover_1_officers']:
+            form_id = "officer_1st_day_" + str(counter_officer_1)
+            result = request.form.get(form_id)
+            if result != "working":
+                officer_openings_1.append({
+                    'username': officer['username'],
+                    'availability': result
+                })
+            counter_officer_1 += 1
         
+        counter_firefighter_1 = 1
+        for firefighter in session['cover_1_firefighters']:
+            form_id = "ff_1st_day_" + str(counter_firefighter_1)
+            result = request.form.get(form_id)
+            if result != "working":
+                ff_openings_1.append({
+                    'username': firefighter['username'],
+                    'availability': result
+                })
+            counter_firefighter_1 += 1
+
+        counter_officer_2 = 1
+        for officer in session['cover_2_officers']:
+            form_id = "officer_2nd_day_" + str(counter_officer_2)
+            result = request.form.get(form_id)
+            if result != "working":
+                officer_openings_2.append({
+                    'username': officer['username'],
+                    'availability': result
+                })     
+            counter_officer_2 += 1
+
+        counter_firefighter_2 = 1
+        for firefighter in session['cover_2_firefighters']:
+            form_id = "ff_2nd_day_" + str(counter_firefighter_2)
+            result = request.form.get(form_id)
+            if result != "working":
+                ff_openings_2.append({
+                    'username': firefighter['username'],
+                    'availability': result
+                })
+            counter_firefighter_2 += 1
+        
+        print(f"Officer 1: {officer_openings_1}")
+        print(f"FF 1: {ff_openings_1}")
+        print(f"Officer 2: {officer_openings_2}")
+        print(f"FF 2: {ff_openings_2}")
+
+    
         return redirect("/hired")
 
     # Display the covered shifts form
@@ -291,7 +305,7 @@ def hiring_c():
 @login_required
 def hired():
     
-    # 
+    # Save approved hiring in db and print results
     if request.method == "POST":
         return render_template("hired.html")
 
