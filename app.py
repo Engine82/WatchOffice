@@ -53,7 +53,7 @@ def index():
 
 # HIRING
 # Hiring form / completed hiring
-"""Select which platoon is covering OT"""
+# Select which platoon is covering OT
 @app.route("/hiring_a", methods=["GET", "POST"])
 @login_required
 def hiring_a():
@@ -70,7 +70,7 @@ def hiring_a():
         return render_template("hiring_a.html")
 
 
-"""Select any members that are not available on cover days"""
+# Select any members that are not available on cover days
 @app.route("/hiring_b", methods=["GET", "POST"])
 @login_required
 def hiring_b():
@@ -154,11 +154,11 @@ def hiring_b():
         session['firefighters_avail'] = firefighters_availability
         session['firefighters_hours'] = firefighters_hours
 
-
         print(f"officers avail: {officers_availability}")
         print(f"officers hours: {officers_hours}")
         print(f"firefighters avail: {firefighters_availability}")
         print(f"firefighters hours: {firefighters_hours}")
+
         return redirect("/hiring_c")
 
     # Display the availability form
@@ -180,7 +180,7 @@ def hiring_b():
         return render_template("hiring_b.html", cover_days=session['cover_days'], days_covered=DAYS_COVERED, firefighters=session['personnel'], hiring_tiers=session['hiring_tiers'], platoon=session['platoon'])
 
 
-"""Load the two platoons to be covered for; select which members are out"""
+# Load the two platoons to be covered for; select which members are out
 @app.route("/hiring_c", methods=["GET", "POST"])
 @login_required
 def hiring_c():
@@ -248,6 +248,7 @@ def hiring_c():
                         'start': request.form.get(start_id),
                         'end': request.form.get(end_id)
                     })
+
             counter_firefighter_1 += 1
 
         # Loop through each officer and get status
@@ -272,6 +273,7 @@ def hiring_c():
                         'start': request.form.get(start_id),
                         'end': request.form.get(end_id)
                     })
+
             counter_officer_2 += 1
 
         # Loop through each firefighter and get status
@@ -296,6 +298,7 @@ def hiring_c():
                         'start': request.form.get(start_id),
                         'end': request.form.get(end_id)
                     })
+
             counter_firefighter_2 += 1
         
         print(f"Officer 1: {session['officer_openings_1']}")
@@ -312,6 +315,7 @@ def hiring_c():
 
     # Display the covered shifts form
     else:
+        
         # Get cover platoons
         if session['platoon'] == '1':
             cover_1 = 4
@@ -377,7 +381,7 @@ def hired():
         return render_template("hired.html")
 
     # Assign shifts & Display completed hiring
-    if request.method == "GET":
+    else request.method == "GET":
         # For each cover day
         # For officers and firefighters
         # Iterate over each opening
@@ -394,7 +398,6 @@ def add_member():
 
     # Add member to db
     if request.method == "POST":
-
 
         # Check for inputs
         if not request.form.get("username"):
