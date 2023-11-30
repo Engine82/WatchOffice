@@ -372,8 +372,13 @@ def hired():
     if request.method == "POST":
         return render_template("hired.html")
 
-    # Display completed hiring
+    # Assign shifts & Display completed hiring
     if request.method == "GET":
+        # For each cover day
+        # For officers and firefighters
+        # Iterate over each opening
+        # Assign NTW or next up person to open shift & flip tags
+            # If next up person is unavailable because of dept business, assign NTW
         return render_template("hired.html")
 
 
