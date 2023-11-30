@@ -11,7 +11,6 @@ GOALS:
 
 +------------------------------------------------------------------------------------------------------------------------------+
 Things to Fix/Change:
-- Add to db: tag flipped/unflipped status, NTW (use number for order of NTW, not as a bool(?))
 +------------------------------------------------------------------------------------------------------------------------------+
 
     HIRING B - covering shift availability
@@ -53,13 +52,13 @@ Things to Fix/Change:
         For each full shift (12 hrs)
             Hire from NTW's
             Hire from available
-                - if no one available:
-                    hire of 96 off
-        for each partial shift (hours)
+                If no one available:
+                    Hire of 96 off
+        For each partial shift (hours)
             Hire from NTW's
             Hire from available
-                - if no one available:
-                    hire of 96 off
+                If no one available:
+                    Hire of 96 off
 
     Hire means:
         - save in list (one list per day of all things hired for)
@@ -68,12 +67,12 @@ Things to Fix/Change:
                 - if all are flipped: unflip all
 
     Once all hiring done/All shifts filled:
-    - loop through each dictin lists:
+    - loop through each dict in lists:
         - enter into covered_shifts db
             - date, shift/hours, covered ff, covering ff, hiring version, active, timestamp
     - Check list for next-up firefghter
     - Print/display Hiring:
-        HTML?:
+        HTML:
             Date
             Hiring
             Date
@@ -195,7 +194,7 @@ Calendar/Digital Pad:
 - Specifics of implementation: requires further research
 
 Fully automate hiring:
-- Hiring is automatically done at 8:59AM every first-day
+- Hiring is automatically done at 8:00AM every first-day
 - If a change is made after hiring is done, it is automatically updated, and members are texted with update
 
 - Specifics are going to depend on implementation of calendar
@@ -206,7 +205,7 @@ Fully automate hiring:
         - GET: Current calendar
     - Add shift page
         - GET: Form for what shift to change
-        - POST: update db's, display updated calendar
+        - POST: update db's, redirect to display updated calendar
 
 
 +------------------------------------------------------------------------------------------------------------------------------+
