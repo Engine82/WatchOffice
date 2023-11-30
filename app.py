@@ -381,7 +381,7 @@ def hired():
         return render_template("hired.html")
 
     # Assign shifts & Display completed hiring
-    else request.method == "GET":
+    else:
         # For each cover day
         # For officers and firefighters
         # Iterate over each opening
