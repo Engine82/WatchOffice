@@ -37,6 +37,10 @@
                                 </select>
                             </td>
                             <td>
+                                <label for="ntw_{{ i + 1 }}_{{ rank['tier'] }}_{{ loop.index }}">Department Business:</label>
+                                <input type="checkbox" id="ntw_{{ i + 1 }}_{{ rank['tier'] }}_{{ loop.index }}" name="ntw_{{ i + 1 }}_{{ rank['tier'] }}_{{ loop.index }}" value="1">
+                            </td>
+                            <td>
                                 <div class="hours_1" id="hours_{{ i + 1 }}_{{ rank['tier'] }}_start_{{ loop.index }}">
                                     <label for="hours_{{ i + 1 }}_{{ rank['tier'] }}_start_{{ loop.index }}">Hours unavailable:</label>
                                     <input type="time" name="hours_{{ i + 1 }}_{{ rank['tier'] }}_start_{{ loop.index }}">
@@ -47,7 +51,7 @@
                                     <label for="hours_{{ i + 1 }}_{{ rank['tier'] }}_end_{{ loop.index }}">to</label>
                                     <input type="time" name="hours_{{ i + 1 }}_{{ rank['tier'] }}_end_{{ loop.index }}">
                                 </div>
-                            </td>                    
+                            </td>                  
                         </tr>
                     {% endfor %}
                 {% endfor %}

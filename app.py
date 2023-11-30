@@ -93,13 +93,17 @@ def hiring_b():
             for person in rank:
                 
                 # Create html tag id and collect this firefighter's availability
-                form_id_1 = "day_1_" + session['hiring_tiers'][tier - 1]['tier'] + "_" + str(person_counter)
-                form_id_2 = "day_2_" + session['hiring_tiers'][tier - 1]['tier'] + "_" + str(person_counter)
+                day_1 = "day_1_" + session['hiring_tiers'][tier - 1]['tier'] + "_" + str(person_counter)
+                ntw_1 = "ntw_1_" + session['hiring_tiers'][tier - 1]['tier'] + "_" + str(person_counter)
+                day_2 = "day_2_" + session['hiring_tiers'][tier - 1]['tier'] + "_" + str(person_counter)
+                ntw_2 = "ntw_2_" + session['hiring_tiers'][tier - 1]['tier'] + "_" + str(person_counter)
 
                 results_avail = {
                     'username': person['username'],
-                    'avail_1': request.form.get(form_id_1),
-                    'avail_2': request.form.get(form_id_2)
+                    'avail_1': request.form.get(day_1),
+                    'dept_business_1': request.form.get(ntw_1),
+                    'avail_2': request.form.get(day_2),
+                    'dept_business_2': request.form.get(ntw_2)
                 }
 
                 # Add results to firefighters list
