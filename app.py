@@ -410,29 +410,25 @@ def hired():
                 for opening in session[rank_lower + "_openings_" + str(day)]:
 
                     # Get this open shift's info
-                    avail_day = "avail_" + str(day)
-                    shift = {'member': opening['username'], 'availability': 'day'}
+                    shift_day = {'member': opening['username'], 'availability': 'day'}
+                    shift_night = {'member': opening['username'], 'availability': 'night'}
 
                     # Day
                     if opening['availability'] == 'day':
-                        session[rank_lower + "_cover_day_" + str(day)].append({
-                            'member': opening['username'],
-                            'availability': 'day'
-                            })
+                        session[rank_lower + "_cover_day_" + str(day)].append(shift_day)
 
                     # Night
                     elif opening['availability'] == 'night':
-                        session[rank_lower + "_cover_night_" + str(day)].append({
-                            'member': opening['username'],
-                            'availability': 'night'
-                            })
+                        session[rank_lower + "_cover_night_" + str(day)].append(shift_night)
 
                     # 24
                     elif opening['availability'] == '24':
-                        shift_day = {'member': opening['username'], 'availability': 'day'}
-                        shift_night = {'member': opening['username'], 'availability': 'night'}
                         session[rank_lower + "_cover_day_" + str(day)].append(shift_day)
                         session[rank_lower + "_cover_night_" + str(day)].append(shift_night)
+
+                    # Hours
+                    elif opening['availability'] == 'hours':
+
                     
                 day += 1
                         
@@ -445,7 +441,7 @@ def hired():
         ntw_list = db.execute(select(Ntw.user_id).where(Ntw.platoon == session['platoon']).order_by(Ntw.id))
         ntw_list = ntw_list.mappings().all()
         print(f"NTW List: {ntw_list}")
-        print(len(ntw_list))
+        print(f" NTW length: {len(ntw_list)}")
 
         # For each cover day
         day = 1
@@ -454,19 +450,16 @@ def hired():
 
         # For officers and firefighters
             for rank in session['hiring_tiers']:
-                print( )
                 print(f"Rank: {rank['tier']}")
 
                 # Iterate over each opening (on this day, at this rank)
                 shifts_list = rank['tier'].lower() + "_openings_" + str(day)
-                print(shifts_list)
-                print(f"shifts list: {session[shifts_list]}")
                 for shift in session[shifts_list]:
                     print(f"shift: {shift}")
 
                     # First hire from NTW
                     if len(ntw_list) != 0:
-                        print(ntw_list[0])
+                        print(f"NTW_list: {ntw_list}")
                         # If first person is available
                         if ntw_list[0]['availability']:
                             print( )
