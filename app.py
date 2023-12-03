@@ -90,6 +90,7 @@ def hiring_b():
 
             # Loop through each person at that rank
             person_counter = 1
+            print("start person loop")
             for person in rank:
                 
                 # Create html tag id and collect this firefighter's availability
@@ -103,9 +104,10 @@ def hiring_b():
                     'avail_1': request.form.get(day_1),
                     'dept_business_1': request.form.get(ntw_1),
                     'avail_2': request.form.get(day_2),
-                    'dept_business_2': request.form.get(ntw_2)
+                    'dept_business_2': request.form.get(ntw_2),
+                    'tag_flipped': session['personnel'][tier - 1][person_counter - 1]['tag_flipped']
                 }
-
+                print(results_avail)
                 # Add results to firefighters list
                 if tier == 1:
                     officers_availability.append(results_avail)
@@ -165,10 +167,10 @@ def hiring_b():
     else:
 
         # query db for list of elligible officers & firefighters and save as dicts
-        officers = db.execute(select(User.id, User.username, User.rank).where(User.platoon == session['platoon']).where(User.elligible == "1").where(User.active == "1").where(User.rank != "firefighter").order_by(User.id))
+        officers = db.execute(select(User.id, User.username, User.rank, User.tag_flipped).where(User.platoon == session['platoon']).where(User.elligible == "1").where(User.active == "1").where(User.rank != "firefighter").order_by(User.id))
         officers = officers.mappings().all()
 
-        firefighters = db.execute(select(User.id, User.username, User.rank).where(User.platoon == session['platoon']).where(User.elligible == "1").where(User.active == "1").where(User.rank == "firefighter").order_by(User.id))
+        firefighters = db.execute(select(User.id, User.username, User.rank, User.tag_flipped).where(User.platoon == session['platoon']).where(User.elligible == "1").where(User.active == "1").where(User.rank == "firefighter").order_by(User.id))
         firefighters = firefighters.mappings().all()
 
         session['personnel'] = [officers, firefighters]
@@ -376,13 +378,13 @@ def hiring_c():
 @login_required
 def hired():
     
-    # Save approved hiring in db and print results
+    # POST: Save approved hiring in db and print results
     if request.method == "POST":
         return render_template("hired.html")
 
     # GET: Assign shifts & Display completed hiring
     else:
-        
+        # Create list for hired-for shifts
         # For each cover day
         day = 1
         while day <= DAYS_COVERED:
@@ -390,31 +392,48 @@ def hired():
 
         # For officers and firefighters
             for rank in session['hiring_tiers']:
-                print(f"Rank: {rank['tier']}")
                 print( )
+                print(f"Rank: {rank['tier']}")
 
-                # Iterate over each opening
+                # Iterate over each opening (on this day, at this rank)
                 shifts_list = rank['tier'].lower() + "_openings_" + str(day)
                 print(shifts_list)
-                print(session[shifts_list])
+                print(f"shifts list: {session[shifts_list]}")
                 for shift in session[shifts_list]:
                     print(f"shift: {shift}")
 
-                    # IF officer/firefighter on this shift:
+                    # For each officer/firefighter on this shift...
                     covering_avail = rank['tier'].lower() + "_avail"
                     print(covering_avail)
                     print(session[covering_avail])
-                    """ WORKS w/o nput, but does it work with input???"""
                     for member in session[covering_avail]:
                         print(member)
 
-                        # has ntw
+                        # First, hire from NTW's
+                        # Then hire next not-flipped person
+
+                        # NTW:
+                        # Make a list of NTW's before looping through anything
+                        # Then first check NTW list:
+                        # If empty
+                            # Break
+                        # Else if someone has ntw
+                            # If first person is available
+                                # Hire them
+                            # Else, move to next
+                        
+
+
+                        # has ntw (iterate through entire NTW list) - prep beforehand?
+                        # or is next up
+                        if member['tag_flipped'] == 0:
+                            member.hire()
+
 
                         # and is available
                         status = "avail_" + str(day)
                         if member[status] != "available":
-                            print("Success")
-                            print(member)
+                            print(f"{member} not available")
 
                         # hire them for this shift
             
