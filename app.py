@@ -384,6 +384,60 @@ def hired():
 
     # GET: Assign shifts & Display completed hiring
     else:
+        # Break hiring lists down into day/night
+        # Create lists for cover shifts
+        session['officers_cover_day_1'] = []
+        session['officers_cover_night_1'] = []
+        session['officers_cover_day_2'] = []
+        session['officers_cover_night_2'] = []
+        session['firefighters_cover_day_1'] = []
+        session['firefighters_cover_night_1'] = []
+        session['firefighters_cover_day_2'] = []
+        session['firefighters_cover_night_2'] = []
+
+        day_night_lists = ['day_1', 'day_2', ]
+        cover_lists = ['openings_1', 'openings_2']
+
+        # Iterate through each rank
+        for rank in session['hiring_tiers']:
+
+            # Iterate through each day
+            day = 1
+            while day <= DAYS_COVERED:
+
+                # Iterate through each opening
+                rank_lower = rank['tier'].lower()
+                for opening in session[rank_lower + "_openings_" + str(day)]:
+
+                    # Get this open shift's info
+                    avail_day = "avail_" + str(day)
+                    shift = {'member': opening['username'], 'availability': 'day'}
+
+                    # Day
+                    if opening['availability'] == 'day':
+                        session[rank_lower + "_cover_day_" + str(day)].append({
+                            'member': opening['username'],
+                            'availability': 'day'
+                            })
+
+                    # Night
+                    elif opening['availability'] == 'night':
+                        session[rank_lower + "_cover_night_" + str(day)].append({
+                            'member': opening['username'],
+                            'availability': 'night'
+                            })
+
+                    # 24
+                    elif opening['availability'] == '24':
+                        shift_day = {'member': opening['username'], 'availability': 'day'}
+                        shift_night = {'member': opening['username'], 'availability': 'night'}
+                        session[rank_lower + "_cover_day_" + str(day)].append(shift_day)
+                        session[rank_lower + "_cover_night_" + str(day)].append(shift_night)
+                    
+                day += 1
+                        
+
+
         # Create list for hired-for shifts
         session['completed_hiring'] = []
 
@@ -396,7 +450,7 @@ def hired():
         # For each cover day
         day = 1
         while day <= DAYS_COVERED:
-            print(f"Day {day}")
+            print(f"Cover day {day}")
 
         # For officers and firefighters
             for rank in session['hiring_tiers']:
@@ -414,7 +468,8 @@ def hired():
                     if len(ntw_list) != 0:
                         print(ntw_list[0])
                         # If first person is available
-                        if ntw_list[0]['']
+                        if ntw_list[0]['availability']:
+                            print( )
                             # Hire them
                         # Else, move to next NTW                        
 
