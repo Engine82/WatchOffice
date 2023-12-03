@@ -7,7 +7,7 @@ from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from helpers import login_required
-from helpers import Base, User
+from helpers import Base, User, Ntw
 
 
 # Configure app
@@ -385,6 +385,14 @@ def hired():
     # GET: Assign shifts & Display completed hiring
     else:
         # Create list for hired-for shifts
+        session['completed_hiring'] = []
+
+        # Create list of NTW tag holders on this platoon
+        ntw_list = db.execute(select(Ntw.user_id).where(Ntw.platoon == session['platoon']).order_by(Ntw.id))
+        ntw_list = ntw_list.mappings().all()
+        print(f"NTW List: {ntw_list}")
+        print(len(ntw_list))
+
         # For each cover day
         day = 1
         while day <= DAYS_COVERED:
@@ -402,6 +410,15 @@ def hired():
                 for shift in session[shifts_list]:
                     print(f"shift: {shift}")
 
+                    # First hire from NTW
+                    if len(ntw_list) != 0:
+                        print(ntw_list[0])
+                        # If first person is available
+                        if ntw_list[0]['']
+                            # Hire them
+                        # Else, move to next NTW                        
+
+                    # Then hire normally
                     # For each officer/firefighter on this shift...
                     covering_avail = rank['tier'].lower() + "_avail"
                     print(covering_avail)
@@ -409,25 +426,16 @@ def hired():
                     for member in session[covering_avail]:
                         print(member)
 
-                        # First, hire from NTW's
-                        # Then hire next not-flipped person
-
                         # NTW:
-                        # Make a list of NTW's before looping through anything
-                        # Then first check NTW list:
-                        # If empty
-                            # Break
-                        # Else if someone has ntw
-                            # If first person is available
-                                # Hire them
-                            # Else, move to next
+
+                        # Else continue to normal hiring
+
                         
 
 
                         # has ntw (iterate through entire NTW list) - prep beforehand?
                         # or is next up
-                        if member['tag_flipped'] == 0:
-                            member.hire()
+
 
 
                         # and is available
@@ -435,8 +443,11 @@ def hired():
                         if member[status] != "available":
                             print(f"{member} not available")
 
-                        # hire them for this shift
-            
+                        # And is next up
+                        if member['tag_flipped'] == 0:
+                        
+                            # hire them for this shift
+                            member.hire()            
             day += 1
 
         # Assign NTW or next up person to open shift & flip tags
