@@ -40,3 +40,12 @@ class User (Base):
     elligible: Mapped[int]
     tag_flipped: Mapped[int]
     created_at: Mapped[datetime] = mapped_column(init=False, server_default=func.now())
+
+
+# SQLAlchemy class for next_to_work table
+class Ntw (Base):
+    __tablename__ = "next_to_work"
+
+    id: Mapped[int] = mapped_column(primary_key=True, init=False)
+    user_id: Mapped[str]
+    platoon: Mapped[int]
