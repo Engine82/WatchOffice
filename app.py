@@ -1,3 +1,4 @@
+from datetime import datetime
 from sqlalchemy import create_engine, insert, select
 from sqlalchemy.orm import sessionmaker
 from flask import Flask, redirect, render_template, request, session
@@ -394,6 +395,14 @@ def hired():
         session['firefighters_cover_night_1'] = []
         session['firefighters_cover_day_2'] = []
         session['firefighters_cover_night_2'] = []
+        session['officers_hours_day_1'] = []
+        session['officers_hours_night_1'] = []
+        session['officers_hours_day_2'] = []
+        session['officers_hours_night_2'] = []
+        session['firefighters_hours_day_1'] = []
+        session['firefighters_hours_night_1'] = []
+        session['firefighters_hours_day_2'] = []
+        session['firefighters_hours_night_2'] = []
 
         day_night_lists = ['day_1', 'day_2', ]
         cover_lists = ['openings_1', 'openings_2']
@@ -407,6 +416,7 @@ def hired():
 
                 # Iterate through each opening
                 rank_lower = rank['tier'].lower()
+                hours_counter = 0
                 for opening in session[rank_lower + "_openings_" + str(day)]:
 
                     # Get this open shift's info
@@ -428,6 +438,36 @@ def hired():
 
                     # Hours
                     elif opening['availability'] == 'hours':
+                        # Get hours input from user
+                        label = rank_lower + "_hours_" + str(day)
+                        print(f"Label: {label}")
+                        print(f"Opening: {opening}")
+                        print(f"Session label: {session[label]}")
+                        start_time = session[label][hours_counter]['start']
+                        end_time = session[label][hours_counter]['end']
+                        start_date = ????
+                        end_date = ????
+                        cover_date = ??????
+                        print(start_time)
+                        print(end_time)
+                        print(start_date)
+                        print(end_date)
+
+                        # Check for sensible input
+                        # If start time is after end time, it must be on different days
+                        if start_time > end_time and end_date <= start_date:                            
+                            print("start_time > end_time")
+                            render_template(apology, "hours start after hours end")
+                
+                        if start_time < "19:00" and end_time < "19:00" and start_date == cover_date:
+                            session[rank_lower + "_hours_day_" + str(day)].append({
+                                'username': opening['username'],
+                                'start_date': start_date,
+                                'start_time': start_time,
+                                'end_date': end_date,
+                                'end_time': end_time
+                            })
+                        # Remove first dict from hours list!!!!!
 
                     
                 day += 1
