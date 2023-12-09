@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date, timedelta
 from sqlalchemy import create_engine, insert, select
 from sqlalchemy.orm import sessionmaker
 from flask import Flask, redirect, render_template, request, session
@@ -205,7 +205,7 @@ def hiring_c():
         # 1st cover day officers:
         counter_officer_1 = 1
 
-        # Loop through each officer and get status
+        # Loop through each officer and get status - Day 1
         for officer in session['cover_1_officers']:
             form_id = "officers_1st_day_" + str(counter_officer_1)
             result = request.form.get(form_id)
@@ -219,17 +219,26 @@ def hiring_c():
 
                 # If officer is out hours, save the hours in a separate list
                 if result == "hours":
-                    start_id = "officers_hours_1_start_" + str(counter_officer_1)
-                    end_id = "officers_hours_1_end_" + str(counter_officer_1)
+                    start_time = request.form.get("officers_hours_1_start_" + str(counter_officer_1))
+                    start_date = date.today()
+                    end_time = request.form.get("officers_hours_1_end_" + str(counter_officer_1))
+                    end_date = date.today()
+                    if "00:00" <= start_time < "07:00":
+                        start_date = start_date + timedelta(1)
+                    if "00:00" <= end_time < "07:00":
+                        end_date = end_date + timedelta(1)
+                    
                     session['officers_hours_1'].append({
                         'username': officer['username'],
-                        'start': request.form.get(start_id),
-                        'end': request.form.get(end_id)
+                        'start': start_time,
+                        'start_date': start_date.strftime('%Y, %m, %d'),
+                        'end': end_time,
+                        'end_date': end_date.strftime('%Y, %m, %d')
                     })
 
             counter_officer_1 += 1
 
-        # Loop through each firefighter and get status
+        # Loop through each firefighter and get status - Day 1
         counter_firefighter_1 = 1
         for firefighter in session['cover_1_firefighters']:
             form_id = "firefighters_1st_day_" + str(counter_firefighter_1)
@@ -244,17 +253,26 @@ def hiring_c():
 
                 # If ff is out hours, save the hours in a separate list
                 if result == "hours":
-                    start_id = "firefighters_hours_1_start_" + str(counter_firefighter_1)
-                    end_id = "firefighters_hours_1_end_" + str(counter_firefighter_1)
+                    start_time = request.form.get("firefighters_hours_1_start_" + str(counter_firefighter_1))
+                    start_date = date.today()
+                    end_time = request.form.get("firefighters_hours_1_end_" + str(counter_firefighter_1))
+                    end_date = date.today()
+                    if "00:00" <= start_time < "07:00":
+                        start_date = start_date + timedelta(1)
+                    if "00:00" <= end_time < "07:00":
+                        end_date = end_date + timedelta(1)
+
                     session['firefighters_hours_1'].append({
-                        'username': firefighter['username'],
-                        'start': request.form.get(start_id),
-                        'end': request.form.get(end_id)
+                        'username': officer['username'],
+                        'start': start_time,
+                        'start_date': start_date.strftime('%Y, %m, %d'),
+                        'end': end_time,
+                        'end_date': end_date.strftime('%Y, %m, %d')
                     })
 
             counter_firefighter_1 += 1
 
-        # Loop through each officer and get status
+        # Loop through each officer and get status - Day 2
         counter_officer_2 = 1
         for officer in session['cover_2_officers']:
             form_id = "officers_2nd_day_" + str(counter_officer_2)
@@ -269,17 +287,27 @@ def hiring_c():
 
                 # If officer is out hours, save the hours in a separate list
                 if result == "hours":
-                    start_id = "officers_hours_2_start_" + str(counter_officer_2)
-                    end_id = "officers_hours_2_end_" + str(counter_officer_2)
+                    start_time = request.form.get("officers_hours_2_start_" + str(counter_officer_2))
+                    start_date = date.today()
+                    end_time = request.form.get("officers_hours_2_end_" + str(counter_officer_2))
+                    end_date = date.today()
+                    if "00:00" <= start_time < "07:00":
+                        start_date = start_date + timedelta(1)
+                    if "00:00" <= end_time < "07:00":
+                        end_date = end_date + timedelta(1)
+
+                    
                     session['officers_hours_2'].append({
                         'username': officer['username'],
-                        'start': request.form.get(start_id),
-                        'end': request.form.get(end_id)
+                        'start': start_time,
+                        'start_date': start_date.strftime('%Y, %m, %d'),
+                        'end': end_time,
+                        'end_date': end_date.strftime('%Y, %m, %d')
                     })
 
             counter_officer_2 += 1
 
-        # Loop through each firefighter and get status
+        # Loop through each firefighter and get status - Day 2
         counter_firefighter_2 = 1
         for firefighter in session['cover_2_firefighters']:
             form_id = "firefighters_2nd_day_" + str(counter_firefighter_2)
@@ -294,12 +322,22 @@ def hiring_c():
 
                 # If ff is out hours, save the hours in a separate list
                 if result == "hours":
-                    start_id = "firefighters_hours_2_start_" + str(counter_firefighter_2)
-                    end_id = "firefighters_hours_2_end_" + str(counter_firefighter_2)
+                    start_time = request.form.get("firefighters_hours_2_start_" + str(counter_firefighter_2))
+                    start_date = date.today()
+                    end_time = request.form.get("firefighters_hours_2_end_" + str(counter_firefighter_2))
+                    end_date = date.today()
+                    if "00:00" <= start_time < "07:00":
+                        start_date = start_date + timedelta(1)
+                    if "00:00" <= end_time < "07:00":
+                        end_date = end_date + timedelta(1)
+
+                    
                     session['firefighters_hours_2'].append({
-                        'username': firefighter['username'],
-                        'start': request.form.get(start_id),
-                        'end': request.form.get(end_id)
+                        'username': officer['username'],
+                        'start': start_time,
+                        'start_date': start_date.strftime('%Y, %m, %d'),
+                        'end': end_time,
+                        'end_date': end_date.strftime('%Y, %m, %d')
                     })
 
             counter_firefighter_2 += 1
@@ -441,7 +479,7 @@ def hired():
                         # Get hours input from user
                         label = rank_lower + "_hours_" + str(day)
                         print(f"Label: {label}")
-                        print(f"Opening: {opening}")
+                        """print(f"Opening: {opening}")
                         print(f"Session label: {session[label]}")
                         start_time = session[label][hours_counter]['start']
                         end_time = session[label][hours_counter]['end']
@@ -466,7 +504,7 @@ def hired():
                                 'start_time': start_time,
                                 'end_date': end_date,
                                 'end_time': end_time
-                            })
+                            })"""
                         # Remove first dict from hours list!!!!!
 
                     
