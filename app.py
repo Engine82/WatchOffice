@@ -128,14 +128,24 @@ def hiring_b():
 
                         # Create html tag id's
                         start_id = "hours_" + str(day) + "_" + session['hiring_tiers'][tier - 1]['tier'] + "_start_" + str(person_counter)
+                        start_time = request.form.get(start_id)
                         end_id = "hours_" + str(day) + "_" + session['hiring_tiers'][tier - 1]['tier'] + "_end_" + str(person_counter)
+                        end_time = request.form.get(end_id)
+                        start_date = date.today()
+                        end_date = date.today()
+                        if "00:00" <= start_time < "07:00":
+                            start_date = start_date + timedelta(1)
+                        if "00:00" <= end_time < "07:00":
+                            end_date = end_date + timedelta(1)
 
                         # Get start and end hours, and save in dict
                         results_hours = {
                             'day': day,
                             'username': person['username'],
-                            'hours_start': request.form.get(start_id),
-                            'hours_end': request.form.get(end_id)
+                            'hours_start': start_time,
+                            'start_date': start_date.strftime('%Y, %m, %d'),
+                            'hours_end': end_time,
+                            'end_date': end_date.strftime('%Y, %m, %d')
                         }
 
                         # Add results to appropriate hours list
@@ -479,13 +489,14 @@ def hired():
                         # Get hours input from user
                         label = rank_lower + "_hours_" + str(day)
                         print(f"Label: {label}")
-                        """print(f"Opening: {opening}")
+                        print(f"Opening: {opening}")
                         print(f"Session label: {session[label]}")
                         start_time = session[label][hours_counter]['start']
                         end_time = session[label][hours_counter]['end']
-                        start_date = ????
-                        end_date = ????
-                        cover_date = ??????
+                        start_date = session[label][hours_counter]['start_date']
+                        end_date = session[label][hours_counter]['end_date']
+                        cover_date = datetime.today()
+                        print(cover_date.strftime('%Y, %m, %d'))
                         print(start_time)
                         print(end_time)
                         print(start_date)
@@ -504,7 +515,7 @@ def hired():
                                 'start_time': start_time,
                                 'end_date': end_date,
                                 'end_time': end_time
-                            })"""
+                            })
                         # Remove first dict from hours list!!!!!
 
                     
