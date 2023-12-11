@@ -486,7 +486,8 @@ def hired():
 
                     # Hours
                     elif opening['availability'] == 'hours':
-                        # Get hours input from user
+
+                        # Get user's hours input and assign start/end dates
                         label = rank_lower + "_hours_" + str(day)
                         print(f"Label: {label}")
                         print(f"Opening: {opening}")
@@ -496,32 +497,66 @@ def hired():
                         start_date = session[label][hours_counter]['start_date']
                         end_date = session[label][hours_counter]['end_date']
                         cover_date = datetime.today()
-                        print(cover_date.strftime('%Y, %m, %d'))
-                        print(start_time)
-                        print(end_time)
-                        print(start_date)
-                        print(end_date)
+
+                        hours_dict = {
+                                'username': opening['username'],
+                                'start_date': start_date,
+                                'start_time': start_time,
+                                'end_date': end_date,
+                                'end_time': end_time
+                            }
 
                         # Check for sensible input
                         # If start time is after end time, it must be on different days
                         if start_time > end_time and end_date <= start_date:                            
                             print("start_time > end_time")
                             render_template(apology, "hours start after hours end")
-                
+
+                        # If hours during day shift, add hours to day hours list
                         if start_time < "19:00" and end_time < "19:00" and start_date == cover_date:
+                            session[rank_lower + "_hours_day_" + str(day)].append(hours_dict)
+                            print(f"Appended: {session[rank_lower + '_hours_day_' + str(day)]}")
+
+                        # If hours are all in the evening before midnight
+                        elif start_time >= "19:00" and end_time >= "19:00":
+                            session[rank_lower + "_hours_night_" + str(day)].append(hours_dict)
+                            print(f"Appended: {session[rank_lower + '_hours_night_' + str(day)]}")
+                            
+                        # If hours during night shift, all past midnight, add hours to night hours list
+                        elif start_time < "07:00" and end_time < "07:00" and start_date == cover_date + timedelta(1):
+                            session[rank_lower + "_hours_night_" + str(day)].append(hours_dict)
+                            print(f"Appended: {session[rank_lower + '_hours_night_' + str(day)]}")
+
+                        # If hours start before midnight and end after midnight:
+                        elif start_time > "19:00" and end_time < "07:00" and end_date == cover_date + timedelta(1):
                             session[rank_lower + "_hours_day_" + str(day)].append({
                                 'username': opening['username'],
                                 'start_date': start_date,
                                 'start_time': start_time,
+                                'end_date': start_date,
+                                'end_time': "18:59"
+                            })
+                            session[rank_lower + "_hours_night_" + str(day)].append({
+                                'username': opening['username'],
+                                'start_date': start_date,
+                                'start_time': "19:00",
                                 'end_date': end_date,
                                 'end_time': end_time
                             })
+                            print(f"Appended: {session[rank_lower + '_hours_day_' + str(day)]}")
+                            print(f"Appended: {session[rank_lower + '_hours_night_' + str(day)]}")
+                                                    
                         # Remove first dict from hours list!!!!!
-
+                        # Look up how to remove the first item in a list
                     
                 day += 1
                         
 
+        print(session['officers_hours_day_1'],
+            session['officers_hours_night_1'],
+            session['officers_hours_day_2'],
+            session['officers_hours_night_2']
+        )
 
         # Create list for hired-for shifts
         session['completed_hiring'] = []
