@@ -455,6 +455,7 @@ def hired():
         day_night_lists = ['day_1', 'day_2', ]
         cover_lists = ['openings_1', 'openings_2']
 
+        # Organize each day's shifts to be covered into the appropriate list
         # Iterate through each rank
         for rank in session['hiring_tiers']:
 
@@ -500,6 +501,7 @@ def hired():
 
                         hours_dict = {
                                 'username': opening['username'],
+                                'covered_by': 'covering_member',
                                 'start_date': start_date,
                                 'start_time': start_time,
                                 'end_date': end_date,
@@ -531,6 +533,7 @@ def hired():
                         elif start_time > "19:00" and end_time < "07:00" and end_date == cover_date + timedelta(1):
                             session[rank_lower + "_hours_day_" + str(day)].append({
                                 'username': opening['username'],
+                                'covered_by': 'covering_member',
                                 'start_date': start_date,
                                 'start_time': start_time,
                                 'end_date': start_date,
@@ -538,6 +541,7 @@ def hired():
                             })
                             session[rank_lower + "_hours_night_" + str(day)].append({
                                 'username': opening['username'],
+                                'covered_by': 'covering_member',
                                 'start_date': start_date,
                                 'start_time': "19:00",
                                 'end_date': end_date,
@@ -546,8 +550,10 @@ def hired():
                             print(f"Appended: {session[rank_lower + '_hours_day_' + str(day)]}")
                             print(f"Appended: {session[rank_lower + '_hours_night_' + str(day)]}")
                                                     
-                        # Remove first dict from hours list!!!!!
-                        # Look up how to remove the first item in a list
+                        # Remove first dict from hours list
+                        session[rank_lower + "_openings_" + str(day)].pop(0)
+                        # or: 
+                        #opening.pop() ???
                     
                 day += 1
                         
@@ -566,6 +572,9 @@ def hired():
         ntw_list = ntw_list.mappings().all()
         print(f"NTW List: {ntw_list}")
         print(f" NTW length: {len(ntw_list)}")
+
+        # Loop through each day/rank/opening from above, and fill - similar structure to above,
+        # but just fill the openings with the next available person - NTW first, and then normal hiring
 
         # For each cover day
         day = 1
