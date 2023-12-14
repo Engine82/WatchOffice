@@ -81,9 +81,7 @@ def hiring_b():
 
         # Create lists & variables outside of loops
         officers_availability = []
-        officers_hours = []
         firefighters_availability = []
-        firefighters_hours = []
 
         #Loop through each rank - Officer and Firefighter
         tier = 1
@@ -115,62 +113,16 @@ def hiring_b():
                 elif tier  == 2:
                     firefighters_availability.append(results_avail)
 
-                # Handle hours unavailability
-                # Loop through each day
-                day = 1
-                while day <= DAYS_COVERED:
-
-                    # Create the tag to check for hours with
-                    avail_tag = 'avail_' + str(day)
-
-                    # If person is out Hours
-                    if results_avail[avail_tag] == "hours":
-
-                        # Create html tag id's
-                        start_id = "hours_" + str(day) + "_" + session['hiring_tiers'][tier - 1]['tier'] + "_start_" + str(person_counter)
-                        start_time = request.form.get(start_id)
-                        end_id = "hours_" + str(day) + "_" + session['hiring_tiers'][tier - 1]['tier'] + "_end_" + str(person_counter)
-                        end_time = request.form.get(end_id)
-                        start_date = date.today()
-                        end_date = date.today()
-                        if "00:00" <= start_time < "07:00":
-                            start_date = start_date + timedelta(1)
-                        if "00:00" <= end_time < "07:00":
-                            end_date = end_date + timedelta(1)
-
-                        # Get start and end hours, and save in dict
-                        results_hours = {
-                            'day': day,
-                            'username': person['username'],
-                            'hours_start': start_time,
-                            'start_date': start_date.strftime('%Y, %m, %d'),
-                            'hours_end': end_time,
-                            'end_date': end_date.strftime('%Y, %m, %d')
-                        }
-
-                        # Add results to appropriate hours list
-                        if tier == 1:
-                            officers_hours.append(results_hours)
-
-                        elif tier == 2:
-                            firefighters_hours.append(results_hours)
-
-                    day += 1
-
                 person_counter += 1
 
             tier += 1
 
         # Save all availability in session
         session['officers_avail'] = officers_availability
-        session['officers_hours'] = officers_hours
         session['firefighters_avail'] = firefighters_availability
-        session['firefighters_hours'] = firefighters_hours
 
         print(f"officers avail: {officers_availability}")
-        print(f"officers hours: {officers_hours}")
         print(f"firefighters avail: {firefighters_availability}")
-        print(f"firefighters hours: {firefighters_hours}")
 
         return redirect("/hiring_c")
 
@@ -203,13 +155,9 @@ def hiring_c():
         
         # Create lists of empty shifts & hours to be filled
         session['firefighters_openings_1'] = []
-        session['firefighters_hours_1'] = []
         session['firefighters_openings_2'] = []
-        session['firefighters_hours_2'] = []
         session['officers_openings_1'] = []
-        session['officers_hours_1'] = []
         session['officers_openings_2'] = []
-        session['officers_hours_2'] = []
 
         # Get openings for shifts in order:
         # 1st cover day officers:
@@ -227,25 +175,6 @@ def hiring_c():
                     'availability': result
                 })
 
-                # If officer is out hours, save the hours in a separate list
-                if result == "hours":
-                    start_time = request.form.get("officers_hours_1_start_" + str(counter_officer_1))
-                    start_date = date.today()
-                    end_time = request.form.get("officers_hours_1_end_" + str(counter_officer_1))
-                    end_date = date.today()
-                    if "00:00" <= start_time < "07:00":
-                        start_date = start_date + timedelta(1)
-                    if "00:00" <= end_time < "07:00":
-                        end_date = end_date + timedelta(1)
-                    
-                    session['officers_hours_1'].append({
-                        'username': officer['username'],
-                        'start': start_time,
-                        'start_date': start_date.strftime('%Y, %m, %d'),
-                        'end': end_time,
-                        'end_date': end_date.strftime('%Y, %m, %d')
-                    })
-
             counter_officer_1 += 1
 
         # Loop through each firefighter and get status - Day 1
@@ -260,25 +189,6 @@ def hiring_c():
                     'username': firefighter['username'],
                     'availability': result
                 })
-
-                # If ff is out hours, save the hours in a separate list
-                if result == "hours":
-                    start_time = request.form.get("firefighters_hours_1_start_" + str(counter_firefighter_1))
-                    start_date = date.today()
-                    end_time = request.form.get("firefighters_hours_1_end_" + str(counter_firefighter_1))
-                    end_date = date.today()
-                    if "00:00" <= start_time < "07:00":
-                        start_date = start_date + timedelta(1)
-                    if "00:00" <= end_time < "07:00":
-                        end_date = end_date + timedelta(1)
-
-                    session['firefighters_hours_1'].append({
-                        'username': officer['username'],
-                        'start': start_time,
-                        'start_date': start_date.strftime('%Y, %m, %d'),
-                        'end': end_time,
-                        'end_date': end_date.strftime('%Y, %m, %d')
-                    })
 
             counter_firefighter_1 += 1
 
@@ -295,26 +205,6 @@ def hiring_c():
                     'availability': result
                 })
 
-                # If officer is out hours, save the hours in a separate list
-                if result == "hours":
-                    start_time = request.form.get("officers_hours_2_start_" + str(counter_officer_2))
-                    start_date = date.today()
-                    end_time = request.form.get("officers_hours_2_end_" + str(counter_officer_2))
-                    end_date = date.today()
-                    if "00:00" <= start_time < "07:00":
-                        start_date = start_date + timedelta(1)
-                    if "00:00" <= end_time < "07:00":
-                        end_date = end_date + timedelta(1)
-
-                    
-                    session['officers_hours_2'].append({
-                        'username': officer['username'],
-                        'start': start_time,
-                        'start_date': start_date.strftime('%Y, %m, %d'),
-                        'end': end_time,
-                        'end_date': end_date.strftime('%Y, %m, %d')
-                    })
-
             counter_officer_2 += 1
 
         # Loop through each firefighter and get status - Day 2
@@ -330,37 +220,12 @@ def hiring_c():
                     'availability': result
                 })
 
-                # If ff is out hours, save the hours in a separate list
-                if result == "hours":
-                    start_time = request.form.get("firefighters_hours_2_start_" + str(counter_firefighter_2))
-                    start_date = date.today()
-                    end_time = request.form.get("firefighters_hours_2_end_" + str(counter_firefighter_2))
-                    end_date = date.today()
-                    if "00:00" <= start_time < "07:00":
-                        start_date = start_date + timedelta(1)
-                    if "00:00" <= end_time < "07:00":
-                        end_date = end_date + timedelta(1)
-
-                    
-                    session['firefighters_hours_2'].append({
-                        'username': officer['username'],
-                        'start': start_time,
-                        'start_date': start_date.strftime('%Y, %m, %d'),
-                        'end': end_time,
-                        'end_date': end_date.strftime('%Y, %m, %d')
-                    })
-
             counter_firefighter_2 += 1
         
         print(f"Officer 1: {session['officers_openings_1']}")
         print(f"FF 1: {session['firefighters_openings_1']}")
         print(f"Officer 2: {session['officers_openings_2']}")
         print(f"FF 2: {session['firefighters_openings_2']}")
-
-        print(f"Officer 1 hours: {session['officers_hours_1']}")
-        print(f"FF 1 hours: {session['firefighters_hours_1']}")
-        print(f"Officer 2 hours: {session['officers_hours_2']}")
-        print(f"FF 2 hours: {session['firefighters_hours_2']}")
     
         return redirect("/hired")
 
@@ -414,10 +279,10 @@ def hiring_c():
             cover_2_officers.append({'username': 'vacancy'})
         session['cover_2_officers'] = cover_2_officers
 
-        print(f"Cover 1: {session['cover_1_firefighters']}")
-        print(f"Cover 2: {session['cover_2_firefighters']}")
         print(f"Cover 1: {session['cover_1_officers']}")
         print(f"Cover 2: {session['cover_2_officers']}")
+        print(f"Cover 1: {session['cover_1_firefighters']}")
+        print(f"Cover 2: {session['cover_2_firefighters']}")
 
         return render_template("hiring_c.html", cover_1_firefighters=cover_1_firefighters, cover_1_officers=cover_1_officers, cover_2_firefighters=cover_2_firefighters, cover_2_officers=cover_2_officers, days_covered=days_covered, platoon=session['platoon'])
 
@@ -443,14 +308,6 @@ def hired():
         session['firefighters_cover_night_1'] = []
         session['firefighters_cover_day_2'] = []
         session['firefighters_cover_night_2'] = []
-        session['officers_hours_day_1'] = []
-        session['officers_hours_night_1'] = []
-        session['officers_hours_day_2'] = []
-        session['officers_hours_night_2'] = []
-        session['firefighters_hours_day_1'] = []
-        session['firefighters_hours_night_1'] = []
-        session['firefighters_hours_day_2'] = []
-        session['firefighters_hours_night_2'] = []
 
         day_night_lists = ['day_1', 'day_2', ]
         cover_lists = ['openings_1', 'openings_2']
@@ -484,85 +341,8 @@ def hired():
                     elif opening['availability'] == '24':
                         session[rank_lower + "_cover_day_" + str(day)].append(shift_day)
                         session[rank_lower + "_cover_night_" + str(day)].append(shift_night)
-
-                    # Hours
-                    elif opening['availability'] == 'hours':
-
-                        # Get user's hours input and assign start/end dates
-                        label = rank_lower + "_hours_" + str(day)
-                        print(f"Label: {label}")
-                        print(f"Opening: {opening}")
-                        print(f"Session label: {session[label]}")
-                        start_time = session[label][hours_counter]['start']
-                        end_time = session[label][hours_counter]['end']
-                        start_date = session[label][hours_counter]['start_date']
-                        end_date = session[label][hours_counter]['end_date']
-                        cover_date = datetime.today()
-
-                        hours_dict = {
-                                'username': opening['username'],
-                                'covered_by': 'covering_member',
-                                'start_date': start_date,
-                                'start_time': start_time,
-                                'end_date': end_date,
-                                'end_time': end_time
-                            }
-
-                        # Check for sensible input
-                        # If start time is after end time, it must be on different days
-                        if start_time > end_time and end_date <= start_date:                            
-                            print("start_time > end_time")
-                            render_template(apology, "hours start after hours end")
-
-                        # If hours during day shift, add hours to day hours list
-                        if start_time < "19:00" and end_time < "19:00" and start_date == cover_date:
-                            session[rank_lower + "_hours_day_" + str(day)].append(hours_dict)
-                            print(f"Appended: {session[rank_lower + '_hours_day_' + str(day)]}")
-
-                        # If hours are all in the evening before midnight
-                        elif start_time >= "19:00" and end_time >= "19:00":
-                            session[rank_lower + "_hours_night_" + str(day)].append(hours_dict)
-                            print(f"Appended: {session[rank_lower + '_hours_night_' + str(day)]}")
-                            
-                        # If hours during night shift, all past midnight, add hours to night hours list
-                        elif start_time < "07:00" and end_time < "07:00" and start_date == cover_date + timedelta(1):
-                            session[rank_lower + "_hours_night_" + str(day)].append(hours_dict)
-                            print(f"Appended: {session[rank_lower + '_hours_night_' + str(day)]}")
-
-                        # If hours start before midnight and end after midnight:
-                        elif start_time > "19:00" and end_time < "07:00" and end_date == cover_date + timedelta(1):
-                            session[rank_lower + "_hours_day_" + str(day)].append({
-                                'username': opening['username'],
-                                'covered_by': 'covering_member',
-                                'start_date': start_date,
-                                'start_time': start_time,
-                                'end_date': start_date,
-                                'end_time': "18:59"
-                            })
-                            session[rank_lower + "_hours_night_" + str(day)].append({
-                                'username': opening['username'],
-                                'covered_by': 'covering_member',
-                                'start_date': start_date,
-                                'start_time': "19:00",
-                                'end_date': end_date,
-                                'end_time': end_time
-                            })
-                            print(f"Appended: {session[rank_lower + '_hours_day_' + str(day)]}")
-                            print(f"Appended: {session[rank_lower + '_hours_night_' + str(day)]}")
-                                                    
-                        # Remove first dict from hours list
-                        session[rank_lower + "_openings_" + str(day)].pop(0)
-                        # or: 
-                        #opening.pop() ???
                     
                 day += 1
-                        
-
-        print(session['officers_hours_day_1'],
-            session['officers_hours_night_1'],
-            session['officers_hours_day_2'],
-            session['officers_hours_night_2']
-        )
 
         # Create list for hired-for shifts
         session['completed_hiring'] = []
@@ -634,7 +414,6 @@ def hired():
         # Assign NTW or next up person to open shift & flip tags
             # If next up person is unavailable because of dept business, assign NTW
         print(session['firefighters_avail'])
-        print(session['ff_openings_1'])
 
         return render_template("hired.html")    
 
