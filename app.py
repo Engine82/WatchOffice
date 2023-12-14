@@ -309,10 +309,8 @@ def hired():
         session['firefighters_cover_day_2'] = []
         session['firefighters_cover_night_2'] = []
 
-        day_night_lists = ['day_1', 'day_2', ]
-        cover_lists = ['openings_1', 'openings_2']
-
-        # Organize each day's shifts to be covered into the appropriate list
+        day_night = ["day_", "night_"]
+        # Organize each day's shifts-to-be-covered into the appropriate list
         # Iterate through each rank
         for rank in session['hiring_tiers']:
 
@@ -322,7 +320,7 @@ def hired():
 
                 # Iterate through each opening
                 rank_lower = rank['tier'].lower()
-                hours_counter = 0
+                print(f"rank_openings_day: {session[rank_lower + '_openings_' + str(day)]}")
                 for opening in session[rank_lower + "_openings_" + str(day)]:
 
                     # Get this open shift's info
@@ -332,20 +330,20 @@ def hired():
                     # Day
                     if opening['availability'] == 'day':
                         session[rank_lower + "_cover_day_" + str(day)].append(shift_day)
+                        print(session[rank_lower + "_cover_day_" + str(day)])
 
                     # Night
                     elif opening['availability'] == 'night':
                         session[rank_lower + "_cover_night_" + str(day)].append(shift_night)
-
+                        print(session[rank_lower + "_cover_night_" + str(day)])
                     # 24
                     elif opening['availability'] == '24':
                         session[rank_lower + "_cover_day_" + str(day)].append(shift_day)
                         session[rank_lower + "_cover_night_" + str(day)].append(shift_night)
+                        print(session[rank_lower + "_cover_day_" + str(day)])
+                        print(session[rank_lower + "_cover_night_" + str(day)])
                     
                 day += 1
-
-        # Create list for hired-for shifts
-        session['completed_hiring'] = []
 
         # Create list of NTW tag holders on this platoon
         ntw_list = db.execute(select(Ntw.user_id).where(Ntw.platoon == session['platoon']).order_by(Ntw.id))
@@ -356,7 +354,24 @@ def hired():
         # Loop through each day/rank/opening from above, and fill - similar structure to above,
         # but just fill the openings with the next available person - NTW first, and then normal hiring
 
-        # For each cover day
+        for rank in session['hiring_tiers']:
+
+            # Iterate through each day
+            day = 1
+            while day <= DAYS_COVERED:
+
+                for time in day_night:
+
+                    # Iterate through each opening
+                    rank_lower = rank['tier'].lower()
+                    for opening in session[rank_lower + "_cover_" + time + str(day)]:
+                        print(f"opening: {opening}")
+                        # First hire from NTW\
+                        # if len(ntw_list) != 0:
+        
+                day += 1
+
+        """# For each cover day
         day = 1
         while day <= DAYS_COVERED:
             print(f"Cover day {day}")
@@ -374,46 +389,31 @@ def hired():
                     if len(ntw_list) != 0:
                         print(f"NTW_list: {ntw_list}")
                         # If first person is available
-                        if ntw_list[0]['availability']:
-                            print( )
+                        #if ntw_list[0]['availability']:
+                            
                             # Hire them
                         # Else, move to next NTW                        
 
                     # Then hire normally
                     # For each officer/firefighter on this shift...
                     covering_avail = rank['tier'].lower() + "_avail"
-                    print(covering_avail)
-                    print(session[covering_avail])
                     for member in session[covering_avail]:
                         print(member)
 
                         # NTW:
-
                         # Else continue to normal hiring
-
-                        
-
 
                         # has ntw (iterate through entire NTW list) - prep beforehand?
                         # or is next up
-
-
-
                         # and is available
-                        status = "avail_" + str(day)
-                        if member[status] != "available":
-                            print(f"{member} not available")
-
                         # And is next up
-                        if member['tag_flipped'] == 0:
-                        
                             # hire them for this shift
-                            member.hire()            
-            day += 1
+        
+            day += 1"""
 
         # Assign NTW or next up person to open shift & flip tags
             # If next up person is unavailable because of dept business, assign NTW
-        print(session['firefighters_avail'])
+        #print(session['firefighters_avail'])
 
         return render_template("hired.html")    
 
