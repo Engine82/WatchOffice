@@ -19,7 +19,6 @@
                     <tr>
                         <th>{{ rank['tier'] }}</th>
                         <th colspan="2">Status</th>
-                        <th>Hours</th>
                     </tr>
                     <!-- Loop through each person in this tier of hiring (officer of firefighter) -->
                     {% for person in session['personnel'][loop.index - 1] %}
@@ -33,25 +32,12 @@
                                     <option value="24">Unavailable 24</option>
                                     <option value="day">Unavailable Day</option>
                                     <option value="night">Unavailable Night</option>
-                                    <option value="hours">Unavailable Hours</option>
                                 </select>
                             </td>
                             <td>
                                 <label for="ntw_{{ i + 1 }}_{{ rank['tier'] }}_{{ loop.index }}">Department Business:</label>
                                 <input type="checkbox" id="ntw_{{ i + 1 }}_{{ rank['tier'] }}_{{ loop.index }}" name="ntw_{{ i + 1 }}_{{ rank['tier'] }}_{{ loop.index }}" value="1">
-                            </td>
-                            <td>
-                                <div class="hours_1" id="hours_{{ i + 1 }}_{{ rank['tier'] }}_start_{{ loop.index }}">
-                                    <label for="hours_{{ i + 1 }}_{{ rank['tier'] }}_start_{{ loop.index }}">Hours unavailable:</label>
-                                    <input type="time" name="hours_{{ i + 1 }}_{{ rank['tier'] }}_start_{{ loop.index }}">
-                                </div>
-                            </td>
-                            <td>
-                                <div class="hours_1" id="hours_{{ i + 1 }}_{{ rank['tier'] }}_end_{{ loop.index }}">
-                                    <label for="hours_{{ i + 1 }}_{{ rank['tier'] }}_end_{{ loop.index }}">to</label>
-                                    <input type="time" name="hours_{{ i + 1 }}_{{ rank['tier'] }}_end_{{ loop.index }}">
-                                </div>
-                            </td>                  
+                            </td>                 
                         </tr>
                     {% endfor %}
                 {% endfor %}

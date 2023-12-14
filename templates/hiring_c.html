@@ -12,7 +12,6 @@
                 <tr>
                     <th>Officer</th>
                     <th>Status</th>
-                    <th>Hours</th>
                 </tr>
                 {% for officer in session['cover_1_officers'] %}              
                     <tr>
@@ -25,20 +24,7 @@
                                 <option value="24">Out 24</option>
                                 <option value="day">Out Day</option>
                                 <option value="night">Out Night</option>
-                                <option value="hours">Out Hours</option>
                             </select>
-                        </td>
-                        <td>
-                            <div class="hours_1" id="officers_hours_1_start_{{ loop.index }}">
-                                <label for="officers_hours_1_start_{{ loop.index }}">Hours out:</label>
-                                <input type="time" name="officers_hours_1_start_{{ loop.index }}">
-                            </div>
-                        </td>
-                        <td>
-                            <div class="hours_1" id="officers_hours_1_end_{{ loop.index }}">
-                                <label for="officers_hours_1_end_{{ loop.index }}">to</label>
-                                <input type="time" name="officers_hours_1_end_{{ loop.index }}">
-                            </div>
                         </td>
                     </tr>
                 {% endfor %}
@@ -46,7 +32,6 @@
                 <tr>
                     <th>Firefighter</th>
                     <th>Status</th>
-                    <th>Hours</th>
                 </tr>
                 {% for firefighter in session['cover_1_firefighters'] %}              
                 <tr>
@@ -59,20 +44,7 @@
                             <option value="24">Out 24</option>
                             <option value="day">Out Day</option>
                             <option value="night">Out Night</option>
-                            <option value="hours">Out Hours</option>
                         </select>
-                    </td>
-                    <td>
-                        <div class="hours_1" id="firefighters_hours_1_start_{{ loop.index }}">
-                            <label for="firefighters_hours_1_start_{{ loop.index }}">Hours out:</label>
-                            <input type="time" name="firefighters_hours_1_start_{{ loop.index }}">
-                        </div>
-                    </td>
-                    <td>
-                        <div class="hours_1" id="firefighters_hours_1_end_{{ loop.index }}">
-                            <label for="firefighters_hours_1_end_{{ loop.index }}">to</label>
-                            <input type="time" name="firefighters_hours_1_end_{{ loop.index }}">
-                        </div>
                     </td>
                 </tr>
             {% endfor %}
@@ -85,7 +57,6 @@
             <tr>
                 <th>Officer</th>
                 <th>Status</th>
-                <th>Hours</th>
             </tr>
             {% for officer in session['cover_2_officers'] %}  
                 <tr>            
@@ -98,27 +69,13 @@
                             <option value="24">Out 24</option>
                             <option value="day">Out Day</option>
                             <option value="night">Out Night</option>
-                            <option value="hours">Out Hours</option>
                         </select>
-                    </td>
-                    <td>
-                        <div class="hours_2" id="officers_hours_2_start_{{ loop.index }}">
-                            <label for="officers_hours_2_start_{{ loop.index }}">Hours out:</label>
-                            <input type="time" name="officers_hours_2_start_{{ loop.index }}">
-                        </div>
-                    </td>
-                    <td>
-                        <div class="hours_1" id="officers_hours_2_end_{{ loop.index }}">
-                            <label for="officers_hours_2_end_{{ loop.index }}">to</label>
-                            <input type="time" name="officers_hours_2_end_{{ loop.index }}">
-                        </div>
                     </td>
                 </tr>
             {% endfor %}
             <tr>
                 <th>Firefighter</th>
                 <th>Status</th>
-                <th>Hours</th>
             </tr>
             {% for firefighter in session['cover_2_firefighters'] %}  
                 <tr>            
@@ -131,20 +88,7 @@
                             <option value="24">Out 24</option>
                             <option value="day">Out Day</option>
                             <option value="night">Out Night</option>
-                            <option value="hours">Out Hours</option>
                         </select>
-                    </td>
-                    <td>
-                        <div class="hours_2" id="firefighters_hours_2_start_{{ loop.index }}">
-                            <label for="firefighters_hours_2_start_{{ loop.index }}">Hours out:</label>
-                            <input type="time" name="firefighters_hours_2_start_{{ loop.index }}">
-                        </div>
-                    </td>
-                    <td>
-                        <div class="hours_1" id="firefighters_hours_2_end_{{ loop.index }}">
-                            <label for="firefighters_hours_2_end_{{ loop.index }}">to</label>
-                            <input type="time" name="firefighters_hours_2_end_{{ loop.index }}">
-                        </div>
                     </td>
                 </tr>
             {% endfor %}
