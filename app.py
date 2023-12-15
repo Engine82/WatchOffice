@@ -386,18 +386,30 @@ def hired():
 
                     # Unavailable Day
                     if member['avail_' + str(day)] == 'day':
-                        session[rank_lower + "_covering_night_" + str(day)].append({'username': member['username'], 'dept_business': session[rank_lower + '_avail'][member_counter]["dept_business_" + str(day)]})
+                        session[rank_lower + "_covering_night_" + str(day)].append({
+                            'username': member['username'],
+                            'dept_business': session[rank_lower + '_avail'][member_counter]["dept_business_" + str(day)]
+                        })
                         print(session[rank_lower + "_covering_night_" + str(day)])
 
                     # Unavailable Night
                     elif member['avail_' + str(day)] == 'night':
-                        session[rank_lower + "_covering_day_" + str(day)].append({'username': member['username'], 'dept_business': session[rank_lower + '_avail'][member_counter]["dept_business_" + str(day)]})
+                        session[rank_lower + "_covering_day_" + str(day)].append({
+                            'username': member['username'],
+                            'dept_business': session[rank_lower + '_avail'][member_counter]["dept_business_" + str(day)]
+                        })
                         print(session[rank_lower + "_covering_day_" + str(day)])
                     
                     # Available
                     elif member['avail_' + str(day)] == 'available':
-                        session[rank_lower + "_covering_day_" + str(day)].append({'username': member['username'], 'dept_business': session[rank_lower + '_avail'][member_counter]["dept_business_" + str(day)]})
-                        session[rank_lower + "_covering_night_" + str(day)].append({'username': member['username'], 'dept_business': session[rank_lower + '_avail'][member_counter]["dept_business_" + str(day)]})
+                        session[rank_lower + "_covering_day_" + str(day)].append({
+                            'username': member['username'],
+                            'dept_business': session[rank_lower + '_avail'][member_counter]["dept_business_" + str(day)]
+                        })
+                        session[rank_lower + "_covering_night_" + str(day)].append({
+                            'username': member['username'],
+                            'dept_business': session[rank_lower + '_avail'][member_counter]["dept_business_" + str(day)]
+                        })
                         print(session[rank_lower + "_covering_day_" + str(day)])
                         print(session[rank_lower + "_covering_night_" + str(day)])
                     
@@ -454,6 +466,7 @@ def hired():
                         else:
 
                             # Iterate through each covering member
+                            tag_counter = 0
                             for member in session[rank_lower + "_tags"]:
 
                                 # If tag is not flipped
@@ -478,12 +491,22 @@ def hired():
 
                                         # Remove this shift from the list of shifts to be covered
                                         session[rank_lower + "_covered_" + time + str(day)].pop(0)
+                                        tag_counter += 1
                                         break
                                     
+                                    elif session[rank_lower + "_avail"][tag_counter]['dept_business_' + str(day)] == 1:
+                                        print(member)
+                                        print("gets NTW")
 
                                     else:
                                         member['tag_flipped'] = 1
                                         print("^ he wasn't available")
+                                    
+                                    print(session[rank_lower + "_avail"][0])
+                                
+                                tag_counter += 1
+                                if tag_counter == PLATOON_OFFICERS:
+                                    tag_counter = 0
 
         
             day += 1
