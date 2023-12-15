@@ -426,7 +426,7 @@ def hired():
 
                     # Iterate through each opening
                     rank_lower = rank['tier'].lower()
-                    for opening in session[rank_lower + "_cover_" + time + str(day)]:
+                    for opening in session[rank_lower + "_covered_" + time + str(day)]:
                         print(f"opening: {opening}")
                         
                         # TODO: Hire first from NTW list
