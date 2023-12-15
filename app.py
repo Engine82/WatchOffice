@@ -1,4 +1,5 @@
 from datetime import datetime, date, timedelta
+from operator import itemgetter
 from sqlalchemy import create_engine, insert, select
 from sqlalchemy.orm import sessionmaker
 from flask import Flask, redirect, render_template, request, session
@@ -319,6 +320,16 @@ def hired():
         session['firefighters_covering_day_2'] = []
         session['firefighters_covering_night_2'] = []
 
+        # Create lists for completed hiring
+        session['officers_hired_day_1'] = []
+        session['officers_hired_night_1'] = []
+        session['officers_hired_day_2'] = []
+        session['officers_hired_night_2'] = []
+        session['firefighters_hired_day_1'] = []
+        session['firefighters_hired_night_1'] = []
+        session['firefighters_hired_day_2'] = []
+        session['firefighters_hired_night_2'] = []
+        
         # Create lists for covering tag status
         session['officers_tags'] = []
         session['firefighters_tags'] = []
@@ -338,8 +349,8 @@ def hired():
                 for opening in session[rank_lower + "_openings_" + str(day)]:
 
                     # Get this open shift's info
-                    shift_day = {'member': opening['username'], 'shift': 'day'}
-                    shift_night = {'member': opening['username'], 'shift': 'night'}
+                    shift_day = {'username': opening['username'], 'shift': 'day'}
+                    shift_night = {'username': opening['username'], 'shift': 'night'}
 
                     # Day
                     if opening['availability'] == 'day':
@@ -356,9 +367,9 @@ def hired():
                     
                 day += 1
 
-        print("Covering breakdown:")
         # Break down each covering member's availability into it's appropriate list
         # Iterate through each rank
+        print("Covering breakdown:")
         for rank in session['hiring_tiers']:
 
             # Iterate through each day
@@ -368,31 +379,34 @@ def hired():
                 # Iterate through each opening
                 rank_lower = rank['tier'].lower()
                 print(f"rank_availability_day: {session[rank_lower + '_avail']}")
+                member_counter = 0
                 for member in session[rank_lower + "_avail"]:
 
                     # 24 - member is simply not added to available lists
 
                     # Unavailable Day
                     if member['avail_' + str(day)] == 'day':
-                        session[rank_lower + "_covering_night_" + str(day)].append({'member': member['username']})
+                        session[rank_lower + "_covering_night_" + str(day)].append({'username': member['username'], 'dept_business': session[rank_lower + '_avail'][member_counter]["dept_business_" + str(day)]})
                         print(session[rank_lower + "_covering_night_" + str(day)])
 
                     # Unavailable Night
                     elif member['avail_' + str(day)] == 'night':
-                        session[rank_lower + "_covering_day_" + str(day)].append({'member': member['username']})
+                        session[rank_lower + "_covering_day_" + str(day)].append({'username': member['username'], 'dept_business': session[rank_lower + '_avail'][member_counter]["dept_business_" + str(day)]})
                         print(session[rank_lower + "_covering_day_" + str(day)])
                     
                     # Available
                     elif member['avail_' + str(day)] == 'available':
-                        session[rank_lower + "_covering_day_" + str(day)].append({'member': member['username']})
-                        session[rank_lower + "_covering_night_" + str(day)].append({'member': member['username']})
+                        session[rank_lower + "_covering_day_" + str(day)].append({'username': member['username'], 'dept_business': session[rank_lower + '_avail'][member_counter]["dept_business_" + str(day)]})
+                        session[rank_lower + "_covering_night_" + str(day)].append({'username': member['username'], 'dept_business': session[rank_lower + '_avail'][member_counter]["dept_business_" + str(day)]})
                         print(session[rank_lower + "_covering_day_" + str(day)])
                         print(session[rank_lower + "_covering_night_" + str(day)])
+                    
+                    member_counter += 1
                 
                 day += 1
 
-        print("Tag lists:")
         # Create list with tag status of covering members
+        print("Tag lists:")
         for rank in session['hiring_tiers']:
             rnk = rank['tier'].lower()
             counter = 0
@@ -433,20 +447,44 @@ def hired():
                         # First hire from NTW
                         if len(ntw_list) != 0:
                             print("NTW exists")
+                            
 
                         # TODO: Then hire normally
                         # Then, if no NTW, hire normally:
                         else:
 
                             # Iterate through each covering member
-                            for member in session[rank_lower + "_avail"]:
+                            for member in session[rank_lower + "_tags"]:
 
-                                # Only access members with an un-flipped tag
+                                # If tag is not flipped
                                 if member['tag_flipped'] != 1:
+                                    print(f"{member['username']}'s tag is not flipped")
 
-                                    # If their availability status
-                                    if member["avail_" + str(day)]:
-                                        print("print")
+                                    # and 
+                                    if member['username'] in map(itemgetter('username'), session[rank_lower + "_covering_" + time + str(day)]):
+                                        print(f"{member['username']} available")
+
+                                        # Actually "hire" this person - add the person being covered and the coverer to the hired list
+                                        session[rank_lower + "_hired_" + time + str(day)].append({
+                                            'person_off': opening['username'],
+                                            'person_covering': member['username']
+                                        })
+
+                                        print(session[rank_lower + "_hired_" + time + str(day)])
+                        
+                                        # Flip the tag of the person hired
+                                        member['tag_flipped'] = 1
+                                        print(session[rank_lower + "_tags"])
+
+                                        # Remove this shift from the list of shifts to be covered
+                                        session[rank_lower + "_covered_" + time + str(day)].pop(0)
+                                        break
+                                    
+
+                                    else:
+                                        member['tag_flipped'] = 1
+                                        print("^ he wasn't available")
+
         
             day += 1
 
