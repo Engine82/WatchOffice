@@ -414,12 +414,12 @@ def hired():
         # Loop through each day/rank/opening from above, and fill - similar structure to above,
         # but just fill the openings with the next available person - NTW first, and then normal hiring
 
-        # Iterate through each rank (officer/firefighter)
-        for rank in session['hiring_tiers']:
+        # Iterate through each day
+        day = 1
+        while day <= DAYS_COVERED:
 
-            # Iterate through each day
-            day = 1
-            while day <= DAYS_COVERED:
+            # Iterate through each rank (officer/firefighter)
+            for rank in session['hiring_tiers']:
 
                 # Iterate through day/night
                 for time in day_night:
@@ -429,19 +429,26 @@ def hired():
                     for opening in session[rank_lower + "_cover_" + time + str(day)]:
                         print(f"opening: {opening}")
                         
+                        # TODO: Hire first from NTW list
                         # First hire from NTW
                         if len(ntw_list) != 0:
                             print("NTW exists")
-                        # Then, if no NTW, hire normally
+
+                        # TODO: Then hire normally
+                        # Then, if no NTW, hire normally:
                         else:
+
+                            # Iterate through each covering member
                             for member in session[rank_lower + "_avail"]:
+
                                 # Only access members with an un-flipped tag
-                                if member.tag_flipped != 1:
+                                if member['tag_flipped'] != 1:
+
                                     # If their availability status
                                     if member["avail_" + str(day)]:
                                         print("print")
         
-                day += 1
+            day += 1
 
 
         # Assign NTW or next up person to open shift & flip tags
