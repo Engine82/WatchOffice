@@ -70,3 +70,28 @@ def reorder_tagboard(tag_list):
     it = iter(tag_list)
     next(islice(it, start, start), None)
     return chain(it, islice(tag_list, start))
+
+
+# Hire function
+def hire(tag_list, availability_list, time, opening):
+    member_up = None
+    
+    # Get next member up to be hired
+    for member in tag_list:
+        print(member)
+        print(tag_list)
+        if member['tag_flipped'] != 1:
+            member_up = member['username']
+            break
+
+    # Get this member's availability:
+    time = opening['shift']
+    for person in availability_list:
+        if person['username'] == member_up:
+            if person[time] != 'available':
+                return [False, {'person_off': 'unavailable', 'person_covering': person['username']}]
+            elif person[time] == 'available':
+                return [True, {'person_off': opening['username'], 'person_covering': person['username']}]
+    
+    
+                            
