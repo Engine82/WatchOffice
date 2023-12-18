@@ -11,6 +11,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from helpers import login_required
 from helpers import Base, User, Ntw
 from helpers import reorder_tagboard
+from helpers import hire
 
 
 # Configure app
@@ -330,6 +331,7 @@ def hired():
         session['firefighters_tags'] = []
 
         day_night = ["day_", "night_"]
+        daynight = ['day', 'night']
 
 
         """ OPEN SHIFTS """
@@ -440,63 +442,44 @@ def hired():
         # Similar structure to above, but just fill the openings with
         # the next available person
 
-        # Iterate through each day
+        # DAY - Iterate through each day
         day = 1
         while day <= DAYS_COVERED:
 
-            # Iterate through each rank (officer/firefighter)
+            # RANK - Iterate through each rank (officer/firefighter)
             for rank in session['hiring_tiers']:
 
-                # Re-order tag list, starting with first up person
+                # Re-order tag list, starting with first up person, and un-flip all tags
                 rnk = rank['tier'].lower()
-                new_taglist = reorder_tagboard(session[rnk + "_tags"])
+                new_taglist = list(reorder_tagboard(session[rnk + "_tags"]))
+                for member in new_taglist:
+                    member.update((k, 0) for k, v in member.items() if v == 1)
                 print(f" New taglist: {list(new_taglist)}")
-                # Iterate through day/night
-                for time in day_night:
+                
+                # TIME - Iterate through time
+                for time in daynight:
 
                     # Iterate through each opening
                     rank_lower = rank['tier'].lower()
-                    for opening in session[rank_lower + "_covered_" + time + str(day)]:
+                    hiring_counter = 0
+                    shift_size = len(session[rank_lower + "_covering_" + str(day)])
+                    print(f"Shift size: {shift_size}")
+                    for opening in session[rank_lower + "_covered_" + time + "_" + str(day)]:
                         print(f"opening: {opening}")
                         
-                        # TODO: Hire for shift
-
-
-
-
-
-
-
-
-
-
-                        tag_counter = 0
-                        for member in session[rank_lower + "_tags"]:
-
-                            # If the member is available
-                            if member['username'] in map(itemgetter('username'), session[rank_lower + "_covering_" + str(day)]):
-                                print(f"{member['username']} available")
-
-                                # Actually "hire" this person - add the person being covered and the coverer to the hired list
-                                session[rank_lower + "_hired_" + time + str(day)].append({
-                                    'person_off': opening['username'],
-                                    'person_covering': member['username']
-                                })
-
-                                print(session[rank_lower + "_hired_" + time + str(day)])
-                
-                                # Flip the tag of the person hired
-                                member['tag_flipped'] = 1
-                                print(session[rank_lower + "_tags"])
-
-                                # Remove this shift from the list of shifts to be covered
-                                session[rank_lower + "_covered_" + time + str(day)].pop(0)
-                                tag_counter += 1
+                        # Hire for this shift
+                        hiring_result = [False]
+                        while hiring_result[0] != True: 
+                            print(f"New taglist: {new_taglist}")
+                            hiring_result = hire(new_taglist, session[rank_lower + "_covering_" + str(day)], time, opening)
+                            print(hiring_result)
+                            session[rank_lower + "_hired_" + time + "_" + str(day)].append(hiring_result[1])
+                            new_taglist.append(new_taglist.pop(0))
+                            hiring_counter += 1
+                            if hiring_counter == shift_size - 1:
+                                new_taglist.append({'person_off': opening['username'], 'person_covering': "96 Off"})
+                                hiring_result == [True]
                                 break
-                            
-                            print(session[rank_lower + "_avail"][0])
-                        
-                        tag_counter += 1
 
             day += 1
 
@@ -504,7 +487,14 @@ def hired():
         # Assign NTW or next up person to open shift & flip tags
             # If next up person is unavailable because of dept business, assign NTW
         #print(session['firefighters_avail'])
-
+        print(session['officers_hired_day_1'], '\n',
+            session['officers_hired_night_1'], '\n',
+            session['officers_hired_day_2'], '\n',
+            session['officers_hired_night_2'], '\n',
+            session['firefighters_hired_day_1'], '\n',
+            session['firefighters_hired_night_1'], '\n',
+            session['firefighters_hired_day_2'], '\n',
+            session['firefighters_hired_night_2'])
         return render_template("hired.html")    
 
 
