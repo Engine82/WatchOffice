@@ -6,6 +6,8 @@ from typing import Optional
 from sqlalchemy import func
 from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase, MappedAsDataclass
 
+from itertools import islice, chain
+
 
 # Apology function for errors
 def apology():
@@ -49,3 +51,22 @@ class Ntw (Base):
     id: Mapped[int] = mapped_column(primary_key=True, init=False)
     user_id: Mapped[str]
     platoon: Mapped[int]
+
+
+# Find next-up person
+def find_next_up(tag_list):
+    for person in tag_list:
+        match person:
+            case {'tag_flipped': tag_flipped} if tag_flipped != 1:
+                place = tag_list.index(person)
+                return place
+    # If nobody is flipped, return first person
+    return 0
+
+
+# Re-order list function for starting with first-up on tag board
+def reorder_tagboard(tag_list):
+    start = find_next_up(tag_list)
+    it = iter(tag_list)
+    next(islice(it, start, start), None)
+    return chain(it, islice(tag_list, start))
