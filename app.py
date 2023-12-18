@@ -10,6 +10,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from helpers import login_required
 from helpers import Base, User, Ntw
+from helpers import reorder_tagboard
 
 
 # Configure app
@@ -330,6 +331,8 @@ def hired():
 
         day_night = ["day_", "night_"]
 
+
+        """ OPEN SHIFTS """
         # Break down each shift opening into it's appropriate list
         # Iterate through each rank
         for rank in session['hiring_tiers']:
@@ -361,6 +364,7 @@ def hired():
                     
                 day += 1
 
+        """ AVAILABILITY """
         # Break down each covering member's availability into it's appropriate list
         # Iterate through each rank
         print("Covering breakdown:")
@@ -416,6 +420,7 @@ def hired():
                 
                 day += 1
 
+        """ TAG STATUS """
         # Create list with tag status of covering members
         print("Tag lists:")
         for rank in session['hiring_tiers']:
@@ -430,8 +435,10 @@ def hired():
             print(session[rnk + '_tags'])
 
 
-        # Loop through each day/rank/opening from above, and fill - similar structure to above,
-        # but just fill the openings with the next available person
+        """ HIRE """
+        # Loop through each day/rank/opening from above, and fill - 
+        # Similar structure to above, but just fill the openings with
+        # the next available person
 
         # Iterate through each day
         day = 1
@@ -440,6 +447,10 @@ def hired():
             # Iterate through each rank (officer/firefighter)
             for rank in session['hiring_tiers']:
 
+                # Re-order tag list, starting with first up person
+                rnk = rank['tier'].lower()
+                new_taglist = reorder_tagboard(session[rnk + "_tags"])
+                print(f" New taglist: {list(new_taglist)}")
                 # Iterate through day/night
                 for time in day_night:
 
@@ -449,19 +460,21 @@ def hired():
                         print(f"opening: {opening}")
                         
                         # TODO: Hire for shift
-                        # Iterate through each covering member
-                        # First, find who is up and set cursor to that person
-                        tag_cursor = 0
-                        for member in session[rank_lower + "_tags"]:
-                            if member['tag_flipped'] != 1:
-                                break
-                            tag_cursor += 1
+
+
+
+
+
+
+
+
+
 
                         tag_counter = 0
                         for member in session[rank_lower + "_tags"]:
 
                             # If the member is available
-                            if member['username'] in map(itemgetter('username'), session[rank_lower + "_covering_" + time + str(day)]):
+                            if member['username'] in map(itemgetter('username'), session[rank_lower + "_covering_" + str(day)]):
                                 print(f"{member['username']} available")
 
                                 # Actually "hire" this person - add the person being covered and the coverer to the hired list
@@ -484,8 +497,6 @@ def hired():
                             print(session[rank_lower + "_avail"][0])
                         
                         tag_counter += 1
-                        if tag_counter == PLATOON_OFFICERS:
-                            tag_counter = 0
 
             day += 1
 
