@@ -5,13 +5,7 @@
 {% endblock %}
 
 {% block main %}
-    <!-- Display Title
-        date for each day
-            list open shifts,
-            list "covering firefighter for covered firefighter - Day/Night/Hours",
-        IF anyone has NTW, "___ has NTW"
-        "Officer __ and Firefighter __ are up"
-    -->
+    <!-- "Officer __ and Firefighter __ are up" -->
     <h1>Platoon {{ platoon }} Hiring</h1>
     <form action="/hired" class="centered" method="post">
         <h2>First Cover Day</h2>
@@ -42,12 +36,11 @@
                     <td> {{ opening['person_covering'] }} hired for {{ opening['person_off'] }} - Night</td>
                 </tr>
             {% endfor %}
-            </table>
+        </table>
+        <br>
 
-            <br>
-
-                <h2>Second Cover Day</h2>
-            <table
+        <h2>Second Cover Day</h2>
+        <table>
             <tr>
                 <th>Officers</th>
             </tr>
@@ -74,7 +67,14 @@
                     <td> {{ opening['person_covering'] }} hired for {{ opening['person_off'] }} - Night</td>
                 </tr>
             {% endfor %}
-            </table>
-
+        </table>
+        <table>
+            <tr>
+                <td>
+                    <button type="submit">Submit</button>
+                </td>
+            </tr>
+        </table>
+    </form>
 
 {% endblock %}
