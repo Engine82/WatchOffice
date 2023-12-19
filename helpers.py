@@ -82,6 +82,7 @@ def hire(tag_list, availability_list, time, opening):
         print(tag_list)
         if member['tag_flipped'] != 1:
             member_up = member['username']
+            member['tag_flipped'] = 1
             break
 
     # Get this member's availability:

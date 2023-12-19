@@ -471,13 +471,18 @@ def hired():
                         hiring_result = [False]
                         while hiring_result[0] != True: 
                             print(f"New taglist: {new_taglist}")
+                            # Use hire function to 
                             hiring_result = hire(new_taglist, session[rank_lower + "_covering_" + str(day)], time, opening)
                             print(hiring_result)
                             session[rank_lower + "_hired_" + time + "_" + str(day)].append(hiring_result[1])
+                            # Move this person to the end of the hiring list
                             new_taglist.append(new_taglist.pop(0))
                             hiring_counter += 1
-                            if hiring_counter == shift_size - 1:
-                                new_taglist.append({'person_off': opening['username'], 'person_covering': "96 Off"})
+                            if hiring_counter == shift_size:
+                                session[rank_lower + "_hired_" + time + "_" + str(day)].append({
+                                    'person_off': opening['username'],
+                                    'person_covering': "96 Off"
+                                })
                                 hiring_result == [True]
                                 break
 
@@ -495,7 +500,17 @@ def hired():
             session['firefighters_hired_night_1'], '\n',
             session['firefighters_hired_day_2'], '\n',
             session['firefighters_hired_night_2'])
-        return render_template("hired.html")    
+
+        return render_template("hired.html", 
+            officers_day_1=session['officers_hired_day_1'],
+            officers_night_1=session['officers_hired_night_1'],
+            officers_day_2=session['officers_hired_day_2'],
+            officers_night_2=session['officers_hired_night_2'],
+            firefighters_day_1=session['firefighters_hired_day_1'],
+            firefighters_night_1=session['firefighters_hired_night_1'],
+            firefighters_day_2=session['firefighters_hired_day_2'],
+            firefighters_night_2=session['firefighters_hired_night_2'],
+            platoon=session['platoon'])    
 
 
 # SETTINGS
