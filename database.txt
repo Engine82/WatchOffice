@@ -19,6 +19,6 @@ platoon INTEGER NOT NULL,
 rank TEXT,
 member_out INTEGER NOT NULL,
 member_covering INTEGER NOT NULL,
-FOREIGN KEY (member_out) REFERENCES users(id)
+FOREIGN KEY (member_out) REFERENCES users(id),
 FOREIGN KEY (member_covering) REFERENCES users(id)
 );
