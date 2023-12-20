@@ -477,29 +477,20 @@ def hired():
                             session[rank_lower + "_hired_" + time + "_" + str(day)].append(hiring_result[1])
                             # Move this person to the end of the hiring list
                             new_taglist.append(new_taglist.pop(0))
-                            hiring_counter += 1
-                            if hiring_counter == shift_size:
+                            if hiring_counter == (shift_size - 1):
                                 session[rank_lower + "_hired_" + time + "_" + str(day)].append({
                                     'person_off': opening['username'],
                                     'person_covering': "96 Off"
                                 })
                                 hiring_result == [True]
+                                hiring_counter += 1
                                 break
+                            hiring_counter += 1
 
             day += 1
 
-
         # Assign NTW or next up person to open shift & flip tags
             # If next up person is unavailable because of dept business, assign NTW
-        #print(session['firefighters_avail'])
-        print(session['officers_hired_day_1'], '\n',
-            session['officers_hired_night_1'], '\n',
-            session['officers_hired_day_2'], '\n',
-            session['officers_hired_night_2'], '\n',
-            session['firefighters_hired_day_1'], '\n',
-            session['firefighters_hired_night_1'], '\n',
-            session['firefighters_hired_day_2'], '\n',
-            session['firefighters_hired_night_2'])
 
         return render_template("hired.html", 
             officers_day_1=session['officers_hired_day_1'],

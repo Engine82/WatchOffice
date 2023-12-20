@@ -82,17 +82,15 @@ def hire(tag_list, availability_list, time, opening):
         print(tag_list)
         if member['tag_flipped'] != 1:
             member_up = member['username']
-            member['tag_flipped'] = 1
             break
 
     # Get this member's availability:
     time = opening['shift']
     for person in availability_list:
         if person['username'] == member_up:
-            if person[time] != 'available':
-                return [False, {'person_off': 'unavailable', 'person_covering': person['username']}]
-            elif person[time] == 'available':
+            if person[time] == 'available':
                 return [True, {'person_off': opening['username'], 'person_covering': person['username']}]
+            return [False, {'person_off': 'unavailable', 'person_covering': person['username']}]
     
     
                             
