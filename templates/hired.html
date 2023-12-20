@@ -23,6 +23,11 @@
                     <td> {{ opening['person_covering'] }} hired for {{ opening['person_off'] }} - Night</td>
                 </tr>
             {% endfor %}
+            {% if officers_day_1 == [] and officers_night_1 == [] %}
+                <tr>
+                    <td>No officers hiring</td>
+                </tr>
+            {% endif %}
             <tr>
                 <th>Firefighters</th>
             </tr>
@@ -36,6 +41,11 @@
                     <td> {{ opening['person_covering'] }} hired for {{ opening['person_off'] }} - Night</td>
                 </tr>
             {% endfor %}
+            {% if firefighters_day_1 == [] and firefighters_night_1 == [] %}
+                <tr>
+                    <td>No firefighters hiring</td>
+                </tr>
+            {% endif %}
         </table>
         <br>
 
@@ -54,6 +64,11 @@
                     <td> {{ opening['person_covering'] }} hired for {{ opening['person_off'] }} - Night</td>
                 </tr>
             {% endfor %}
+            {% if officers_day_2 == [] and officers_night_2 == [] %}
+                <tr>
+                    <td>No officers hiring</td>
+                </tr>
+            {% endif %}
             <tr>
                 <th>Firefighters</th>
             </tr>
@@ -67,6 +82,11 @@
                     <td> {{ opening['person_covering'] }} hired for {{ opening['person_off'] }} - Night</td>
                 </tr>
             {% endfor %}
+            {% if firefighters_day_2 == [] and firefighters_night_2 == [] %}
+                <tr>
+                    <td>No firefighters hiring</td>
+                </tr>
+            {% endif %}                
         </table>
         <table>
             <tr>
