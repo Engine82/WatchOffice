@@ -18,7 +18,10 @@
                     <td> {{ opening['person_covering'] }} hired for {{ opening['person_off'] }} - Day</td>
                 </tr>
             {% endfor %}
-            {% for opening in officers_night_1 %}
+            <tr>
+                <td><br></td>
+            </tr> 
+           {% for opening in officers_night_1 %}
                 <tr>
                     <td> {{ opening['person_covering'] }} hired for {{ opening['person_off'] }} - Night</td>
                 </tr>
@@ -36,6 +39,9 @@
                     <td> {{ opening['person_covering'] }} hired for {{ opening['person_off'] }} - Day</td>
                 </tr>
             {% endfor %}
+            <tr>
+                <td><br></td>
+            </tr> 
             {% for opening in firefighters_night_1 %}
                 <tr>
                     <td> {{ opening['person_covering'] }} hired for {{ opening['person_off'] }} - Night</td>
@@ -59,6 +65,9 @@
                     <td> {{ opening['person_covering'] }} hired for {{ opening['person_off'] }} - Day</td>
                 </tr>
             {% endfor %}
+            <tr>
+                <td><br></td>
+            </tr>
             {% for opening in officers_night_2 %}
                 <tr>
                     <td> {{ opening['person_covering'] }} hired for {{ opening['person_off'] }} - Night</td>
@@ -77,6 +86,9 @@
                     <td> {{ opening['person_covering'] }} hired for {{ opening['person_off'] }} - Day</td>
                 </tr>
             {% endfor %}
+            <tr>
+                <br>
+            </tr>
             {% for opening in firefighters_night_2 %}
                 <tr>
                     <td> {{ opening['person_covering'] }} hired for {{ opening['person_off'] }} - Night</td>
