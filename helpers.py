@@ -59,6 +59,7 @@ def find_next_up(tag_list):
         match person:
             case {'tag_flipped': tag_flipped} if tag_flipped != 1:
                 place = tag_list.index(person)
+                print(f"place: {place}")
                 return place
     # If nobody is flipped, return first person
     return 0
@@ -86,11 +87,13 @@ def hire(tag_list, availability_list, time, opening):
 
     # Get this member's availability:
     time = opening['shift']
+    if len(availability_list) == 0: return [False]
     for person in availability_list:
         if person['username'] == member_up:
             if person[time] == 'available':
                 return [True, {'person_off': opening['username'], 'person_covering': person['username']}]
             return [False, {'person_off': 'unavailable', 'person_covering': person['username']}]
+    return [False, {'person_off': 'unavailable', 'person_covering': person['username']}]
     
     
                             

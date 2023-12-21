@@ -441,36 +441,41 @@ def hired():
 
             # RANK - Iterate through each rank (officer/firefighter)
             for rank in session['hiring_tiers']:
-
-                # Re-order tag list, starting with first up person, and un-flip all tags
-                rnk = rank['tier'].lower()
-                new_taglist = list(reorder_tagboard(session[rnk + "_tags"]))
-                for member in new_taglist:
-                    member.update((k, 0) for k, v in member.items() if v == 1)
-                print(f" New taglist: {list(new_taglist)}")
                 
                 # TIME - Iterate through time
                 for time in daynight:
 
+                    # Re-order tag list, starting with first up person, and un-flip all tags
+                    rnk = rank['tier'].lower()
+                    new_taglist = list(reorder_tagboard(session[rnk + "_tags"]))
+                    for member in new_taglist:
+                        member.update((k, 0) for k, v in member.items() if v == 1)
+                    print(f" New taglist: {list(new_taglist)}")
+
                     # Iterate through each opening
                     rank_lower = rank['tier'].lower()
                     hiring_counter = 0
+
                     shift_size = len(session[rank_lower + "_covering_" + str(day)])
                     print(f"Shift size: {shift_size}")
+
                     for opening in session[rank_lower + "_covered_" + time + "_" + str(day)]:
                         print(f"opening: {opening}")
                         
                         # Hire for this shift
                         hiring_result = [False]
                         while hiring_result[0] != True: 
-                            print(f"New taglist: {new_taglist}")
+
                             # Use hire function to 
                             hiring_result = hire(new_taglist, session[rank_lower + "_covering_" + str(day)], time, opening)
                             print(hiring_result)
+                            if hiring_result[0] != True:
+                                hiring_counter -= 1
+                            print(f"Hiring counter: {hiring_counter}")
                             session[rank_lower + "_hired_" + time + "_" + str(day)].append(hiring_result[1])
                             # Move this person to the end of the hiring list
-                            new_taglist.append(new_taglist.pop(0))
-                            if hiring_counter == (shift_size - 1):
+                            if len(new_taglist) > 0: new_taglist.pop(0)
+                            if len(new_taglist) == 0:
                                 session[rank_lower + "_hired_" + time + "_" + str(day)].append({
                                     'person_off': opening['username'],
                                     'person_covering': "96 Off"
