@@ -378,7 +378,6 @@ def hired():
 
                 # Iterate through each opening
                 rank_lower = rank['tier'].lower()
-                print(f"rank_availability_day: {session[rank_lower + '_avail']}")
                 member_counter = 0
                 for member in session[rank_lower + "_avail"]:
 
@@ -389,7 +388,6 @@ def hired():
                             'day': 'unavailable',
                             'night': 'unavailable'
                         })
-                        print(session[rank_lower + "_covering_" + str(day)])                    
 
                     # Unavailable Day
                     elif member['avail_' + str(day)] == 'day':
@@ -398,7 +396,6 @@ def hired():
                             'day': 'unavailable',
                             'night': 'available'
                         })
-                        print(session[rank_lower + "_covering_" + str(day)])
 
                     # Unavailable Night
                     elif member['avail_' + str(day)] == 'night':
@@ -407,7 +404,6 @@ def hired():
                             'day': 'available',
                             'night': 'unavailable'
                         })
-                        print(session[rank_lower + "_covering_" + str(day)])
                     
                     # Available
                     elif member['avail_' + str(day)] == 'available':
@@ -416,7 +412,6 @@ def hired():
                             'day': 'available',
                             'night': 'available'
                         })
-                        print(session[rank_lower + "_covering_" + str(day)])
                     
                     member_counter += 1
                 
@@ -424,7 +419,6 @@ def hired():
 
         """ TAG STATUS """
         # Create list with tag status of covering members
-        print("Tag lists:")
         for rank in session['hiring_tiers']:
             rnk = rank['tier'].lower()
             counter = 0
@@ -434,7 +428,6 @@ def hired():
                     'tag_flipped': session[rnk + "_avail"][counter]['tag_flipped']
                 })
                 counter += 1
-            print(session[rnk + '_tags'])
 
 
         """ HIRE """
