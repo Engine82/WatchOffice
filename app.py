@@ -472,9 +472,7 @@ def hired():
                             if hiring_result[0] != True:
                                 hiring_counter -= 1
                             print(f"Hiring counter: {hiring_counter}")
-                            session[rank_lower + "_hired_" + time + "_" + str(day)].append(hiring_result[1])
                             # Move this person to the end of the hiring list
-                            if len(new_taglist) > 0: new_taglist.pop(0)
                             if len(new_taglist) == 0:
                                 session[rank_lower + "_hired_" + time + "_" + str(day)].append({
                                     'person_off': opening['username'],
@@ -483,6 +481,8 @@ def hired():
                                 hiring_result == [True]
                                 hiring_counter += 1
                                 break
+                            session[rank_lower + "_hired_" + time + "_" + str(day)].append(hiring_result[1])
+                            if len(new_taglist) > 0: new_taglist.pop(0)
                             hiring_counter += 1
 
             day += 1
