@@ -65,4 +65,7 @@ def find_next_up(tag_list):
 
 
 # Hire function
-def hire():
+# opening: {'username': opening['username'], 'shift': 'day'}
+# availability: [{'username': member['username'], 'day': 'available', 'night': 'unavailable'}, {}]
+# taglist: [{'username': member['username'], 'tag_flipped': 0}, {}]
+def hire(opening, availabilty, taglist):
