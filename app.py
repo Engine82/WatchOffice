@@ -449,52 +449,16 @@ def hired():
                     # whatever the previous order was
                     # So, to fix this, update the session tag list at the end of each round of hiring
                     # [{'username': 'kyle', 'tag_flipped': 0}, ]
-                    new_taglist = list(reorder_tagboard(session[rnk + "_tags"]))
-                    for member in new_taglist:
-                        member.update((k, 0) for k, v in member.items() if v == 1)
 
                     # Iterate through each opening
                         # {"tier": "Officers"}, {"tier": "Firefighters"}
                     rank_lower = rank['tier'].lower()
-                    hiring_counter = 0
-
                     shift_size = len(session[rank_lower + "_covering_" + str(day)])
 
                     # session[rank_covered_day_1] = [{'username': opening['username'], 'shift': 'day'}]
                     for opening in session[rank_lower + "_covered_" + time + "_" + str(day)]:
                         
-                        # Hire for this shift
-                            # Hiring_result: [True, {'person_off': chad, 'person_covering': shipp}]
-                        hiring_result = [False]
-                        while hiring_result[0] != True: 
-
-                            # Use hire function to 
-                                # new_taglist: [{'username': 'kyle', 'tag_flipped': 0}, ]
-                                # Session[offcers_covering_1]: [{'username': 'kyle', 'day': 'available', 'night': 'unavailable'}]
-                                # time: 'day'
-                                # opening: [{'username': opening['username'], 'shift': 'day'}]
-                            hiring_result = hire(new_taglist, session[rank_lower + "_covering_" + str(day)], time, opening)
-                            if hiring_result[0] != True:
-                                hiring_counter -= 1
-                    
-                            session[rank_lower + "_hired_" + time + "_" + str(day)].append(hiring_result[1])
-                            if len(new_taglist) > 0: new_taglist.pop(0)
-                            hiring_counter += 1
-
-                    # Update session[rnk + "_tags"] so that tags are up to date
-                        # Find last member
-                        if len(new_taglist) >= 0:
-                            last_member = new_taglist[0]
-
-                            # Go through tablist and set tag_flipped = 1 until you get to the member who's up
-                            for member in session[rnk + "_tags"]:
-                                if member['username'] == last_member['username']:
-                                    break
-                                member['tag_flipped'] = 1
-                        else:
-                            for member in session[rnk + "_tags"]: 
-                                member['tag_flipped'] = 0
-                        print(f"Session[rank + tags]: {session[rnk + '_tags']}")
+                        
 
             day += 1
 
