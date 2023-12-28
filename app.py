@@ -447,6 +447,7 @@ def hired():
                     # !!!!!!!! So here, in the next line on every iteration of hiring day/rank/time, it is 
                     # ordering the new_taglist based on the tag status in session[firefighters_tags], not
                     # whatever the previous order was
+                    # So, to fix this, update the session tag list at the end of each round of hiring
                     # [{'username': 'kyle', 'tag_flipped': 0}, ]
                     new_taglist = list(reorder_tagboard(session[rnk + "_tags"]))
                     for member in new_taglist:
@@ -482,7 +483,7 @@ def hired():
 
                     # Update session[rnk + "_tags"] so that tags are up to date
                         # Find last member
-                        if len(new_taglist) > 0:
+                        if len(new_taglist) >= 0:
                             last_member = new_taglist[0]
 
                             # Go through tablist and set tag_flipped = 1 until you get to the member who's up
