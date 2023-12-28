@@ -475,6 +475,7 @@ def hired():
                             hiring_result = hire(new_taglist, session[rank_lower + "_covering_" + str(day)], time, opening)
                             if hiring_result[0] != True:
                                 hiring_counter -= 1
+<<<<<<< HEAD
                             # Move this person to the end of the hiring list
                             if len(new_taglist) == 0:
                                 hiring_result == [True, {
@@ -485,6 +486,17 @@ def hired():
                                 break
 
                                 
+=======
+                                # Move this person to the end of the hiring list
+                                if len(new_taglist) == 0:
+                                    session[rank_lower + "_hired_" + time + "_" + str(day)].append({
+                                        'person_off': opening['username'],
+                                        'person_covering': "96 Off"
+                                    })
+                                    hiring_result == [True]
+                                    hiring_counter += 1
+                                    break
+>>>>>>> 5d44930ff1d85c01ca59e36838e449b0fe17fbf9
                             session[rank_lower + "_hired_" + time + "_" + str(day)].append(hiring_result[1])
                             if len(new_taglist) > 0: new_taglist.pop(0)
                             hiring_counter += 1
