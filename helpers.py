@@ -58,14 +58,51 @@ def find_next_up(tag_list):
     for person in tag_list:
         match person:
             case {'tag_flipped': tag_flipped} if tag_flipped != 1:
-                place = tag_list.index(person)
-                return place
+                # Return {'username': 'kyle', 'tag_flipped': 0}
+                return tag_list.index(person)
     # If nobody is flipped, return first person
     return 0
 
+
+def get_availability(member_up, availability):
+    print(availability)
+    for person in availability:
+            match person:
+                case {'username': username} if username == member_up:
+                    return(person)
+    
+    return 1
 
 # Hire function
 # opening: {'username': opening['username'], 'shift': 'day'}
 # availability: [{'username': member['username'], 'day': 'available', 'night': 'unavailable'}, {}]
 # taglist: [{'username': member['username'], 'tag_flipped': 0}, {}]
-def hire(opening, availabilty, taglist):
+def hire(opening, availability, taglist, time, round):
+    # Create list of results
+    results = []
+
+    # Fine next person up (tag_flipped == 0)
+    next_up = find_next_up(taglist)
+    next_up_name = taglist[next_up]['username']
+    print("taglist next up:", taglist[next_up])
+
+    # Get availability of next_up person
+    avail = get_availability(next_up_name, availability)
+    print("avail:", avail)
+
+    # If available
+    if avail[time] == 'available':
+        results.append({
+            'person_covering': next_up_name,
+            'person_off': opening['username']
+        })
+        print("Results:", results)
+        return(results)
+    # If unavailable:
+    else:
+        print("Results:", results)
+        return(results)
+
+    print()
+    return(taglist[next_up])
+    '''list of results for this opening - all unavailable skipped + covering person hired/96 off'''

@@ -10,7 +10,6 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from helpers import login_required
 from helpers import Base, User, Ntw
-from helpers import reorder_tagboard
 from helpers import hire
 
 
@@ -448,16 +447,25 @@ def hired():
                     # Iterate through each opening
                     # session[rank_covered_day_1] = [{'username': opening['username'], 'shift': 'day'}]
                     # Hire(opening, availability, taglist)
+                    round_num = 0
                     for opening in session[rnk + "_covered_" + time + "_" + str(day)]:
-                        session[rnk + "_hired_" + time + "_" + str(day)].append(hire(opening, session[rnk + "_covering_" + str(day)], session[rnk + '_tags']))
-
+                        print(rnk + "_hired_" + time + "_" + str(day))
+                        session[rnk + "_hired_" + time + "_" + str(day)].extend(
+                            hire(
+                                opening,
+                                session[rnk + "_covering_" + str(day)],
+                                session[rnk + '_tags'],
+                                time,
+                                round_num
+                            ))
+                        round_num += 1
                         
 
             day += 1
 
         # Assign NTW or next up person to open shift & flip tags
             # If next up person is unavailable because of dept business, assign NTW
-
+        print("officers day 1:", session['officers_hired_day_1'])
         return render_template("hired.html", 
             officers_day_1=session['officers_hired_day_1'],
             officers_night_1=session['officers_hired_night_1'],
