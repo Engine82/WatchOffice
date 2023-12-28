@@ -436,28 +436,21 @@ def hired():
 
             # RANK - Iterate through each rank: [{"tier": "Officers"}, {"tier": "Firefighters"}]
             for rank in session['hiring_tiers']:
+            # {"tier": "Officers"}, {"tier": "Firefighters"}
                 
-                # TIME - Iterate through time: ['day', 'night']
+                # TIME - Iterate through time:
                 for time in daynight:
+                # ['day', 'night']
 
-                    # Re-order tag list, starting with first up person, and un-flip all tags
                     rnk = rank['tier'].lower()
-
-                    # session 
-                    # !!!!!!!! So here, in the next line on every iteration of hiring day/rank/time, it is 
-                    # ordering the new_taglist based on the tag status in session[firefighters_tags], not
-                    # whatever the previous order was
-                    # So, to fix this, update the session tag list at the end of each round of hiring
-                    # [{'username': 'kyle', 'tag_flipped': 0}, ]
+                    shift_size = len(session[rnk + "_covering_" + str(day)])
 
                     # Iterate through each opening
-                        # {"tier": "Officers"}, {"tier": "Firefighters"}
-                    rank_lower = rank['tier'].lower()
-                    shift_size = len(session[rank_lower + "_covering_" + str(day)])
-
                     # session[rank_covered_day_1] = [{'username': opening['username'], 'shift': 'day'}]
-                    for opening in session[rank_lower + "_covered_" + time + "_" + str(day)]:
-                        
+                    # Hire(opening, availability, taglist)
+                    for opening in session[rnk + "_covered_" + time + "_" + str(day)]:
+                        session[rnk + "_hired_" + time + "_" + str(day)].append(hire(opening, session[rnk + "_covering_" + str(day)], session[rnk + '_tags']))
+
                         
 
             day += 1
