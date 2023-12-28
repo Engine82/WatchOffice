@@ -59,7 +59,6 @@ def find_next_up(tag_list):
         match person:
             case {'tag_flipped': tag_flipped} if tag_flipped != 1:
                 place = tag_list.index(person)
-                print(f"place: {place}")
                 return place
     # If nobody is flipped, return first person
     return 0
@@ -79,8 +78,6 @@ def hire(tag_list, availability_list, time, opening):
     
     # Get next member up to be hired
     for member in tag_list:
-        print(member)
-        print(tag_list)
         if member['tag_flipped'] != 1:
             member_up = member['username']
             break

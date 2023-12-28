@@ -280,11 +280,6 @@ def hiring_c():
             cover_2_officers.append({'username': 'vacancy'})
         session['cover_2_officers'] = cover_2_officers
 
-        print(f"Cover 1: {session['cover_1_officers']}")
-        print(f"Cover 2: {session['cover_2_officers']}")
-        print(f"Cover 1: {session['cover_1_firefighters']}")
-        print(f"Cover 2: {session['cover_2_firefighters']}")
-
         return render_template("hiring_c.html", cover_1_firefighters=cover_1_firefighters, cover_1_officers=cover_1_officers, cover_2_firefighters=cover_2_firefighters, cover_2_officers=cover_2_officers, days_covered=days_covered, platoon=session['platoon'])
 
 
@@ -369,7 +364,6 @@ def hired():
         """ AVAILABILITY """
         # Break down each covering member's availability into it's appropriate list
         # Iterate through each rank
-        print("Covering breakdown:")
         for rank in session['hiring_tiers']:
 
             # Iterate through each day
@@ -440,48 +434,57 @@ def hired():
         day = 1
         while day <= DAYS_COVERED:
 
-            # RANK - Iterate through each rank (officer/firefighter)
+            # RANK - Iterate through each rank: [{"tier": "Officers"}, {"tier": "Firefighters"}]
             for rank in session['hiring_tiers']:
                 
-                # TIME - Iterate through time
+                # TIME - Iterate through time: ['day', 'night']
                 for time in daynight:
 
                     # Re-order tag list, starting with first up person, and un-flip all tags
                     rnk = rank['tier'].lower()
+
+                    # session 
+                    # !!!!!!!! So here, in the next line on every iteration of hiring day/rank/time, it is 
+                    # ordering the new_taglist based on the tag status in session[firefighters_tags], not
+                    # whatever the previous order was
+                    # [{'username': 'kyle', 'tag_flipped': 0}, ]
                     new_taglist = list(reorder_tagboard(session[rnk + "_tags"]))
                     for member in new_taglist:
                         member.update((k, 0) for k, v in member.items() if v == 1)
-                    print(f" New taglist: {list(new_taglist)}")
 
                     # Iterate through each opening
+                        # {"tier": "Officers"}, {"tier": "Firefighters"}
                     rank_lower = rank['tier'].lower()
                     hiring_counter = 0
 
                     shift_size = len(session[rank_lower + "_covering_" + str(day)])
-                    print(f"Shift size: {shift_size}")
 
+                    # session[rank_covered_day_1] = [{'username': opening['username'], 'shift': 'day'}]
                     for opening in session[rank_lower + "_covered_" + time + "_" + str(day)]:
-                        print(f"opening: {opening}")
                         
                         # Hire for this shift
+                            # Hiring_result: [True, {'person_off': chad, 'person_covering': shipp}]
                         hiring_result = [False]
                         while hiring_result[0] != True: 
 
                             # Use hire function to 
+                                # new_taglist: [{'username': 'kyle', 'tag_flipped': 0}, ]
+                                # Session[offcers_covering_1]: [{'username': 'kyle', 'day': 'available', 'night': 'unavailable'}]
+                                # time: 'day'
+                                # opening: [{'username': opening['username'], 'shift': 'day'}]
                             hiring_result = hire(new_taglist, session[rank_lower + "_covering_" + str(day)], time, opening)
-                            print(hiring_result)
                             if hiring_result[0] != True:
                                 hiring_counter -= 1
-                            print(f"Hiring counter: {hiring_counter}")
                             # Move this person to the end of the hiring list
                             if len(new_taglist) == 0:
-                                session[rank_lower + "_hired_" + time + "_" + str(day)].append({
+                                hiring_result == [True, {
                                     'person_off': opening['username'],
                                     'person_covering': "96 Off"
-                                })
-                                hiring_result == [True]
-                                hiring_counter += 1
+                                }]
+                                session[rank_lower + "_hired_" + time + "_" + str(day)].append(hiring_result[1])
                                 break
+
+                                
                             session[rank_lower + "_hired_" + time + "_" + str(day)].append(hiring_result[1])
                             if len(new_taglist) > 0: new_taglist.pop(0)
                             hiring_counter += 1
@@ -499,6 +502,7 @@ def hired():
                         else:
                             for member in session[rnk + "_tags"]: 
                                 member['tag_flipped'] = 0
+                        print(f"Session[rank + tags]: {session[rnk + '_tags']}")
 
             day += 1
 
