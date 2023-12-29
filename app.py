@@ -324,6 +324,9 @@ def hired():
         session['officers_tags'] = []
         session['firefighters_tags'] = []
 
+        # Create list for hiring results
+        session['results'] = []
+
         day_night = ["day_", "night_"]
         daynight = ['day', 'night']
 
@@ -429,7 +432,6 @@ def hired():
         # the next available person
 
         # DAY - Iterate through each day
-        # FIXME: hiring list not re-ordering to go to Kyle after Amy is hired
         day = 1
         while day <= DAYS_COVERED:
 
@@ -447,19 +449,21 @@ def hired():
                     # Iterate through each opening
                     # session[rank_covered_day_1] = [{'username': opening['username'], 'shift': 'day'}]
                     # Hire(opening, availability, taglist)
-                    round_num = 0
+                    
                     for opening in session[rnk + "_covered_" + time + "_" + str(day)]:
+                        session['round_num'] = 0
                         print(rnk + "_hired_" + time + "_" + str(day))
                         session[rnk + "_hired_" + time + "_" + str(day)].extend(
                             hire(
                                 opening,
                                 session[rnk + "_covering_" + str(day)],
                                 session[rnk + '_tags'],
+                                session['results'],
                                 time,
-                                round_num
+                                session['round_num'],
+                                shift_size
                             ))
-                        round_num += 1
-                        
+                        print("results 3:", session['results'])
 
             day += 1
 
