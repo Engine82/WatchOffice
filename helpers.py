@@ -78,7 +78,6 @@ def flip_tag(taglist, member_up):
     for person in taglist:
         match person:
             case {'username': username} if username == member_up:
-                print("Person:", person)
                 person['tag_flipped'] = 1
                 return()
 
@@ -89,47 +88,44 @@ def flip_tag(taglist, member_up):
 # taglist: [{'username': member['username'], 'tag_flipped': 0}, {}]
 def hire(opening, availability, taglist, results, time, hiring_round, shift_size):
 
-    counter = 0
     # Clear session['results']
     session['results'] = []
-    print("Hiring Round:", hiring_round)
-
-
     
     # Fine next person up (tag_flipped == 0)
     next_up = find_next_up(taglist)
     next_up_name = taglist[next_up]['username']
-    print("taglist next up:", taglist[next_up])
 
     # Get availability of next_up person
     avail = get_availability(next_up_name, availability)
-    print("avail:", avail)
 
     # Flip tag
     flip_tag(taglist, next_up_name)
     # Goal: session[tag_list][{'username': 'kyle', 'tag_flipped': 1}
 
-    counter += 1
+    session['count'] += 1
+    print("Count:", session['count'])
 
     # If available
     if avail[time] == 'available':
-        print("Results 1:", results)
         results.append({
             'person_covering': next_up_name,
             'person_off': opening['username']
         })
-        print("Results 2:", results)
-        return([results, counter])
+        return([results, session['count']])
 
     # If unavailable:
     else:
-        if hiring_round > (2 * shift_size):
-            return()
         results.append({
             'person_covering': next_up_name,
             'person_off': 'unavailable'
         })
-        print("Results:", results)
+        print(results)
+        if session['count'] >= shift_size:
+            results.append({
+                'person_covering': "96 Off",
+                'person_off': opening['username']
+            })
+            return([results, session['count']])
         return(hire(opening, availability, taglist, results, time, hiring_round, shift_size))
 
     return(taglist[next_up])

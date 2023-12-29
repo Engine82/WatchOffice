@@ -441,20 +441,22 @@ def hired():
                 
                 rnk = rank['tier'].lower()
                 shift_size = len(session[rnk + "_covering_" + str(day)])
-
+                print("Shift size:", shift_size)
                 # TIME - Iterate through time:
                 for time in daynight:
                 # ['day', 'night']
                     session['round_num'] = 1
+                    counter = 0
+                    
 
                     # Iterate through each opening
                     # session[rank_covered_day_1] = [{'username': opening['username'], 'shift': 'day'}]
                     # Hire(opening, availability, taglist)
-                    counter = 0
                     for opening in session[rnk + "_covered_" + time + "_" + str(day)]:
                         print()
+                        print("Opening:", opening)
                         print("Counter:", counter)
-
+                        session['count'] = 0
                         if counter < shift_size:
                             result = hire(
                                     opening,
@@ -466,19 +468,16 @@ def hired():
                                     shift_size
                                 )
                             session[rnk + "_hired_" + time + "_" + str(day)].extend(result[0])
-                            print("Results 3:", session['results'])
-                            print("counter:", counter)
-                            counter = counter + result[1] + 1
-                            print("counter:", counter)
-                        
+                            counter = counter + result[1]
+
                         # If everyone has been checked and either hired or unavailable, hire from 96 off
                         else:
                             session[rnk + "_hired_" + time + "_" + str(day)].append({
                                 'person_covering': "96 off",
                                 'person_off': opening['username']
                             })
-                            print("96 OFF")
                             counter += 1
+
 
             day += 1
 
