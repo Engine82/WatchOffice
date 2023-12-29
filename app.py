@@ -441,23 +441,23 @@ def hired():
                 
                 rnk = rank['tier'].lower()
                 shift_size = len(session[rnk + "_covering_" + str(day)])
+                print()
                 print("Shift size:", shift_size)
                 # TIME - Iterate through time:
                 for time in daynight:
                 # ['day', 'night']
-                    session['round_num'] = 1
-                    counter = 0
                     
 
                     # Iterate through each opening
                     # session[rank_covered_day_1] = [{'username': opening['username'], 'shift': 'day'}]
                     # Hire(opening, availability, taglist)
-                    for opening in session[rnk + "_covered_" + time + "_" + str(day)]:
+                    for opening, opening_count in enumerate(session[rnk + "_covered_" + time + "_" + str(day)]):
                         print()
+                        print("Round:", session['round_num'])
                         print("Opening:", opening)
                         print("Counter:", counter)
-                        session['count'] = 0
-                        if counter < shift_size:
+
+                        if count < shift_size:
                             result = hire(
                                     opening,
                                     session[rnk + "_covering_" + str(day)],
@@ -468,7 +468,6 @@ def hired():
                                     shift_size
                                 )
                             session[rnk + "_hired_" + time + "_" + str(day)].extend(result[0])
-                            counter = counter + result[1]
 
                         # If everyone has been checked and either hired or unavailable, hire from 96 off
                         else:
@@ -476,14 +475,13 @@ def hired():
                                 'person_covering': "96 off",
                                 'person_off': opening['username']
                             })
-                            counter += 1
+                        print("Hiring: ",session[rnk + "_hired_" + time + "_" + str(day)])
 
 
             day += 1
 
         # Assign NTW or next up person to open shift & flip tags
             # If next up person is unavailable because of dept business, assign NTW
-        print("officers day 1:", session['officers_hired_day_1'])
         return render_template("hired.html", 
             officers_day_1=session['officers_hired_day_1'],
             officers_night_1=session['officers_hired_night_1'],

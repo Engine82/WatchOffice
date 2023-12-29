@@ -89,9 +89,10 @@ def flip_tag(taglist, member_up):
 def hire(opening, availability, taglist, results, time, hiring_round, shift_size):
 
     # Clear session['results']
+    # Session is used here to make results available upon each iteration when recursing
     session['results'] = []
     
-    # Fine next person up (tag_flipped == 0)
+    # Find next person up (tag_flipped == 0)
     next_up = find_next_up(taglist)
     next_up_name = taglist[next_up]['username']
 
@@ -102,11 +103,11 @@ def hire(opening, availability, taglist, results, time, hiring_round, shift_size
     flip_tag(taglist, next_up_name)
     # Goal: session[tag_list][{'username': 'kyle', 'tag_flipped': 1}
 
-    session['count'] += 1
     print("Count:", session['count'])
 
     # If available
     if avail[time] == 'available':
+        session['count'] += 1
         results.append({
             'person_covering': next_up_name,
             'person_off': opening['username']
@@ -115,11 +116,12 @@ def hire(opening, availability, taglist, results, time, hiring_round, shift_size
 
     # If unavailable:
     else:
-        if session['count'] <= shift_size:
+        if session['count'] < shift_size:
             results.append({
                 'person_covering': next_up_name,
                 'person_off': 'unavailable'
             })
+            session['count'] += 1
             print(results)
             return(hire(opening, availability, taglist, results, time, hiring_round, shift_size))
         
