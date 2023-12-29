@@ -115,12 +115,16 @@ def hire(opening, availability, taglist, results, time, hiring_round, shift_size
 
     # If unavailable:
     else:
-        results.append({
-            'person_covering': next_up_name,
-            'person_off': 'unavailable'
-        })
-        print(results)
-        if session['count'] >= shift_size:
+        if session['count'] <= shift_size:
+            results.append({
+                'person_covering': next_up_name,
+                'person_off': 'unavailable'
+            })
+            print(results)
+            return(hire(opening, availability, taglist, results, time, hiring_round, shift_size))
+        
+        else:
+        # if session['count'] >= shift_size:
             results.append({
                 'person_covering': "96 Off",
                 'person_off': opening['username']
