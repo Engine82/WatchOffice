@@ -88,11 +88,14 @@ def flip_tag(taglist, member_up):
 # availability: [{'username': member['username'], 'day': 'available', 'night': 'unavailable'}, {}]
 # taglist: [{'username': member['username'], 'tag_flipped': 0}, {}]
 def hire(opening, availability, taglist, results, time, hiring_round, shift_size):
-    print()
+
+    counter = 0
     # Clear session['results']
     session['results'] = []
-    hiring_round += 1
+    print("Hiring Round:", hiring_round)
 
+
+    
     # Fine next person up (tag_flipped == 0)
     next_up = find_next_up(taglist)
     next_up_name = taglist[next_up]['username']
@@ -106,6 +109,8 @@ def hire(opening, availability, taglist, results, time, hiring_round, shift_size
     flip_tag(taglist, next_up_name)
     # Goal: session[tag_list][{'username': 'kyle', 'tag_flipped': 1}
 
+    counter += 1
+
     # If available
     if avail[time] == 'available':
         print("Results 1:", results)
@@ -114,11 +119,12 @@ def hire(opening, availability, taglist, results, time, hiring_round, shift_size
             'person_off': opening['username']
         })
         print("Results 2:", results)
-        return(results)
+        return([results, counter])
 
     # If unavailable:
     else:
-        #if hiring_round 
+        if hiring_round > (2 * shift_size):
+            return()
         results.append({
             'person_covering': next_up_name,
             'person_off': 'unavailable'
@@ -126,6 +132,5 @@ def hire(opening, availability, taglist, results, time, hiring_round, shift_size
         print("Results:", results)
         return(hire(opening, availability, taglist, results, time, hiring_round, shift_size))
 
-    print()
     return(taglist[next_up])
     '''list of results for this opening - all unavailable skipped + covering person hired/96 off'''

@@ -439,31 +439,46 @@ def hired():
             for rank in session['hiring_tiers']:
             # {"tier": "Officers"}, {"tier": "Firefighters"}
                 
+                rnk = rank['tier'].lower()
+                shift_size = len(session[rnk + "_covering_" + str(day)])
+
                 # TIME - Iterate through time:
                 for time in daynight:
                 # ['day', 'night']
-
-                    rnk = rank['tier'].lower()
-                    shift_size = len(session[rnk + "_covering_" + str(day)])
+                    session['round_num'] = 1
 
                     # Iterate through each opening
                     # session[rank_covered_day_1] = [{'username': opening['username'], 'shift': 'day'}]
                     # Hire(opening, availability, taglist)
-                    
+                    counter = 0
                     for opening in session[rnk + "_covered_" + time + "_" + str(day)]:
-                        session['round_num'] = 0
-                        print(rnk + "_hired_" + time + "_" + str(day))
-                        session[rnk + "_hired_" + time + "_" + str(day)].extend(
-                            hire(
-                                opening,
-                                session[rnk + "_covering_" + str(day)],
-                                session[rnk + '_tags'],
-                                session['results'],
-                                time,
-                                session['round_num'],
-                                shift_size
-                            ))
-                        print("results 3:", session['results'])
+                        print()
+                        print("Counter:", counter)
+
+                        if counter < shift_size:
+                            result = hire(
+                                    opening,
+                                    session[rnk + "_covering_" + str(day)],
+                                    session[rnk + '_tags'],
+                                    session['results'],
+                                    time,
+                                    session['round_num'],
+                                    shift_size
+                                )
+                            session[rnk + "_hired_" + time + "_" + str(day)].extend(result[0])
+                            print("Results 3:", session['results'])
+                            print("counter:", counter)
+                            counter = counter + result[1] + 1
+                            print("counter:", counter)
+                        
+                        # If everyone has been checked and either hired or unavailable, hire from 96 off
+                        else:
+                            session[rnk + "_hired_" + time + "_" + str(day)].append({
+                                'person_covering': "96 off",
+                                'person_off': opening['username']
+                            })
+                            print("96 OFF")
+                            counter += 1
 
             day += 1
 
