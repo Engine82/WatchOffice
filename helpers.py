@@ -86,53 +86,52 @@ def flip_tag(taglist, member_up):
 # opening: {'username': opening['username'], 'shift': 'day'}
 # availability: [{'username': member['username'], 'day': 'available', 'night': 'unavailable'}, {}]
 # taglist: [{'username': member['username'], 'tag_flipped': 0}, {}]
-def hire(opening, availability, taglist, results, time, hiring_round, shift_size):
+def hire(opening, availability, taglist, results, time, covering_count, shift_size):
 
-    # Clear session['results']
     # Session is used here to make results available upon each iteration when recursing
+    # Clear session['results']
     session['results'] = []
     
-    # Find next person up (tag_flipped == 0)
-    next_up = find_next_up(taglist)
-    next_up_name = taglist[next_up]['username']
+    if covering_count < shift_size:
+        # Find next person up (tag_flipped == 0)
+        next_up = find_next_up(taglist)
+        next_up_name = taglist[next_up]['username']
 
-    # Get availability of next_up person
-    avail = get_availability(next_up_name, availability)
+        # Get availability of next_up person
+        avail = get_availability(next_up_name, availability)
 
-    # Flip tag
-    flip_tag(taglist, next_up_name)
-    # Goal: session[tag_list][{'username': 'kyle', 'tag_flipped': 1}
+        # Flip tag
+        flip_tag(taglist, next_up_name)
+        
+        # Goal: session[tag_list][{'username': 'kyle', 'tag_flipped': 1}
+        covering_count += 1
 
-    print("Count:", session['count'])
+        # If available
+        if avail[time] == 'available':
+            results.append({
+                'person_covering': next_up_name,
+                'person_off': opening['username']
+            })
+            return([results, covering_count])
 
-    # If available
-    if avail[time] == 'available':
-        session['count'] += 1
-        results.append({
-            'person_covering': next_up_name,
-            'person_off': opening['username']
-        })
-        return([results, session['count']])
-
-    # If unavailable:
-    else:
-        if session['count'] < shift_size:
+        # If unavailable:
+        else:
             results.append({
                 'person_covering': next_up_name,
                 'person_off': 'unavailable'
             })
-            session['count'] += 1
             print(results)
-            return(hire(opening, availability, taglist, results, time, hiring_round, shift_size))
-        
-        else:
-        # if session['count'] >= shift_size:
-            results.append({
-                'person_covering': "96 Off",
-                'person_off': opening['username']
-            })
-            return([results, session['count']])
-        return(hire(opening, availability, taglist, results, time, hiring_round, shift_size))
+            return(hire(opening, availability, taglist, results, time, covering_count, shift_size))
 
-    return(taglist[next_up])
+    # If everyone has been checked and either hired or unavailable, hire from 96 off
+    else:
+    # if session['count'] >= shift_size:
+        results.append({
+            'person_covering': "96 Off",
+            'person_off': opening['username']
+        })
+        return([results, covering_count])
+    #return(hire(opening, availability, taglist, results, time, covering_count, shift_size))
+
+    #    return(taglist[next_up])
     '''list of results for this opening - all unavailable skipped + covering person hired/96 off'''

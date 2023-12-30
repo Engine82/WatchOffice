@@ -447,36 +447,30 @@ def hired():
                 for time in daynight:
                 # ['day', 'night']
                     
+                    # Zero covering person counter
+                    session['covering_count'] = 0
 
                     # Iterate through each opening
                     # session[rank_covered_day_1] = [{'username': opening['username'], 'shift': 'day'}]
                     # Hire(opening, availability, taglist)
-                    for opening, opening_count in enumerate(session[rnk + "_covered_" + time + "_" + str(day)]):
+                    for opening in session[rnk + "_covered_" + time + "_" + str(day)]:
                         print()
-                        print("Round:", session['round_num'])
+                        print("Covering Count:", session['covering_count'])
                         print("Opening:", opening)
-                        print("Counter:", counter)
 
-                        if count < shift_size:
-                            result = hire(
-                                    opening,
-                                    session[rnk + "_covering_" + str(day)],
-                                    session[rnk + '_tags'],
-                                    session['results'],
-                                    time,
-                                    session['round_num'],
-                                    shift_size
-                                )
-                            session[rnk + "_hired_" + time + "_" + str(day)].extend(result[0])
+                        result = hire(
+                                opening,
+                                session[rnk + "_covering_" + str(day)],
+                                session[rnk + '_tags'],
+                                session['results'],
+                                time,
+                                session['covering_count'],
+                                shift_size
+                            )
+                        session[rnk + "_hired_" + time + "_" + str(day)].extend(result[0])
+                        session['covering_count'] = result[1]
 
-                        # If everyone has been checked and either hired or unavailable, hire from 96 off
-                        else:
-                            session[rnk + "_hired_" + time + "_" + str(day)].append({
-                                'person_covering': "96 off",
-                                'person_off': opening['username']
-                            })
                         print("Hiring: ",session[rnk + "_hired_" + time + "_" + str(day)])
-
 
             day += 1
 
