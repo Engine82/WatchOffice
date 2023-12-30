@@ -91,7 +91,6 @@ def hiring_b():
 
             # Loop through each person at that rank
             person_counter = 1
-            print("start person loop")
             for person in rank:
                 
                 # Create html tag id and collect this firefighter's availability
@@ -106,7 +105,6 @@ def hiring_b():
                     'avail_2': request.form.get(day_2),
                     'tag_flipped': session['personnel'][tier - 1][person_counter - 1]['tag_flipped']
                 }
-                print(results_avail)
                 # Add results to firefighters list
                 if tier == 1:
                     officers_availability.append(results_avail)
@@ -120,9 +118,6 @@ def hiring_b():
         # Save all availability in session
         session['officers_avail'] = officers_availability
         session['firefighters_avail'] = firefighters_availability
-
-        print(f"officers avail: {officers_availability}")
-        print(f"firefighters avail: {firefighters_availability}")
 
         return redirect("/hiring_c")
 
@@ -221,11 +216,6 @@ def hiring_c():
                 })
 
             counter_firefighter_2 += 1
-        
-        print(f"Officer 1: {session['officers_openings_1']}")
-        print(f"FF 1: {session['firefighters_openings_1']}")
-        print(f"Officer 2: {session['officers_openings_2']}")
-        print(f"FF 2: {session['firefighters_openings_2']}")
     
         return redirect("/hired")
 
@@ -427,9 +417,7 @@ def hired():
 
 
         """ HIRE """
-        # Loop through each day/rank/opening from above, and fill - 
-        # Similar structure to above, but just fill the openings with
-        # the next available person
+        # Loop through each day/rank/time/opening from above, and fill each opening with next available person or from 96-off
 
         # DAY - Iterate through each day
         day = 1
@@ -437,24 +425,21 @@ def hired():
 
             # RANK - Iterate through each rank: [{"tier": "Officers"}, {"tier": "Firefighters"}]
             for rank in session['hiring_tiers']:
-            # {"tier": "Officers"}, {"tier": "Firefighters"}
                 
+                # create lowercase rank name for use in variables, get number of people on covering shift for future use
                 rnk = rank['tier'].lower()
                 shift_size = len(session[rnk + "_covering_" + str(day)])
-                print()
-                print("Shift size:", shift_size)
-                # TIME - Iterate through time:
+
+                # TIME - Iterate through time (day/night):
                 for time in daynight:
-                # ['day', 'night']
                     
                     # Zero covering person counter
                     session['covering_count'] = 0
 
                     # Iterate through each opening
-                    # session[rank_covered_day_1] = [{'username': opening['username'], 'shift': 'day'}]
-                    # Hire(opening, availability, taglist)
                     for opening in session[rnk + "_covered_" + time + "_" + str(day)]:
                         
+                        # Hire for this opening using hiring function in helpers.py
                         result = hire(
                                 opening,
                                 session[rnk + "_covering_" + str(day)],
@@ -464,17 +449,16 @@ def hired():
                                 session['covering_count'],
                                 shift_size
                             )
+
+                        # Add hiring results to the results dict
                         session[rnk + "_hired_" + time + "_" + str(day)].extend(result[0])
 
-
+                        # Increase counter for number of covering members checked (hired or unavailable)
                         session['covering_count'] = result[1]
-
-                        print("Hiring: ",session[rnk + "_hired_" + time + "_" + str(day)])
 
             day += 1
 
-        # Assign NTW or next up person to open shift & flip tags
-            # If next up person is unavailable because of dept business, assign NTW
+        # Display hired form with hiring results
         return render_template("hired.html", 
             officers_day_1=session['officers_hired_day_1'],
             officers_night_1=session['officers_hired_night_1'],
