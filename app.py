@@ -454,10 +454,7 @@ def hired():
                     # session[rank_covered_day_1] = [{'username': opening['username'], 'shift': 'day'}]
                     # Hire(opening, availability, taglist)
                     for opening in session[rnk + "_covered_" + time + "_" + str(day)]:
-                        print()
-                        print("Covering Count:", session['covering_count'])
-                        print("Opening:", opening)
-
+                        
                         result = hire(
                                 opening,
                                 session[rnk + "_covering_" + str(day)],
@@ -468,6 +465,8 @@ def hired():
                                 shift_size
                             )
                         session[rnk + "_hired_" + time + "_" + str(day)].extend(result[0])
+
+
                         session['covering_count'] = result[1]
 
                         print("Hiring: ",session[rnk + "_hired_" + time + "_" + str(day)])
