@@ -58,40 +58,80 @@ def find_next_up(tag_list):
     for person in tag_list:
         match person:
             case {'tag_flipped': tag_flipped} if tag_flipped != 1:
-                place = tag_list.index(person)
-                return place
+                # Return {'username': 'kyle', 'tag_flipped': 0}
+                return tag_list.index(person)
     # If nobody is flipped, return first person
+    for person in tag_list:
+        person['tag_flipped'] = 0
     return 0
 
 
-# Re-order list function for starting with first-up on tag board
-def reorder_tagboard(tag_list):
-    start = find_next_up(tag_list)
-    it = iter(tag_list)
-    next(islice(it, start, start), None)
-    return chain(it, islice(tag_list, start))
+def get_availability(member_up, availability):
+    for person in availability:
+        match person:
+            case {'username': username} if username == member_up:
+                return(person)
+    return 1
+
+
+def flip_tag(taglist, member_up):
+    for person in taglist:
+        match person:
+            case {'username': username} if username == member_up:
+                person['tag_flipped'] = 1
+                return()
 
 
 # Hire function
-def hire(tag_list, availability_list, time, opening):
-    member_up = None
-    
-    # Get next member up to be hired
-    for member in tag_list:
-        if member['tag_flipped'] != 1:
-            member_up = member['username']
-            break
+# opening: {'username': opening['username'], 'shift': 'day'}
+# availability: [{'username': member['username'], 'day': 'available', 'night': 'unavailable'}, {}]
+# taglist: [{'username': member['username'], 'tag_flipped': 0}, {}]
+def hire(opening, availability, taglist, results, time, covering_count, shift_size):
 
-    # Get this member's availability:
-    time = opening['shift']
-    if len(availability_list) == 0: return [False]
-    for person in availability_list:
-        if person['username'] == member_up:
-            if person[time] == 'available':
-                return [True, {'person_off': opening['username'], 'person_covering': person['username']}]
-            elif person[time] != 'available':
-                return [False, {'person_off': 'unavailable', 'person_covering': person['username']}]
-    return [False, {'person_off': 'unavailable', 'person_covering': person['username']}]
+    # Session is used here to make results available upon each iteration when recursing
+    # Clear session['results']
+    session['results'] = []
     
-    
-                            
+    if covering_count < shift_size:
+        # Find next person up (tag_flipped == 0)
+        next_up = find_next_up(taglist)
+        next_up_name = taglist[next_up]['username']
+
+        # Get availability of next_up person
+        avail = get_availability(next_up_name, availability)
+
+        # Flip tag
+        flip_tag(taglist, next_up_name)
+        
+        # Goal: session[tag_list][{'username': 'kyle', 'tag_flipped': 1}
+        covering_count += 1
+
+        # If available
+        if avail[time] == 'available':
+            results.append({
+                'person_covering': next_up_name,
+                'person_off': opening['username']
+            })
+            return([results, covering_count])
+
+        # If unavailable:
+        else:
+            results.append({
+                'person_covering': next_up_name,
+                'person_off': 'unavailable'
+            })
+            print(results)
+            return(hire(opening, availability, taglist, results, time, covering_count, shift_size))
+
+    # If everyone has been checked and either hired or unavailable, hire from 96 off
+    else:
+    # if session['count'] >= shift_size:
+        results.append({
+            'person_covering': "96 Off",
+            'person_off': opening['username']
+        })
+        return([results, covering_count])
+    #return(hire(opening, availability, taglist, results, time, covering_count, shift_size))
+
+    #    return(taglist[next_up])
+    '''list of results for this opening - all unavailable skipped + covering person hired/96 off'''

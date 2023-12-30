@@ -10,7 +10,6 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from helpers import login_required
 from helpers import Base, User, Ntw
-from helpers import reorder_tagboard
 from helpers import hire
 
 
@@ -325,6 +324,9 @@ def hired():
         session['officers_tags'] = []
         session['firefighters_tags'] = []
 
+        # Create list for hiring results
+        session['results'] = []
+
         day_night = ["day_", "night_"]
         daynight = ['day', 'night']
 
@@ -430,76 +432,49 @@ def hired():
         # the next available person
 
         # DAY - Iterate through each day
-        # FIXME: hiring list not re-ordering to go to Kyle after Amy is hired
         day = 1
         while day <= DAYS_COVERED:
 
             # RANK - Iterate through each rank: [{"tier": "Officers"}, {"tier": "Firefighters"}]
             for rank in session['hiring_tiers']:
+            # {"tier": "Officers"}, {"tier": "Firefighters"}
                 
-                # TIME - Iterate through time: ['day', 'night']
+                rnk = rank['tier'].lower()
+                shift_size = len(session[rnk + "_covering_" + str(day)])
+                print()
+                print("Shift size:", shift_size)
+                # TIME - Iterate through time:
                 for time in daynight:
-
-                    # Re-order tag list, starting with first up person, and un-flip all tags
-                    rnk = rank['tier'].lower()
-
-                    # session 
-                    # !!!!!!!! So here, in the next line on every iteration of hiring day/rank/time, it is 
-                    # ordering the new_taglist based on the tag status in session[firefighters_tags], not
-                    # whatever the previous order was
-                    # [{'username': 'kyle', 'tag_flipped': 0}, ]
-                    new_taglist = list(reorder_tagboard(session[rnk + "_tags"]))
-                    for member in new_taglist:
-                        member.update((k, 0) for k, v in member.items() if v == 1)
+                # ['day', 'night']
+                    
+                    # Zero covering person counter
+                    session['covering_count'] = 0
 
                     # Iterate through each opening
-                        # {"tier": "Officers"}, {"tier": "Firefighters"}
-                    rank_lower = rank['tier'].lower()
-                    hiring_counter = 0
-
-                    shift_size = len(session[rank_lower + "_covering_" + str(day)])
-
                     # session[rank_covered_day_1] = [{'username': opening['username'], 'shift': 'day'}]
-                    for opening in session[rank_lower + "_covered_" + time + "_" + str(day)]:
+                    # Hire(opening, availability, taglist)
+                    for opening in session[rnk + "_covered_" + time + "_" + str(day)]:
                         
-                        # Hire for this shift
-                            # Hiring_result: [True, {'person_off': chad, 'person_covering': shipp}]
-                        hiring_result = [False]
-                        while hiring_result[0] != True: 
+                        result = hire(
+                                opening,
+                                session[rnk + "_covering_" + str(day)],
+                                session[rnk + '_tags'],
+                                session['results'],
+                                time,
+                                session['covering_count'],
+                                shift_size
+                            )
+                        session[rnk + "_hired_" + time + "_" + str(day)].extend(result[0])
 
-                            # Use hire function to 
-                                # new_taglist: [{'username': 'kyle', 'tag_flipped': 0}, ]
-                                # Session[offcers_covering_1]: [{'username': 'kyle', 'day': 'available', 'night': 'unavailable'}]
-                                # time: 'day'
-                                # opening: [{'username': opening['username'], 'shift': 'day'}]
-                            hiring_result = hire(new_taglist, session[rank_lower + "_covering_" + str(day)], time, opening)
-                            if hiring_result[0] != True:
-                                hiring_counter -= 1
-                    
-                            session[rank_lower + "_hired_" + time + "_" + str(day)].append(hiring_result[1])
-                            if len(new_taglist) > 0: new_taglist.pop(0)
-                            hiring_counter += 1
 
-                    # Update session[rnk + "_tags"] so that tags are up to date
-                        # Find last member
-                        if len(new_taglist) > 0:
-                            last_member = new_taglist[0]
+                        session['covering_count'] = result[1]
 
-                            # Go through tablist and set tag_flipped = 1 until you get to the member who's up
-                            for member in session[rnk + "_tags"]:
-                                if member['username'] == last_member['username']:
-                                    break
-                                member['tag_flipped'] = 1
-                        else:
-                            for member in session[rnk + "_tags"]: 
-                                member['tag_flipped'] = 0
-                        print(f"Session[rank + tags]: {session[rnk + '_tags']}")
+                        print("Hiring: ",session[rnk + "_hired_" + time + "_" + str(day)])
 
             day += 1
 
         # Assign NTW or next up person to open shift & flip tags
             # If next up person is unavailable because of dept business, assign NTW
-
         return render_template("hired.html", 
             officers_day_1=session['officers_hired_day_1'],
             officers_night_1=session['officers_hired_night_1'],
