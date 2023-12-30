@@ -6,8 +6,6 @@ from typing import Optional
 from sqlalchemy import func
 from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase, MappedAsDataclass
 
-from itertools import islice, chain
-
 
 # Apology function for errors
 def apology():
@@ -53,19 +51,20 @@ class Ntw (Base):
     platoon: Mapped[int]
 
 
-# Find next-up person
+# Find next-up person from tag list/tag board
 def find_next_up(tag_list):
     for person in tag_list:
         match person:
             case {'tag_flipped': tag_flipped} if tag_flipped != 1:
-                # Return {'username': 'kyle', 'tag_flipped': 0}
                 return tag_list.index(person)
+
     # If nobody is flipped, return first person
     for person in tag_list:
         person['tag_flipped'] = 0
     return 0
 
 
+# Find this person (member_up)'s entry in the availability list  and return it
 def get_availability(member_up, availability):
     for person in availability:
         match person:
@@ -74,6 +73,7 @@ def get_availability(member_up, availability):
     return 1
 
 
+# Match the person who is up and flip their tag
 def flip_tag(taglist, member_up):
     for person in taglist:
         match person:
@@ -83,16 +83,15 @@ def flip_tag(taglist, member_up):
 
 
 # Hire function
-# opening: {'username': opening['username'], 'shift': 'day'}
-# availability: [{'username': member['username'], 'day': 'available', 'night': 'unavailable'}, {}]
-# taglist: [{'username': member['username'], 'tag_flipped': 0}, {}]
 def hire(opening, availability, taglist, results, time, covering_count, shift_size):
 
     # Session is used here to make results available upon each iteration when recursing
-    # Clear session['results']
+    # Clear session['results'] from previous openings' hiring
     session['results'] = []
     
+    # If the entire covering shift has not been hired/unavailable
     if covering_count < shift_size:
+
         # Find next person up (tag_flipped == 0)
         next_up = find_next_up(taglist)
         next_up_name = taglist[next_up]['username']
@@ -100,13 +99,11 @@ def hire(opening, availability, taglist, results, time, covering_count, shift_si
         # Get availability of next_up person
         avail = get_availability(next_up_name, availability)
 
-        # Flip tag
+        # Flip tag of this person and increase counter
         flip_tag(taglist, next_up_name)
-        
-        # Goal: session[tag_list][{'username': 'kyle', 'tag_flipped': 1}
         covering_count += 1
 
-        # If available
+        # If available save results and return results and number of members checked
         if avail[time] == 'available':
             results.append({
                 'person_covering': next_up_name,
@@ -114,24 +111,19 @@ def hire(opening, availability, taglist, results, time, covering_count, shift_si
             })
             return([results, covering_count])
 
-        # If unavailable:
+        # If unavailable save that result and call hiring function to fill opening
         else:
             results.append({
                 'person_covering': next_up_name,
                 'person_off': 'unavailable'
             })
-            print(results)
             return(hire(opening, availability, taglist, results, time, covering_count, shift_size))
 
     # If everyone has been checked and either hired or unavailable, hire from 96 off
+    # Save 96 off and return results and number of members checked
     else:
-    # if session['count'] >= shift_size:
         results.append({
             'person_covering': "96 Off",
             'person_off': opening['username']
         })
         return([results, covering_count])
-    #return(hire(opening, availability, taglist, results, time, covering_count, shift_size))
-
-    #    return(taglist[next_up])
-    '''list of results for this opening - all unavailable skipped + covering person hired/96 off'''
