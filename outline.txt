@@ -12,6 +12,25 @@ GOALS:
 +------------------------------------------------------------------------------------------------------------------------------+
 Things to Fix/Change:
 +------------------------------------------------------------------------------------------------------------------------------+
+Next Steps:
+- Hired html - wording for unavailable vs hired
+- Hired html - next up officer and firefighter
+
+- CSS - make it pretty
+
+- Update tag status when hiring is submitted
+- Save hiring results in db when hiring is submitted
+- Print hiring results - when submitted or with separate button?? (Or have number of copies box and can choose to print multiple?)
+
+- Remove member page/route
+- Change member page/route
+
+- Manual input of hiring - for results when done not using this app
+
+- Display hiring results from a certain hiring
+
+
++------------------------------------------------------------------------------------------------------------------------------+
 
     HIRING B - covering shift availability
     Lists:
