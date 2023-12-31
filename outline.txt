@@ -12,8 +12,8 @@ GOALS:
 +------------------------------------------------------------------------------------------------------------------------------+
 Things to Fix/Change:
 +------------------------------------------------------------------------------------------------------------------------------+
-Next Steps:
-- Hired html - wording for unavailable vs hired
+TODO:
+Next Steps
 - Hired html - next up officer and firefighter
 
 - CSS - make it pretty
