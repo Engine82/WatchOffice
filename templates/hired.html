@@ -17,41 +17,70 @@
                 <tr>
                     <td>No officers hiring</td>
                 </tr>
+            {% else %}
+                {% for opening in officers_day_1 %}
+                    {% if opening['person_off'] == 'unavailable' %}
+                        <tr>
+                            <td> {{ opening['person_covering'] }} unavailable - Day</td>
+                        </tr>      
+                    {% else %}          
+                        <tr>
+                            <td> {{ opening['person_covering'] }} hired for {{ opening['person_off'] }} - Day</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+                <tr>
+                    <td><br></td>
+                </tr> 
+
+                {% for opening in officers_night_1 %}
+                    {% if opening['person_off'] == 'unavailable' %}
+                        <tr>
+                            <td> {{ opening['person_covering'] }} unavailable - Night</td>
+                        </tr>      
+                    {% else %}
+                        <tr>
+                            <td> {{ opening['person_covering'] }} hired for {{ opening['person_off'] }} - Night</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
             {% endif %}
-            {% for opening in officers_day_1 %}
-                <tr>
-                    <td> {{ opening['person_covering'] }} hired for {{ opening['person_off'] }} - Day</td>
-                </tr>
-            {% endfor %}
-            <tr>
-                <td><br></td>
-            </tr> 
-           {% for opening in officers_night_1 %}
-                <tr>
-                    <td> {{ opening['person_covering'] }} hired for {{ opening['person_off'] }} - Night</td>
-                </tr>
-            {% endfor %}
+
             <tr>
                 <th>Firefighters</th>
             </tr>
             {% if firefighters_day_1 == [] and firefighters_night_1 == [] %}
                 <tr>
-                    <td>No firefighters hiring</td>
+                    <td>No officers hiring</td>
                 </tr>
+            {% else %}
+                {% for opening in firefighters_day_1 %}
+                    {% if opening['person_off'] == 'unavailable' %}
+                        <tr>
+                            <td> {{ opening['person_covering'] }} unavailable - Day</td>
+                        </tr>      
+                    {% else %}          
+                        <tr>
+                            <td> {{ opening['person_covering'] }} hired for {{ opening['person_off'] }} - Day</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+                <tr>
+                    <td><br></td>
+                </tr> 
+
+                {% for opening in firefighters_night_1 %}
+                    {% if opening['person_off'] == 'unavailable' %}
+                        <tr>
+                            <td> {{ opening['person_covering'] }} unavailable - Night</td>
+                        </tr>      
+                    {% else %}
+                        <tr>
+                            <td> {{ opening['person_covering'] }} hired for {{ opening['person_off'] }} - Night</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
             {% endif %}
-            {% for opening in firefighters_day_1 %}
-                <tr>
-                    <td> {{ opening['person_covering'] }} hired for {{ opening['person_off'] }} - Day</td>
-                </tr>
-            {% endfor %}
-            <tr>
-                <td><br></td>
-            </tr> 
-            {% for opening in firefighters_night_1 %}
-                <tr>
-                    <td> {{ opening['person_covering'] }} hired for {{ opening['person_off'] }} - Night</td>
-                </tr>
-            {% endfor %}
         </table>
         <br>
 
@@ -64,41 +93,70 @@
                 <tr>
                     <td>No officers hiring</td>
                 </tr>
+            {% else %}
+                {% for opening in officers_day_2 %}
+                    {% if opening['person_off'] == 'unavailable' %}
+                        <tr>
+                            <td> {{ opening['person_covering'] }} unavailable - Day</td>
+                        </tr>      
+                    {% else %}          
+                        <tr>
+                            <td> {{ opening['person_covering'] }} hired for {{ opening['person_off'] }} - Day</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+                <tr>
+                    <td><br></td>
+                </tr> 
+
+                {% for opening in officers_night_2 %}
+                    {% if opening['person_off'] == 'unavailable' %}
+                        <tr>
+                            <td> {{ opening['person_covering'] }} unavailable - Night</td>
+                        </tr>      
+                    {% else %}
+                        <tr>
+                            <td> {{ opening['person_covering'] }} hired for {{ opening['person_off'] }} - Night</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
             {% endif %}
-            {% for opening in officers_day_2 %}
-                <tr>
-                    <td> {{ opening['person_covering'] }} hired for {{ opening['person_off'] }} - Day</td>
-                </tr>
-            {% endfor %}
-            <tr>
-                <td><br></td>
-            </tr>
-            {% for opening in officers_night_2 %}
-                <tr>
-                    <td> {{ opening['person_covering'] }} hired for {{ opening['person_off'] }} - Night</td>
-                </tr>
-            {% endfor %}
+
             <tr>
                 <th>Firefighters</th>
             </tr>
             {% if firefighters_day_2 == [] and firefighters_night_2 == [] %}
                 <tr>
-                    <td>No firefighters hiring</td>
+                    <td>No officers hiring</td>
                 </tr>
-            {% endif %}  
-            {% for opening in firefighters_day_2 %}
+            {% else %}
+                {% for opening in firefighters_day_2 %}
+                    {% if opening['person_off'] == 'unavailable' %}
+                        <tr>
+                            <td> {{ opening['person_covering'] }} unavailable - Day</td>
+                        </tr>      
+                    {% else %}          
+                        <tr>
+                            <td> {{ opening['person_covering'] }} hired for {{ opening['person_off'] }} - Day</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
                 <tr>
-                    <td> {{ opening['person_covering'] }} hired for {{ opening['person_off'] }} - Day</td>
-                </tr>
-            {% endfor %}
-            <tr>
-                <td><br></td>
-            </tr>
-            {% for opening in firefighters_night_2 %}
-                <tr>
-                    <td> {{ opening['person_covering'] }} hired for {{ opening['person_off'] }} - Night</td>
-                </tr>
-            {% endfor %}              
+                    <td><br></td>
+                </tr> 
+
+                {% for opening in firefighters_night_2 %}
+                    {% if opening['person_off'] == 'unavailable' %}
+                        <tr>
+                            <td> {{ opening['person_covering'] }} unavailable - Night</td>
+                        </tr>      
+                    {% else %}
+                        <tr>
+                            <td> {{ opening['person_covering'] }} hired for {{ opening['person_off'] }} - Night</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
         </table>
         <table>
             <tr>
