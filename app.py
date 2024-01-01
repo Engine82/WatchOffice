@@ -10,7 +10,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from helpers import login_required
 from helpers import Base, User, Ntw
-from helpers import hire
+from helpers import find_next_up, hire
 
 
 # Configure app
@@ -317,6 +317,9 @@ def hired():
         # Create list for hiring results
         session['results'] = []
 
+        # Create list for who's up next
+        session['up_next'] = []
+
         day_night = ["day_", "night_"]
         daynight = ['day', 'night']
 
@@ -452,11 +455,22 @@ def hired():
 
                         # Add hiring results to the results dict
                         session[rnk + "_hired_" + time + "_" + str(day)].extend(result[0])
+                        print(session[rnk + "_hired_" + time + "_" + str(day)])
 
                         # Increase counter for number of covering members checked (hired or unavailable)
                         session['covering_count'] = result[1]
 
+
             day += 1
+
+        # Save next-up officer & firefighter
+        for rank in session['hiring_tiers']:
+            rnk = rank['tier'].lower()
+            session['up_next'].append({
+                'rank': rnk,
+                'up_next': find_next_up(session[rnk + '_tags'])
+            })
+        print(session['up_next'])
 
         # Display hired form with hiring results
         return render_template("hired.html", 
@@ -468,6 +482,7 @@ def hired():
             firefighters_night_1=session['firefighters_hired_night_1'],
             firefighters_day_2=session['firefighters_hired_day_2'],
             firefighters_night_2=session['firefighters_hired_night_2'],
+            up_next=session['up_next'],
             platoon=session['platoon'])    
 
 
