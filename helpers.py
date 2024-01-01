@@ -56,12 +56,14 @@ def find_next_up(tag_list):
     for person in tag_list:
         match person:
             case {'tag_flipped': tag_flipped} if tag_flipped != 1:
-                return tag_list.index(person)
+                index = tag_list.index(person)
+                return(tag_list[index]['username'])
+
 
     # If nobody is flipped, return first person
     for person in tag_list:
         person['tag_flipped'] = 0
-    return 0
+    return(tag_list[0]['username'])
 
 
 # Find this person (member_up)'s entry in the availability list  and return it
@@ -94,19 +96,18 @@ def hire(opening, availability, taglist, results, time, covering_count, shift_si
 
         # Find next person up (tag_flipped == 0)
         next_up = find_next_up(taglist)
-        next_up_name = taglist[next_up]['username']
 
         # Get availability of next_up person
-        avail = get_availability(next_up_name, availability)
+        avail = get_availability(next_up, availability)
 
         # Flip tag of this person and increase counter
-        flip_tag(taglist, next_up_name)
+        flip_tag(taglist, next_up)
         covering_count += 1
 
         # If available save results and return results and number of members checked
         if avail[time] == 'available':
             results.append({
-                'person_covering': next_up_name,
+                'person_covering': next_up,
                 'person_off': opening['username']
             })
             return([results, covering_count])
@@ -114,7 +115,7 @@ def hire(opening, availability, taglist, results, time, covering_count, shift_si
         # If unavailable save that result and call hiring function to fill opening
         else:
             results.append({
-                'person_covering': next_up_name,
+                'person_covering': next_up,
                 'person_off': 'unavailable'
             })
             return(hire(opening, availability, taglist, results, time, covering_count, shift_size))
