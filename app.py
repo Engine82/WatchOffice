@@ -1,6 +1,6 @@
 from datetime import datetime, date, timedelta
 from operator import itemgetter
-from sqlalchemy import create_engine, insert, select, update
+from sqlalchemy import create_engine, insert, select, text, update
 from sqlalchemy.orm import sessionmaker
 from flask import Flask, redirect, render_template, request, session
 from flask_session import Session
@@ -239,16 +239,40 @@ def hiring_c():
         days_covered = {'day_1': cover_1, 'day_2': cover_2}
 
         # Get officers & firefighters list for each cover platoon
-        cover_1_firefighters = db.execute(select(User.username).where(User.platoon == cover_1).where(User.active == '1').where(User.rank == "firefighter").order_by(User.id))
+        cover_1_firefighters = db.execute(
+            select(User.username)
+            .where(User.platoon == cover_1)
+            .where(User.active == '1')
+            .where(User.rank == "firefighter")
+            .order_by(User.id)
+        )
         cover_1_firefighters = cover_1_firefighters.mappings().all()
 
-        cover_1_officers = db.execute(select(User.username).where(User.platoon == cover_1).where(User.active == '1').where(User.rank != "firefighter").order_by(User.id))
+        cover_1_officers = db.execute(
+            select(User.username)
+            .where(User.platoon == cover_1)
+            .where(User.active == '1')
+            .where(User.rank != "firefighter")
+            .order_by(User.id)
+        )
         cover_1_officers = cover_1_officers.mappings().all()
 
-        cover_2_firefighters = db.execute(select(User.username).where(User.platoon == cover_2).where(User.active == '1').where(User.rank == "firefighter").order_by(User.id))
+        cover_2_firefighters = db.execute(
+            select(User.username)
+            .where(User.platoon == cover_2)
+            .where(User.active == '1')
+            .where(User.rank == "firefighter")
+            .order_by(User.id)
+        )
         cover_2_firefighters = cover_2_firefighters.mappings().all()
 
-        cover_2_officers = db.execute(select(User.username).where(User.platoon == cover_2).where(User.active == '1').where(User.rank != "firefighter").order_by(User.id))
+        cover_2_officers = db.execute(
+            select(User.username)
+            .where(User.platoon == cover_2)
+            .where(User.active == '1')
+            .where(User.rank != "firefighter")
+            .order_by(User.id)
+        )
         cover_2_officers = cover_2_officers.mappings().all()
 
 
@@ -279,8 +303,8 @@ def hired():
     
     # POST: Save approved hiring in db and print results
     if request.method == "POST":
-    # {'username': kyle, 'tag_flipped': 0}
 
+        ''' UPDATE TAGS IN DB '''
         # Go through each rank
         for index, rank in enumerate(session['hiring_tiers']):
             rnk = rank['tier'].lower()
@@ -306,6 +330,52 @@ def hired():
                     
         # Commit all updates to db
         db.commit()
+
+        ''' SAVE RESULTS IN DB '''
+        # Create list of hiring lists:
+        hiring_lists = [
+            'officers_hired_day_1', 
+            'officers_hired_night_1',
+            'officers_hired_day_2',
+            'officers_hired_night_2',
+            'firefighters_hired_day_1',
+            'firefighters_hired_night_1',
+            'firefighters_hired_day_2',
+            'firefighters_hired_night_2'
+        ]
+
+        # Get hiring id
+        try:
+            hiring_id = db.execute(text("SELECT hiring_id FROM hiring ORDER BY hiring_id DESC LIMIT 1"))
+            print("Hiring_id:", hiring_id)
+            print("db error")
+        except:
+            hiring_id = 0
+            print("excepted, hiring id:", hiring_id)
+        else:
+            hiring_id = 0
+            print("Hiring_id:", hiring_id)
+
+        # Iterate through each hiring entry and save it in db
+        for hiring_list in hiring_lists:
+            for shift in session[hiring_list]:
+                # shift: {'person_off': 'unavailable', 'day': day, 'time': time}
+                db.execute(
+                    text("INSERT INTO hiring (hiring_id, platoon, rank, day, time, member_out, member_covering) VALUES (:hiring_id, :platoon, :rank, :day, :time, :member_out, :member_covering)"),
+                    [
+                        {"hiring_id": hiring_id,
+                        "platoon": session['platoon'],
+                        "rank": shift['rank'],
+                        "day": shift['day'],
+                        "time": shift['time'],
+                        "member_out": shift['person_off'],
+                        "member_covering": shift['person_covering']}
+                    ]
+                )
+        db.commit()
+
+        ''' PRINT OPTIONS ?????? '''
+
         return redirect("/")
 
     # GET: Assign shifts & Display completed hiring
@@ -477,7 +547,9 @@ def hired():
                                 session['results'],
                                 time,
                                 session['covering_count'],
-                                shift_size
+                                shift_size,
+                                day,
+                                rnk
                             )
 
                         # Add hiring results to the results dict
