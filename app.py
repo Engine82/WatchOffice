@@ -279,7 +279,25 @@ def hired():
     
     # POST: Save approved hiring in db and print results
     if request.method == "POST":
-        return render_template("hired.html")
+    # {'username': kyle, 'tag_flipped': 0}
+        up_next = session['up_next']
+        next_found = False
+        for member in session[rnk + '_tags']:
+            
+            # If this member is up next, set next_found to true
+            if member['username'] == up_next:
+                next_found = True
+            
+            # If this member isn't next up, their tag is flipped
+            if next_found == False:
+                # update db tag_flipped = 1
+            
+            # Otherwise, their tag is not flipped
+            else:
+                # update db tag_flipped = 0
+    
+
+        redirect ("/")
 
     # GET: Assign shifts & Display completed hiring
     else:
@@ -455,22 +473,21 @@ def hired():
 
                         # Add hiring results to the results dict
                         session[rnk + "_hired_" + time + "_" + str(day)].extend(result[0])
-                        print(session[rnk + "_hired_" + time + "_" + str(day)])
 
                         # Increase counter for number of covering members checked (hired or unavailable)
                         session['covering_count'] = result[1]
 
-
             day += 1
 
-        # Save next-up officer & firefighter
+        # Save next-up officer & firefighter and update taglist in db
         for rank in session['hiring_tiers']:
             rnk = rank['tier'].lower()
+            
+            # Save next up members
             session['up_next'].append({
                 'rank': rnk,
                 'up_next': find_next_up(session[rnk + '_tags'])
             })
-        print(session['up_next'])
 
         # Display hired form with hiring results
         return render_template("hired.html", 
