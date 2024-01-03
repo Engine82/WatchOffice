@@ -85,7 +85,7 @@ def flip_tag(taglist, member_up):
 
 
 # Hire function
-def hire(opening, availability, taglist, results, time, covering_count, shift_size):
+def hire(opening, availability, taglist, results, time, covering_count, shift_size, day, rank):
 
     # Session is used here to make results available upon each iteration when recursing
     # Clear session['results'] from previous openings' hiring
@@ -108,7 +108,10 @@ def hire(opening, availability, taglist, results, time, covering_count, shift_si
         if avail[time] == 'available':
             results.append({
                 'person_covering': next_up,
-                'person_off': opening['username']
+                'person_off': opening['username'],
+                'day': day,
+                'time': time, 
+                'rank': rank
             })
             return([results, covering_count])
 
@@ -116,15 +119,21 @@ def hire(opening, availability, taglist, results, time, covering_count, shift_si
         else:
             results.append({
                 'person_covering': next_up,
-                'person_off': 'unavailable'
+                'person_off': 'unavailable',
+                'day': day,
+                'time': time,
+                'rank': rank
             })
-            return(hire(opening, availability, taglist, results, time, covering_count, shift_size))
+            return(hire(opening, availability, taglist, results, time, covering_count, shift_size, day, rank))
 
     # If everyone has been checked and either hired or unavailable, hire from 96 off
     # Save 96 off and return results and number of members checked
     else:
         results.append({
             'person_covering': "96 Off",
-            'person_off': opening['username']
+            'person_off': opening['username'],
+            'day': day,
+            'time': time, 
+            'rank': rank
         })
         return([results, covering_count])
