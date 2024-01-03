@@ -1,6 +1,6 @@
 from datetime import datetime, date, timedelta
 from operator import itemgetter
-from sqlalchemy import create_engine, insert, select
+from sqlalchemy import create_engine, insert, select, update
 from sqlalchemy.orm import sessionmaker
 from flask import Flask, redirect, render_template, request, session
 from flask_session import Session
@@ -280,24 +280,33 @@ def hired():
     # POST: Save approved hiring in db and print results
     if request.method == "POST":
     # {'username': kyle, 'tag_flipped': 0}
-        up_next = session['up_next']
-        next_found = False
-        for member in session[rnk + '_tags']:
-            
-            # If this member is up next, set next_found to true
-            if member['username'] == up_next:
-                next_found = True
-            
-            # If this member isn't next up, their tag is flipped
-            if next_found == False:
-                # update db tag_flipped = 1
-            
-            # Otherwise, their tag is not flipped
-            else:
-                # update db tag_flipped = 0
-    
 
-        redirect ("/")
+        # Go through each rank
+        for index, rank in enumerate(session['hiring_tiers']):
+            rnk = rank['tier'].lower()
+
+            # Go through each member in taglist at that rank
+            for member in session[rnk + '_tags']:
+                
+                # If this member isn't next up, their tag is flipped
+                if member['tag_flipped'] == 1:
+                    db.execute(
+                        update(User)
+                        .where(User.username == member['username'])
+                        .values(tag_flipped=1)
+                    )
+
+                # Otherwise, their tag is not flipped
+                else:
+                    db.execute(
+                        update(User)
+                        .where(User.username == member['username'])
+                        .values(tag_flipped=0)
+                    )
+                    
+        # Commit all updates to db
+        db.commit()
+        return redirect("/")
 
     # GET: Assign shifts & Display completed hiring
     else:

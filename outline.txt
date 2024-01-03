@@ -17,7 +17,6 @@ Next Steps
 
 - CSS - make it pretty
 
-- Update tag status when hiring is submitted
 - Save hiring results in db when hiring is submitted
 - Print hiring results - when submitted or with separate button?? (Or have number of copies box and can choose to print multiple?)
 
