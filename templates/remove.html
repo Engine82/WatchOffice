@@ -6,7 +6,7 @@
 
 {% block main %}
     <h1>Remove member</h1>
-    <form action="/remove" method="post">
+    <form action="/remove_member" method="post">
         <select class="member" id="member" name="member" required>
             {% for member in member_list %}
                 <option value="{{ member['username'] }}"">{{ member['username'] }}</option>

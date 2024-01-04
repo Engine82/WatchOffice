@@ -639,11 +639,19 @@ def add_member():
 def remove_member():
     # Remove member from active status
     if request.method == "POST":
-        # Update db: platoon = n/a, active = 0
-        
-        # Display "___ removed"
 
-        return render_template("removed.html")
+        # Get member to be removed from html form        
+        member = request.form.get("member")
+        
+        # Update db: platoon = n/a, active = 0
+        db.execute(
+            update(User)
+            .where(User.username == member)
+            .values(active=0, platoon=None)
+        )
+
+        # Display "___ removed"
+        return render_template("removed.html", member=member)
 
     # Blank removal form
     else:
@@ -654,6 +662,7 @@ def remove_member():
             .order_by(User.username)
         )
         member_list = member_list.mappings().all()
+        db.commit()
 
         # Feed list to html
         return render_template("remove.html", member_list=member_list)
