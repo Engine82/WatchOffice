@@ -639,11 +639,24 @@ def add_member():
 def remove_member():
     # Remove member from active status
     if request.method == "POST":
+        # Update db: platoon = n/a, active = 0
+        
+        # Display "___ removed"
+
         return render_template("removed.html")
 
     # Blank removal form
     else:
-        return render_template("remove.html")
+        # Query db for active members list, save in list
+        member_list = db.execute(
+            select(User.username)
+            .where(User.active == '1')
+            .order_by(User.username)
+        )
+        member_list = member_list.mappings().all()
+
+        # Feed list to html
+        return render_template("remove.html", member_list=member_list)
 
 
 # Change member
