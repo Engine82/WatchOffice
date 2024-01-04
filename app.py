@@ -669,16 +669,39 @@ def remove_member():
 
 
 # Change member
-@app.route("/change_member", methods=["GET", "POST"])
+@app.route("/change_member_a", methods=["GET", "POST"])
 @login_required
 def change_member():
-    # Submit member changes
+    # Remove member from active status
     if request.method == "POST":
-        return render_template("changed.html")
 
-    # Blank member change form
+        # Get member to be removed from html form        
+        member = request.form.get("member")
+        
+        # Update db: platoon = n/a, active = 0
+        result = db.execute(
+            select(User.rank, User.platoon, User.active, User.elligible, )
+            .where(User.username == member)
+        )
+        result = result.mappings().all()
+        print("result:", result)
+
+        return render_template("change_b.html", member=member)
+
+    # Blank removal form
     else:
-        return render_template("change.html")
+
+        # Query db for active members list, save in list
+        member_list = db.execute(
+            select(User.username)
+            .where(User.active == '1')
+            .order_by(User.username)
+        )
+        member_list = member_list.mappings().all()
+
+        # Feed list to html
+        return render_template("change_a.html", member_list=member_list)
+
         
 
 # Session
