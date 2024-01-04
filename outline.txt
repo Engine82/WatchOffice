@@ -21,9 +21,9 @@ CSS:
 JavaScript:
 - Print hiring results - when submitted or with separate button?? (Or have number of copies box and can choose to print multiple?)
 - Automatically make vacancies "Out 24"
- 
+- Alert "are you sure" when removing member
+
 Python/HTML:
-- Remove member page/route
 - Change member page/route
 
 - Manual input of hiring - for results when done not using this app
