@@ -22,6 +22,6 @@ time TEXT NOT NULL,
 member_out INTEGER NOT NULL,
 member_covering INTEGER NOT NULL,
 created_at DATETIME DEFAULT(CURRENT_TIMESTAMP) NOT NULL,
-FOREIGN KEY (member_out) REFERENCES users(id),
-FOREIGN KEY (member_covering) REFERENCES users(id)
+FOREIGN KEY (member_out) REFERENCES users(username),
+FOREIGN KEY (member_covering) REFERENCES users(username)
 );
