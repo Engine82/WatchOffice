@@ -9,7 +9,7 @@ from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from helpers import login_required
-from helpers import Base, User, Ntw
+from helpers import Base, User, Hiring
 from helpers import find_next_up, hire
 
 
@@ -344,17 +344,17 @@ def hired():
             'firefighters_hired_night_2'
         ]
 
-        # Get hiring id
-        try:
-            hiring_id = db.execute(text("SELECT hiring_id FROM hiring ORDER BY hiring_id DESC LIMIT 1"))
-            print("Hiring_id:", hiring_id)
-            print("db error")
-        except:
+        # Get hiring id and increase by one
+        hiring_id = db.execute(select(Hiring.hiring_id).order_by(Hiring.hiring_id.desc()).limit(1))
+        hiring_id = hiring_id.mappings().all()
+        hiring_id = hiring_id[0]['hiring_id']
+        hiring_id += 1
+
+        # Leaving this in for the first iteration of hiring
+        """except:
             hiring_id = 0
-            print("excepted, hiring id:", hiring_id)
-        else:
-            hiring_id = 0
-            print("Hiring_id:", hiring_id)
+            print("excepted, hiring id:", hiring_id)"""
+
 
         # Iterate through each hiring entry and save it in db
         for hiring_list in hiring_lists:
@@ -372,7 +372,7 @@ def hired():
                         "member_covering": shift['person_covering']}
                     ]
                 )
-        db.commit()
+            db.commit()
 
         ''' PRINT OPTIONS ?????? '''
 
