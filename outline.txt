@@ -15,10 +15,14 @@ Things to Fix/Change:
 TODO:
 Next Steps
 
-- CSS - make it pretty
+CSS:
+- make it pretty
 
+JavaScript:
 - Print hiring results - when submitted or with separate button?? (Or have number of copies box and can choose to print multiple?)
-
+- Automatically make vacancies "Out 24"
+ 
+Python/HTML:
 - Remove member page/route
 - Change member page/route
 
