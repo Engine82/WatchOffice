@@ -42,14 +42,18 @@ class User (Base):
     created_at: Mapped[datetime] = mapped_column(init=False, server_default=func.now())
 
 
-# SQLAlchemy class for next_to_work table
-class Ntw (Base):
-    __tablename__ = "next_to_work"
+# SQLAlchemy class for hiring table
+class Hiring (Base):
+    __tablename__ = "hiring"
 
     id: Mapped[int] = mapped_column(primary_key=True, init=False)
-    user_id: Mapped[str]
+    hiring_id: Mapped[int]
     platoon: Mapped[int]
-
+    rank: Mapped[str]
+    day: Mapped[int]
+    time: Mapped[str]
+    member_out: Mapped[str]
+    member_covering: Mapped[str]
 
 # Find next-up person from tag list/tag board
 def find_next_up(tag_list):
