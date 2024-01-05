@@ -672,13 +672,89 @@ def remove_member():
 @app.route("/change_member", methods=["GET", "POST"])
 @login_required
 def change_member():
-    # Submit member changes
+    # Remove member from active status
     if request.method == "POST":
-        return render_template("changed.html")
 
-    # Blank member change form
+        # Get form imput    
+        member = request.form.get("member")
+
+        # Check/change password
+        password = request.form.get("password")
+        confirm_password = request.form.get("confirm_password")
+        if password != "":
+            print("Password:", password)
+            if password != confirm_password:
+                return render_template("apology.html", type="password mismatch")
+            hashword = generate_password_hash(password)
+            db.execute(
+                update(User)
+                .where(User.username == member)
+                .values(hash=hashword)
+            )
+            print("password updated")
+
+        # Check/change rank
+        rank = request.form.get("rank")
+        if rank != None:
+            print("Rank != none")
+            print(rank)
+            db.execute(
+                update(User)
+                .where(User.username == member)
+                .values(rank=rank)
+            )
+        
+        # Platoon
+        platoon = request.form.get("platoon")
+        if platoon != None:
+            print("Platoon != none")
+            print(platoon)
+            db.execute(
+                update(User)
+                .where(User.username == member)
+                .values(platoon=platoon)
+            )
+
+        # Active status
+        active = request.form.get("active")
+        if active != None:
+            print("Active != none")
+            print(active)
+            db.execute(
+                update(User)
+                .where(User.username == member)
+                .values(active=active)
+            )
+
+        # Elligibility
+        elligible = request.form.get("elligible")
+        if elligible != None:
+            print("Elligible != none")
+            print(elligible)
+            db.execute(
+                update(User)
+                .where(User.username == member)
+                .values(elligible=elligible)
+            )
+        
+        db.commit()
+
+        return render_template("changed.html", member=member)
+
+    # Blank removal form
     else:
-        return render_template("change.html")
+
+        # Query db for active members list, save in list
+        member_list = db.execute(
+            select(User.username)
+            .where(User.active == '1')
+            .order_by(User.username)
+        )
+        member_list = member_list.mappings().all()
+
+        # Feed list to html
+        return render_template("change.html", member_list=member_list)
+
         
 
 # Session
