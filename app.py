@@ -381,7 +381,6 @@ def hired():
         else:
             for hiring_list in hiring_lists:
                 for shift in session[hiring_list]:
-                    # shift: {'person_off': 'unavailable', 'day': day, 'time': time}
                     db.execute(
                         text("INSERT INTO hiring (hiring_id, platoon, rank, day, time, member_out, member_covering) VALUES (:hiring_id, :platoon, :rank, :day, :time, :member_out, :member_covering)"),
                         [
@@ -626,27 +625,36 @@ def hired():
 @login_required
 def history():
     
-    # FIRST ADD NEW TABLE TO DB
     # Post:
     if request.method == "POST":
-        print("post")
+
         # query db for all entries with this id
-            #separate officers & firefighters
+        past_id = request.form.get("past_hiring")
+
+        # Get results of this hiring from db
+        past_hiring = db.execute(
+            select(Hiring.platoon, Hiring.rank, Hiring.day, Hiring.time, Hiring.member_out, Hiring.member_covering)
+            .where(Hiring.hiring_id == past_id)
+        )
+        past_hiring = past_hiring.mappings().all()
+        print(past_hiring)
+
+        # separate day/rank/time?
+
         # display hiring results a la hired.html
+        return render_template("history_found.html")
 
     # Get:
     else:
         # query db for hiring id's
         hiring_list = db.execute(
-            select(Hiring_list)
+            select(Hiring_list.hiring_id, Hiring_list.created_at)
         )
         hiring_list = hiring_list.mappings().all()
-        print(hiring_list)
+        print("Hiring list:", hiring_list)
 
-        # save the date for each hiring in list
-        
-            # if duplicate date, add " - [number]"
         # feed list of dates & id's to html, where user selects one
+        return render_template("history.html", hiring_list=hiring_list)
 
 
 
