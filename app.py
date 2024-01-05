@@ -669,24 +669,77 @@ def remove_member():
 
 
 # Change member
-@app.route("/change_member_a", methods=["GET", "POST"])
+@app.route("/change_member", methods=["GET", "POST"])
 @login_required
 def change_member():
     # Remove member from active status
     if request.method == "POST":
 
-        # Get member to be removed from html form        
+        # Get form imput    
         member = request.form.get("member")
-        
-        # Update db: platoon = n/a, active = 0
-        result = db.execute(
-            select(User.rank, User.platoon, User.active, User.elligible, )
-            .where(User.username == member)
-        )
-        result = result.mappings().all()
-        print("result:", result)
 
-        return render_template("change_b.html", member=member)
+        # Check/change password
+        password = request.form.get("password")
+        confirm_password = request.form.get("confirm_password")
+        if password != "":
+            print("Password:", password)
+            if password != confirm_password:
+                return render_template("apology.html", type="password mismatch")
+            hashword = generate_password_hash(password)
+            db.execute(
+                update(User)
+                .where(User.username == member)
+                .values(hash=hashword)
+            )
+            print("password updated")
+
+        # Check/change rank
+        rank = request.form.get("rank")
+        if rank != None:
+            print("Rank != none")
+            print(rank)
+            db.execute(
+                update(User)
+                .where(User.username == member)
+                .values(rank=rank)
+            )
+        
+        # Platoon
+        platoon = request.form.get("platoon")
+        if platoon != None:
+            print("Platoon != none")
+            print(platoon)
+            db.execute(
+                update(User)
+                .where(User.username == member)
+                .values(platoon=platoon)
+            )
+
+        # Active status
+        active = request.form.get("active")
+        if active != None:
+            print("Active != none")
+            print(active)
+            db.execute(
+                update(User)
+                .where(User.username == member)
+                .values(active=active)
+            )
+
+        # Elligibility
+        elligible = request.form.get("elligible")
+        if elligible != None:
+            print("Elligible != none")
+            print(elligible)
+            db.execute(
+                update(User)
+                .where(User.username == member)
+                .values(elligible=elligible)
+            )
+        
+        db.commit()
+
+        return render_template("changed.html", member=member)
 
     # Blank removal form
     else:
@@ -700,7 +753,7 @@ def change_member():
         member_list = member_list.mappings().all()
 
         # Feed list to html
-        return render_template("change_a.html", member_list=member_list)
+        return render_template("change.html", member_list=member_list)
 
         
 

@@ -24,7 +24,7 @@ JavaScript:
 - Alert "are you sure" when removing member
 
 Python/HTML:
-- Change member page/route
+- Add check active status before logging user in
 
 - Manual input of hiring - for results when done not using this app
 
