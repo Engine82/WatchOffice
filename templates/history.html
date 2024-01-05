@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    History
+{% endblock %}
+
+{% block main %}
+    <h3>Select past hiring to display:</h3>
+    <form action="/history" method="post">
+        <select id="past_hiring" name="past_hiring">
+            {% for hiring in hiring_list %}
+                <option value="{{ hiring['hiring_id'] }}">{{ hiring['created_at'] }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <button type="submit">Submit</button>
+    </form>
+{% endblock %}
