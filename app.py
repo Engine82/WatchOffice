@@ -584,6 +584,27 @@ def hired():
             platoon=session['platoon'])    
 
 
+# History
+@app.route("/history", methods=["GET", "POST"])
+@login_required
+def history():
+    
+    # FIRST ADD NEW TABLE TO DB
+    # Post:
+    if request.method == "POST":
+        # query db for all entries with this id
+            #separate officers & firefighters
+        # display hiring results a la hired.html
+
+    # Get:
+    else:
+        # query db for hiring id's
+        # save the date for each hiring in list
+            # if duplicate date, add " - [number]"
+        # feed list of dates & id's to html, where user selects one
+
+
+
 # SETTINGS
 # Add member
 @app.route("/add_member", methods=["GET", "POST"])
