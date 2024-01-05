@@ -54,6 +54,7 @@ class Hiring (Base):
     time: Mapped[str]
     member_out: Mapped[str]
     member_covering: Mapped[str]
+    created_at: Mapped[str]
 
 
 # SQLAlchemy class for hiring_list table
