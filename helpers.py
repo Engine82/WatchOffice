@@ -55,6 +55,15 @@ class Hiring (Base):
     member_out: Mapped[str]
     member_covering: Mapped[str]
 
+
+# SQLAlchemy class for hiring_list table
+class Hiring_list (Base):
+    __tablename__ = "hiring_list"
+    id: Mapped[int] = mapped_column(primary_key=True, init=False)
+    hiring_id: Mapped[int]
+    created_at: Mapped[str]
+
+
 # Find next-up person from tag list/tag board
 def find_next_up(tag_list):
     for person in tag_list:
