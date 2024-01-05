@@ -779,12 +779,16 @@ def login():
         username = request.form.get("username")
         password = request.form.get("password")
 
-        result = db.execute(select(User.id, User.username, User.hash).where(User.username == username))
+        result = db.execute(select(User.id, User.username, User.hash, User.active).where(User.username == username))
         result = result.mappings().first()
-
+        print(result)
         # Verify username in db
         if result == None:
             return render_template("apology.html", type="incorrect username")
+
+        # Verify user is active
+        if result['active'] != 1:
+            return render_template("apology.html", type="user inactive")
 
         # Verify password is correct
         if check_password_hash(result.hash, password) == False:
