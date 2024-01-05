@@ -9,7 +9,7 @@ from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from helpers import login_required
-from helpers import Base, User, Hiring
+from helpers import Base, User, Hiring, Hiring_list
 from helpers import find_next_up, hire
 
 
@@ -356,23 +356,60 @@ def hired():
             print("excepted, hiring id:", hiring_id)"""
 
 
-        # Iterate through each hiring entry and save it in db
-        for hiring_list in hiring_lists:
-            for shift in session[hiring_list]:
-                # shift: {'person_off': 'unavailable', 'day': day, 'time': time}
-                db.execute(
-                    text("INSERT INTO hiring (hiring_id, platoon, rank, day, time, member_out, member_covering) VALUES (:hiring_id, :platoon, :rank, :day, :time, :member_out, :member_covering)"),
-                    [
-                        {"hiring_id": hiring_id,
-                        "platoon": session['platoon'],
-                        "rank": shift['rank'],
-                        "day": shift['day'],
-                        "time": shift['time'],
-                        "member_out": shift['person_off'],
-                        "member_covering": shift['person_covering']}
-                    ]
-                )
+        # Iterate through each hiring entry and save it in db, or if no hiring, save that
+        daynight = ['day', 'night']
+        if hiring_lists != []:
+            day = 1
+            while day <= DAYS_COVERED:
+                for rank in session['hiring_tiers']:
+                    rnk = rank['tier'].lower()
+                    for time in daynight:
+                        db.execute(
+                            text("INSERT INTO hiring (hiring_id, platoon, rank, day, time, member_out, member_covering) VALUES (:hiring_id, :platoon, :rank, :day, :time, :member_out, :member_covering)"),
+                            [
+                                {"hiring_id": hiring_id,
+                                "platoon": session['platoon'],
+                                "rank": rnk,
+                                "day": str(day),
+                                "time": time,
+                                "member_out": "none",
+                                "member_covering": "none"}
+                            ]
+                        )
+                day += 1
+ 
+        else:
+            for hiring_list in hiring_lists:
+                for shift in session[hiring_list]:
+                    # shift: {'person_off': 'unavailable', 'day': day, 'time': time}
+                    db.execute(
+                        text("INSERT INTO hiring (hiring_id, platoon, rank, day, time, member_out, member_covering) VALUES (:hiring_id, :platoon, :rank, :day, :time, :member_out, :member_covering)"),
+                        [
+                            {"hiring_id": hiring_id,
+                            "platoon": session['platoon'],
+                            "rank": shift['rank'],
+                            "day": shift['day'],
+                            "time": shift['time'],
+                            "member_out": shift['person_off'],
+                            "member_covering": shift['person_covering']}
+                        ]
+                    )
+
             db.commit()
+        
+        # Save this hiring id in list of hirings
+        time = db.execute(
+                    select(Hiring.created_at)
+                    .where(Hiring.hiring_id == hiring_id)
+                )
+        time = time.mappings().all()
+        time = time[0]['created_at']
+        print("time:", time)
+
+        db.execute(
+            text("INSERT INTO hiring_list (hiring_id, created_at) VALUES (:hiring_id, :created_at)"), [{"hiring_id": hiring_id, "created_at": time}]
+        )
+        db.commit()
 
         ''' PRINT OPTIONS ?????? '''
 
@@ -592,6 +629,7 @@ def history():
     # FIRST ADD NEW TABLE TO DB
     # Post:
     if request.method == "POST":
+        print("post")
         # query db for all entries with this id
             #separate officers & firefighters
         # display hiring results a la hired.html
@@ -599,7 +637,14 @@ def history():
     # Get:
     else:
         # query db for hiring id's
+        hiring_list = db.execute(
+            select(Hiring_list)
+        )
+        hiring_list = hiring_list.mappings().all()
+        print(hiring_list)
+
         # save the date for each hiring in list
+        
             # if duplicate date, add " - [number]"
         # feed list of dates & id's to html, where user selects one
 
