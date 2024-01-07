@@ -35,6 +35,7 @@ PLATOON_OFFICERS = 2
 PLATOON_FIREFIGHTERS = 8
 DAYS_COVERED = 2
 HIRING_TIERS = 2
+hiring_tiers = [{"tier": "Officers"}, {"tier": "Firefighters"}]
 
 # Shifts covered:
 PLT_1 = {'first_day': '4', 'second_day': '2'}
@@ -345,15 +346,15 @@ def hired():
         ]
 
         # Get hiring id and increase by one
-        hiring_id = db.execute(select(Hiring.hiring_id).order_by(Hiring.hiring_id.desc()).limit(1))
-        hiring_id = hiring_id.mappings().all()
-        hiring_id = hiring_id[0]['hiring_id']
-        hiring_id += 1
+        try:
+            hiring_id = db.execute(select(Hiring.hiring_id).order_by(Hiring.hiring_id.desc()).limit(1))
+            hiring_id = hiring_id.mappings().all()
+            hiring_id = hiring_id[0]['hiring_id']
+            hiring_id += 1
 
-        # Leaving this in for the first iteration of hiring
-        """except:
+        # Handle the first iteration of hiring
+        except:
             hiring_id = 0
-            print("excepted, hiring id:", hiring_id)"""
 
 
         # Iterate through each hiring entry and save it in db, or if no hiring, save that
@@ -364,12 +365,14 @@ def hired():
         while day <= DAYS_COVERED:
 
             for rank in session['hiring_tiers']:
+
                 # Iterate through each opening
                 rank_lower = rank['tier'].lower()
                 for time in daynight:
+
                     # If hiring at this day/rank/time has been done
                     if session[rnk + "_hired_" + time + "_" + str(day)] != []:
-                        for shift in session[rnk + "_hired_" + time + "_" + str(day)]:
+                        for shift in session[rank_lower + "_hired_" + time + "_" + str(day)]:
                             db.execute(
                                 text("INSERT INTO hiring (hiring_id, platoon, rank, day, time, member_out, member_covering) VALUES (:hiring_id, :platoon, :rank, :day, :time, :member_out, :member_covering)"),
                                 [
@@ -410,7 +413,6 @@ def hired():
                 )
         time = time.mappings().all()
         time = time[0]['created_at']
-        print("time:", time)
 
         db.execute(
             text("INSERT INTO hiring_list (hiring_id, created_at) VALUES (:hiring_id, :created_at)"), [{"hiring_id": hiring_id, "created_at": time}]
@@ -632,9 +634,10 @@ def hired():
 @login_required
 def history():
     
-    # Post:
+    # POST get and display chosen past hiring:
     if request.method == "POST":
 
+        # Create empty past hiring lists
         session['officers_past_hiring_day_1'] = []
         session['officers_past_hiring_night_1'] = []
         session['officers_past_hiring_day_2'] = []
@@ -646,29 +649,34 @@ def history():
 
         # query db for all entries with this id at each day/rank/time, save in list
         past_id = request.form.get("past_hiring")
-        print("Past hiring id:", past_id)
+
+        past_platoon = db.execute(select(Hiring.platoon).where(Hiring.hiring_id == past_id))
+        past_platoon = past_platoon.scalars().all()
+        past_platoon = past_platoon[0]
+
+        # Loop through day/rank/time
         daynight = ["day", "night"]
         day = 1
         while day <= DAYS_COVERED:
 
-            for rank in session['hiring_tiers']:
+            for rank in hiring_tiers:
                 rnk = rank['tier'].lower()
 
                 for time in daynight:
+
+                    # Query db for hiring at this day/rank/time and save in session
                     past_hiring = db.execute(
-                        select(Hiring.platoon, Hiring.rank, Hiring.day, Hiring.time, Hiring.member_out, Hiring.member_covering)
+                        select(Hiring.rank, Hiring.day, Hiring.time, Hiring.member_out, Hiring.member_covering)
                         .where(Hiring.hiring_id == past_id)
                         .where(Hiring.day == day)
                         .where(Hiring.rank == rank['tier'])
                         .where(Hiring.time == time)
                     )
                     past_hiring = past_hiring.mappings().all()
-                    print(f"Day: {day} Rank: {rnk} Time: {time}")
-                    print("  past hiring:", past_hiring)
-                    session[rnk + "_" + "past_hiring" + "_" + time + "_" + str(day)].append(past_hiring[0])
-                    print (session[rnk + "_" + "past_hiring" + "_" + time + "_" + str(day)])
+                    session[rnk + "_" + "past_hiring" + "_" + time + "_" + str(day)].extend(past_hiring)
                     
             day += 1
+
         # display hiring results a la hired.html
         return render_template("history_found.html", 
             officers_day_1=session['officers_past_hiring_day_1'],
@@ -678,16 +686,18 @@ def history():
             firefighters_day_1=session['firefighters_past_hiring_day_1'],
             firefighters_night_1=session['firefighters_past_hiring_night_1'],
             firefighters_day_2=session['firefighters_past_hiring_day_2'],
-            firefighters_night_2=session['firefighters_past_hiring_night_2']
+            firefighters_night_2=session['firefighters_past_hiring_night_2'],
+            platoon=past_platoon
         )
-    # Get:
+
+    # GET get list of past hiring and feed to html select
     else:
+
         # query db for hiring id's
         hiring_list = db.execute(
-            select(Hiring_list.hiring_id, Hiring_list.created_at)
+            select(Hiring_list.hiring_id, Hiring_list.created_at).order_by(Hiring_list.hiring_id.desc())
         )
         hiring_list = hiring_list.mappings().all()
-        print("Hiring list:", hiring_list)
 
         # feed list of dates & id's to html, where user selects one
         return render_template("history.html", hiring_list=hiring_list)
