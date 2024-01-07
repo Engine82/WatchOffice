@@ -26,9 +26,6 @@ JavaScript:
 Python/HTML:
 - Manual input of hiring - for results when done not using this app
 
-- Display hiring results from a certain hiring
-
-
 +------------------------------------------------------------------------------------------------------------------------------+
 
     HIRING B - covering shift availability
