@@ -25,3 +25,11 @@ created_at DATETIME DEFAULT(CURRENT_TIMESTAMP) NOT NULL,
 FOREIGN KEY (member_out) REFERENCES users(username),
 FOREIGN KEY (member_covering) REFERENCES users(username)
 );
+
+CREATE TABLE hiring_list (
+id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+hiring_id INTEGER NOT NULL,
+created_at DATETIME NOT NULL,
+FOREIGN KEY (hiring_id) REFERENCES hiring(hiring_id),
+FOREIGN KEY (created_at) REFERENCES hiring(created_at)
+);

@@ -29,9 +29,11 @@
                         </tr>
                     {% endif %}
                 {% endfor %}
-                <tr>
-                    <td><br></td>
-                </tr> 
+                {% if officers_day_1 != [] %}
+                    <tr>
+                        <td><br></td>
+                    </tr>
+                {% endif %}
 
                 {% for opening in officers_night_1 %}
                     {% if opening['person_off'] == 'unavailable' %}
@@ -65,9 +67,11 @@
                         </tr>
                     {% endif %}
                 {% endfor %}
-                <tr>
-                    <td><br></td>
-                </tr> 
+                {% if firefighters_day_1 != [] %}
+                    <tr>
+                        <td><br></td>
+                    </tr>
+                {% endif %}
 
                 {% for opening in firefighters_night_1 %}
                     {% if opening['person_off'] == 'unavailable' %}
@@ -105,9 +109,11 @@
                         </tr>
                     {% endif %}
                 {% endfor %}
-                <tr>
-                    <td><br></td>
-                </tr> 
+                {% if officers_day_2 != [] %}
+                    <tr>
+                        <td><br></td>
+                    </tr>
+                {% endif %}
 
                 {% for opening in officers_night_2 %}
                     {% if opening['person_off'] == 'unavailable' %}
@@ -141,9 +147,11 @@
                         </tr>
                     {% endif %}
                 {% endfor %}
-                <tr>
-                    <td><br></td>
-                </tr> 
+                {% if firefighters_day_2 != [] %}
+                    <tr>
+                        <td><br></td>
+                    </tr>
+                {% endif %}
 
                 {% for opening in firefighters_night_2 %}
                     {% if opening['person_off'] == 'unavailable' %}
