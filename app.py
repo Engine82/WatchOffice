@@ -371,7 +371,7 @@ def hired():
                 for time in daynight:
 
                     # If hiring at this day/rank/time has been done
-                    if session[rnk + "_hired_" + time + "_" + str(day)] != []:
+                    if session[rank_lower + "_hired_" + time + "_" + str(day)] != []:
                         for shift in session[rank_lower + "_hired_" + time + "_" + str(day)]:
                             db.execute(
                                 text("INSERT INTO hiring (hiring_id, platoon, rank, day, time, member_out, member_covering) VALUES (:hiring_id, :platoon, :rank, :day, :time, :member_out, :member_covering)"),
@@ -676,6 +676,17 @@ def history():
                     session[rnk + "_" + "past_hiring" + "_" + time + "_" + str(day)].extend(past_hiring)
                     
             day += 1
+        
+        print(
+            "officers day 1:", session['officers_past_hiring_day_1'],
+            "officers night 1:", session['officers_past_hiring_night_1'],
+            "officers day 2", session['officers_past_hiring_day_2'],
+            "officers night 2:", session['officers_past_hiring_night_2'],
+            "firefighters day 1", session['firefighters_past_hiring_day_1'],
+            "firefighters night 1:", session['firefighters_past_hiring_night_1'],
+            "firefighters day 2:", session['firefighters_past_hiring_day_2'],
+            "firefighters night 2:", session['firefighters_past_hiring_night_2']
+        )
 
         # display hiring results a la hired.html
         return render_template("history_found.html", 
