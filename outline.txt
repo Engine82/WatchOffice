@@ -24,7 +24,11 @@ JavaScript:
 - Alert "are you sure" when removing member
 
 Python/HTML:
-- Manual input of hiring - for results when done not using this app
+- Manual input of Hiring
+    - just choose who is up next and update in db   
+        - Save updated state in Users.tag_flipped
+        - Save manual override in hiring and hiring_list tables
+
 
 +------------------------------------------------------------------------------------------------------------------------------+
 

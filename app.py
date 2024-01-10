@@ -629,6 +629,140 @@ def hired():
             platoon=session['platoon'])    
 
 
+# Manual hiring input
+@app.route("/manual_a", methods=["GET", "POST"])
+@login_required
+def manual_a():
+    
+    # After platoon is selected
+    if request.method == "POST":
+
+        # Save platoon choice for next route
+        session["platoon"] = request.form.get("platoon")
+        return redirect("/manual_b")
+
+    # If starting new hiring
+    else:
+        return render_template("manual_a.html")
+
+
+# Select any members that are not available on cover days
+@app.route("/manual_b", methods=["GET", "POST"])
+@login_required
+def manual_b():
+
+    # After availability is submitted
+    if request.method == "POST":
+        
+        # Get user input:
+        officer = request.form.get("officer")
+        firefighter = request.form.get("firefighter")
+        ids = [
+            {"rank": "officer", "id": officer},
+            {"rank": "firefighter", "id": firefighter}
+        ]
+        print(ids)
+
+        # Update tag_flipped status in db:
+        for entry in ids:
+            for member in session['covering_' + entry['rank']]:
+                if member['id'] < int(entry['id']):
+                    db.execute(
+                        update(User)
+                        .where(User.id == member['id'])
+                        .values(tag_flipped=1)
+                    )
+
+                # Required if the previous person up was lower in seniority than the new person up
+                else:
+                    db.execute(
+                        update(User)
+                        .where(User.id == member['id'])
+                        .values(tag_flipped=0)
+                    )
+        db.commit()
+
+        # Get hiring id and increase by one
+        try:
+            hiring_id = db.execute(select(Hiring.hiring_id).order_by(Hiring.hiring_id.desc()).limit(1))
+            hiring_id = hiring_id.mappings().all()
+            hiring_id = hiring_id[0]['hiring_id']
+            hiring_id += 1
+
+        # Handle the first iteration of hiring
+        except:
+            hiring_id = 0
+        
+        # Record manual override in hiring and hiring_list db's
+        daynight = ['day', 'night']
+
+        for day in range(DAYS_COVERED):
+            for rank in session['hiring_tiers']:
+                for time in daynight:
+                    db.execute(
+                        text("INSERT INTO hiring (hiring_id, platoon, rank, day, time, member_out, member_covering) VALUES (:hiring_id, :platoon, :rank, :day, :time, :member_out, :member_covering)"),
+                        [{
+                            "hiring_id": hiring_id,
+                            "platoon": session['platoon'],
+                            "rank": rank['tier'],
+                            "day": day,
+                            "time": time,
+                            "member_out": "manual override",
+                            "member_covering": "manual override"
+                        }]
+                    )
+        db.commit()
+
+        # Record this "hiring" in hiring_list
+        time = db.execute(
+                    select(Hiring.created_at)
+                    .where(Hiring.hiring_id == hiring_id)
+                )
+        time = time.mappings().all()
+        time = time[0]['created_at']
+
+        db.execute(
+            text("INSERT INTO hiring_list (hiring_id, created_at) VALUES (:hiring_id, :created_at)"),
+            [{"hiring_id": hiring_id, "created_at": time}]
+        )
+        db.commit()
+
+        return redirect("/")
+
+    # Display the availability form
+    else:
+
+        # query db for list of elligible officers & firefighters and save as dicts
+        covering_officers = db.execute(
+            select(User.id, User.username)
+            .where(User.platoon == session['platoon'])
+            .where(User.elligible == "1")
+            .where(User.active == "1")
+            .where(User.rank != "firefighter")
+            .order_by(User.id)
+        )
+        session['covering_officer'] = covering_officers.mappings().all()
+        print("covering officer:", session['covering_officer'])
+
+        covering_firefighters = db.execute(
+            select(User.id, User.username, User.rank)
+            .where(User.platoon == session['platoon'])
+            .where(User.elligible == "1")
+            .where(User.active == "1")
+            .where(User.rank == "firefighter")
+            .order_by(User.id)
+        )
+        session['covering_firefighter'] = covering_firefighters.mappings().all()
+        print("covering firefighter:", session['covering_firefighter'])
+
+        return render_template(
+            "manual_b.html",
+            officers=session['covering_officer'],
+            firefighters=session['covering_firefighter'],
+            platoon=session['platoon']
+        )
+
+
 # History
 @app.route("/history", methods=["GET", "POST"])
 @login_required
@@ -755,7 +889,10 @@ def add_member():
         hashword = generate_password_hash(password)
         
         # Insert username & password into db
-        db.execute(insert(User), {"username": username, "hash": hashword, "rank": rank, "platoon": platoon, "active": active, "elligible": elligibility})
+        db.execute(
+            insert(User),
+            {"username": username, "hash": hashword, "rank": rank, "platoon": platoon, "active": active, "elligible": elligibility}
+        )
         db.commit()
         return render_template("added.html")
 

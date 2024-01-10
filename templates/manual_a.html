@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Manual Hiring - Select Platoon
+{% endblock %}
+
+{% block main %}
+    <h3>Select covering platoon:</h3>
+    <form action="/manual_a" method="post">
+        <select id="platoon" name="platoon">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+        </select>
+        <br>
+        <button type="submit">Submit</button>
+    </form>
+{% endblock %}

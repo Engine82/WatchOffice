@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Hiring: Select Availability
+{% endblock %}
+
+{% block main %}
+    <h1>Platoon {{ platoon }} Tagboard Override</h1>
+    <h4>Select new next-up members:</h4>
+    <form action="/manual_b" class="centered" method="post">
+        <table>
+            <tr>
+                <td>Officers:</td>
+                <td>
+                    <select id="officer" name="officer">
+                        {% for officer in officers %}
+                            <option value="{{ officer['id'] }}">{{ officer['username'] }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Firefighters:</td>
+                <td>
+                    <select id="firefighter" name="firefighter">
+                        {% for firefighter in firefighters %}
+                            <option value="{{ firefighter['id'] }}">{{ firefighter['username'] }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <td>
+                    <button type="submit">Submit</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+{% endblock %}
