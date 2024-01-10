@@ -629,6 +629,135 @@ def hired():
             platoon=session['platoon'])    
 
 
+# Manual hiring input
+@app.route("/manual_a", methods=["GET", "POST"])
+@login_required
+def manual_a():
+    
+    # After platoon is selected
+    if request.method == "POST":
+
+        # Save platoon choice for next route
+        session["platoon"] = request.form.get("platoon")
+        return redirect("/manual_b")
+
+    # If starting new hiring
+    else:
+        return render_template("manual_a.html")
+
+
+# Select any members that are not available on cover days
+@app.route("/manual_b", methods=["GET", "POST"])
+@login_required
+def manual_b():
+
+    # After availability is submitted
+    if request.method == "POST":
+
+        return redirect("/manual_c")
+
+    # Display the availability form
+    else:
+
+        # query db for list of elligible officers & firefighters and save as dicts
+        covering_officers = db.execute(
+            select(User.id, User.username, User.rank, User.tag_flipped)
+            .where(User.platoon == session['platoon'])
+            .where(User.elligible == "1")
+            .where(User.active == "1")
+            .where(User.rank != "firefighter")
+            .order_by(User.id)
+        )
+        session['covering_officers'] = covering_officers.mappings().all()
+        print("covering officers:", session['covering_officers'])
+
+        covering_firefighters = db.execute(
+            select(User.id, User.username, User.rank, User.tag_flipped)
+            .where(User.platoon == session['platoon'])
+            .where(User.elligible == "1")
+            .where(User.active == "1")
+            .where(User.rank == "firefighter")
+            .order_by(User.id)
+        )
+        session['covering_firefighters'] = covering_firefighters.mappings().all()
+        print("covering firefighters:", session['covering_firefighters'])
+
+        # Get cover platoons
+        if session['platoon'] == '1':
+            cover_1 = 4
+            cover_2 = 2
+        elif session['platoon'] == '2':
+            cover_1 = 1
+            cover_2 = 3
+        elif session['platoon'] == '3':
+            cover_1 = 2
+            cover_2 = 4
+        elif session['platoon'] == '4':
+            cover_1 = 3
+            cover_2 = 1
+        
+        days_covered = {'day_1': cover_1, 'day_2': cover_2}
+
+        # Get officers & firefighters list for each covered platoon
+        cover_1_firefighters = db.execute(
+            select(User.username)
+            .where(User.platoon == cover_1)
+            .where(User.active == '1')
+            .where(User.rank == "firefighter")
+            .order_by(User.id)
+        )
+        session['covered_1_firefighters'] = cover_1_firefighters.mappings().all()
+        print("covered 1 firefighters:", session['covered_1_firefighters'])
+
+        cover_1_officers = db.execute(
+            select(User.username)
+            .where(User.platoon == cover_1)
+            .where(User.active == '1')
+            .where(User.rank != "firefighter")
+            .order_by(User.id)
+        )
+        session['covered_1_officers'] = cover_1_officers.mappings().all()
+        print("covered 1 officers:", session['covered_1_officers'])
+
+        cover_2_firefighters = db.execute(
+            select(User.username)
+            .where(User.platoon == cover_2)
+            .where(User.active == '1')
+            .where(User.rank == "firefighter")
+            .order_by(User.id)
+        )
+        session['covered_2_firefighters'] = cover_2_firefighters.mappings().all()
+        print("covered 2 firefighters:", session['covered_2_firefighters'])
+
+        cover_2_officers = db.execute(
+            select(User.username)
+            .where(User.platoon == cover_2)
+            .where(User.active == '1')
+            .where(User.rank != "firefighter")
+            .order_by(User.id)
+        )
+        session['covered_2_officers'] = cover_2_officers.mappings().all()
+        print("covered 2 officers:", session['covered_2_officers'])
+
+        # Create list of titles for HTML
+        session['cover_days'] = [{"day": "First Cover Day"}, {"day": "Second Cover Day"}]
+        session['hiring_tiers'] = [{"tier": "Officers"}, {"tier": "Firefighters"}]
+
+        return render_template(
+            "manual_b.html",
+            cover_days=session['cover_days'],
+            covered_1_firefighters=session['covered_1_firefighters'],
+            covered_1_officers=session['covered_1_officers'],
+            covered_2_firefighters=session['covered_2_firefighters'],
+            covered_2_officers=session['covered_2_officers'],
+            covering_firefighters=session['covering_firefighters'],
+            covering_officers=session['covering_officers'],
+            days_covered=DAYS_COVERED,
+            hiring_tiers=session['hiring_tiers'],
+            platoon=session['platoon']
+        )
+
+
 # History
 @app.route("/history", methods=["GET", "POST"])
 @login_required
