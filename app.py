@@ -682,8 +682,50 @@ def manual_b():
                     )
         db.commit()
 
-        # Record manual override in hiring and hiring_list db's
+        # Get hiring id and increase by one
+        try:
+            hiring_id = db.execute(select(Hiring.hiring_id).order_by(Hiring.hiring_id.desc()).limit(1))
+            hiring_id = hiring_id.mappings().all()
+            hiring_id = hiring_id[0]['hiring_id']
+            hiring_id += 1
+
+        # Handle the first iteration of hiring
+        except:
+            hiring_id = 0
         
+        # Record manual override in hiring and hiring_list db's
+        daynight = ['day', 'night']
+
+        for day in range(DAYS_COVERED):
+            for rank in session['hiring_tiers']:
+                for time in daynight:
+                    db.execute(
+                        text("INSERT INTO hiring (hiring_id, platoon, rank, day, time, member_out, member_covering) VALUES (:hiring_id, :platoon, :rank, :day, :time, :member_out, :member_covering)"),
+                        [{
+                            "hiring_id": hiring_id,
+                            "platoon": session['platoon'],
+                            "rank": rank['tier'],
+                            "day": day,
+                            "time": time,
+                            "member_out": "manual override",
+                            "member_covering": "manual override"
+                        }]
+                    )
+        db.commit()
+
+        # Record this "hiring" in hiring_list
+        time = db.execute(
+                    select(Hiring.created_at)
+                    .where(Hiring.hiring_id == hiring_id)
+                )
+        time = time.mappings().all()
+        time = time[0]['created_at']
+
+        db.execute(
+            text("INSERT INTO hiring_list (hiring_id, created_at) VALUES (:hiring_id, :created_at)"),
+            [{"hiring_id": hiring_id, "created_at": time}]
+        )
+        db.commit()
 
         return redirect("/")
 
