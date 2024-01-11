@@ -16,7 +16,7 @@
                 {% for officer in session['cover_1_officers'] %}              
                     <tr>
                         <td>
-                            {{ officer['username'] }}
+                            {{ officer['first_name'] }} {{ officer['last_name'] }}
                         </td>
                         <td>
                             <select class="day" id="officers_1st_day_{{ loop.index }}" name="officers_1st_day_{{ loop.index }}" required>
@@ -36,7 +36,7 @@
                 {% for firefighter in session['cover_1_firefighters'] %}              
                 <tr>
                     <td>
-                        {{ firefighter['username'] }}
+                        {{ firefighter['first_name'] }} {{ firefighter['last_name'] }}
                     </td>
                     <td>
                         <select class="day" id="firefighters_1st_day_{{ loop.index }}" name="firefighters_1st_day_{{ loop.index }}" required>
@@ -61,7 +61,7 @@
             {% for officer in session['cover_2_officers'] %}  
                 <tr>            
                     <td>
-                        {{ officer['username'] }}
+                        {{ officer['first_name'] }} {{ officer['last_name'] }}
                     </td>
                     <td>
                         <select class="day" id="officers_2nd_day_{{ loop.index }}" name="officers_2nd_day_{{ loop.index }}" required>
@@ -80,7 +80,7 @@
             {% for firefighter in session['cover_2_firefighters'] %}  
                 <tr>            
                     <td>
-                        {{ firefighter['username'] }}
+                        {{ firefighter['first_name'] }} {{ firefighter['last_name'] }}
                     </td>
                     <td>
                         <select class="day" id="firefighters_2nd_day_{{ loop.index }}" name="firefighters_2nd_day_{{ loop.index }}" required>

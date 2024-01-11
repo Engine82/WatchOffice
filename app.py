@@ -101,7 +101,9 @@ def hiring_b():
                 ntw_2 = "ntw_2_" + session['hiring_tiers'][tier - 1]['tier'] + "_" + str(person_counter)
 
                 results_avail = {
-                    'username': person['username'],
+                    'id': person['id'],
+                    'first_name': person['first_name'],
+                    'last_name': person['last_name'],
                     'avail_1': request.form.get(day_1),
                     'avail_2': request.form.get(day_2),
                     'tag_flipped': session['personnel'][tier - 1][person_counter - 1]['tag_flipped']
@@ -126,10 +128,10 @@ def hiring_b():
     else:
 
         # query db for list of elligible officers & firefighters and save as dicts
-        officers = db.execute(select(User.id, User.username, User.rank, User.tag_flipped).where(User.platoon == session['platoon']).where(User.elligible == "1").where(User.active == "1").where(User.rank != "firefighter").order_by(User.id))
+        officers = db.execute(select(User.id, User.first_name, User.last_name, User.rank, User.tag_flipped).where(User.platoon == session['platoon']).where(User.elligible == "1").where(User.active == "1").where(User.rank != "firefighter").order_by(User.id))
         officers = officers.mappings().all()
 
-        firefighters = db.execute(select(User.id, User.username, User.rank, User.tag_flipped).where(User.platoon == session['platoon']).where(User.elligible == "1").where(User.active == "1").where(User.rank == "firefighter").order_by(User.id))
+        firefighters = db.execute(select(User.id, User.first_name, User.last_name, User.rank, User.tag_flipped).where(User.platoon == session['platoon']).where(User.elligible == "1").where(User.active == "1").where(User.rank == "firefighter").order_by(User.id))
         firefighters = firefighters.mappings().all()
 
         session['personnel'] = [officers, firefighters]
@@ -167,7 +169,9 @@ def hiring_c():
             # If officer is not working a 24, save their status
             if result != "working":
                 session['officers_openings_1'].append({
-                    'username': officer['username'],
+                    'id': officer['id'],
+                    'first_name': officer['first_name'],
+                    'last_name': officer['last_name'],
                     'availability': result
                 })
 
@@ -182,7 +186,9 @@ def hiring_c():
             # If ff is not working a 24, save their status
             if result != "working":
                 session['firefighters_openings_1'].append({
-                    'username': firefighter['username'],
+                    'id': firefighter['id'],
+                    'first_name': firefighter['first_name'],
+                    'last_name': firefighter['last_name'],
                     'availability': result
                 })
 
@@ -197,7 +203,9 @@ def hiring_c():
             # If officer is not working a 24, save their status
             if result != "working":
                 session['officers_openings_2'].append({
-                    'username': officer['username'],
+                    'id': officer['id'],
+                    'first_name': officer['first_name'],
+                    'last_name': officer['last_name'],
                     'availability': result
                 })
 
@@ -211,8 +219,11 @@ def hiring_c():
 
             # If ff is not working a 24, save their status
             if result != "working":
+                print("firefighter: ", firefighter)
                 session['firefighters_openings_2'].append({
-                    'username': firefighter['username'],
+                    'id': firefighter['id'],
+                    'first_name': firefighter['first_name'],
+                    'last_name': firefighter['last_name'],
                     'availability': result
                 })
 
@@ -241,7 +252,7 @@ def hiring_c():
 
         # Get officers & firefighters list for each cover platoon
         cover_1_firefighters = db.execute(
-            select(User.username)
+            select(User.id, User.first_name, User.last_name)
             .where(User.platoon == cover_1)
             .where(User.active == '1')
             .where(User.rank == "firefighter")
@@ -250,7 +261,7 @@ def hiring_c():
         cover_1_firefighters = cover_1_firefighters.mappings().all()
 
         cover_1_officers = db.execute(
-            select(User.username)
+            select(User.id, User.first_name, User.last_name)
             .where(User.platoon == cover_1)
             .where(User.active == '1')
             .where(User.rank != "firefighter")
@@ -259,7 +270,7 @@ def hiring_c():
         cover_1_officers = cover_1_officers.mappings().all()
 
         cover_2_firefighters = db.execute(
-            select(User.username)
+            select(User.id, User.first_name, User.last_name)
             .where(User.platoon == cover_2)
             .where(User.active == '1')
             .where(User.rank == "firefighter")
@@ -268,7 +279,7 @@ def hiring_c():
         cover_2_firefighters = cover_2_firefighters.mappings().all()
 
         cover_2_officers = db.execute(
-            select(User.username)
+            select(User.id, User.first_name, User.last_name)
             .where(User.platoon == cover_2)
             .where(User.active == '1')
             .where(User.rank != "firefighter")
@@ -279,19 +290,19 @@ def hiring_c():
 
         # Add vacancies to shifts up to full-size
         while len(cover_1_firefighters) < PLATOON_FIREFIGHTERS:
-            cover_1_firefighters.append({'username': 'vacancy'})
+            cover_1_firefighters.append({'id': '0', 'first_name': 'vacancy', 'last_name': " "})
         session['cover_1_firefighters'] = cover_1_firefighters
 
         while len(cover_1_officers) < PLATOON_OFFICERS:
-            cover_1_officers.append({'username': 'vacancy'})
+            cover_1_officers.append({'id': '0', 'first_name': 'vacancy', 'last_name': " "})
         session['cover_1_officers'] = cover_1_officers
 
         while len(cover_2_firefighters) < PLATOON_FIREFIGHTERS:
-            cover_2_firefighters.append({'username': 'vacancy'})
+            cover_2_firefighters.append({'id': '0', 'first_name': 'vacancy', 'last_name': " "})
         session['cover_2_firefighters'] = cover_2_firefighters
 
         while len(cover_2_officers) < PLATOON_OFFICERS:
-            cover_2_officers.append({'username': 'vacancy'})
+            cover_2_officers.append({'id': '0', 'first_name': 'vacancy', 'last_name': " "})
         session['cover_2_officers'] = cover_2_officers
 
         return render_template("hiring_c.html", cover_1_firefighters=cover_1_firefighters, cover_1_officers=cover_1_officers, cover_2_firefighters=cover_2_firefighters, cover_2_officers=cover_2_officers, days_covered=days_covered, platoon=session['platoon'])
@@ -317,7 +328,7 @@ def hired():
                 if member['tag_flipped'] == 1:
                     db.execute(
                         update(User)
-                        .where(User.username == member['username'])
+                        .where(User.username == member['id'])
                         .values(tag_flipped=1)
                     )
 
@@ -325,7 +336,7 @@ def hired():
                 else:
                     db.execute(
                         update(User)
-                        .where(User.username == member['username'])
+                        .where(User.username == member['id'])
                         .values(tag_flipped=0)
                     )
                     
@@ -375,15 +386,15 @@ def hired():
                         for shift in session[rank_lower + "_hired_" + time + "_" + str(day)]:
                             db.execute(
                                 text("INSERT INTO hiring (hiring_id, platoon, rank, day, time, member_out, member_covering) VALUES (:hiring_id, :platoon, :rank, :day, :time, :member_out, :member_covering)"),
-                                [
-                                    {"hiring_id": hiring_id,
+                                [{
+                                    "hiring_id": hiring_id,
                                     "platoon": session['platoon'],
                                     "rank": rank['tier'],
                                     "day": day,
                                     "time": time,
                                     "member_out": shift['person_off'],
-                                    "member_covering": shift['person_covering']}
-                                ]
+                                    "member_covering": shift['person_covering']
+                                }]
                             )
                             db.commit()
 
@@ -480,8 +491,17 @@ def hired():
                 for opening in session[rank_lower + "_openings_" + str(day)]:
 
                     # Get this open shift's info
-                    shift_day = {'username': opening['username'], 'shift': 'day'}
-                    shift_night = {'username': opening['username'], 'shift': 'night'}
+                    shift_day = {
+                        'id': opening['id'],
+                        'name': opening['first_name'] + " " + opening['last_name'],
+                        'shift': 'day'
+                    }
+                    shift_night = {
+                        'id': opening['id'],
+                        'name': opening['first_name'] + " " + opening['last_name'],
+                        'shift': 'night'
+                    }
+                    print("shift night: ", shift_night)
 
                     # Day
                     if opening['availability'] == 'day':
@@ -515,7 +535,9 @@ def hired():
                     # 24
                     if member['avail_' + str(day)] == '24':
                         session[rank_lower + "_covering_" + str(day)].append({
-                            'username': member['username'], 
+                            'id': member['id'],
+                            'first_name': member['first_name'],
+                            'last_name': member['last_name'],
                             'day': 'unavailable',
                             'night': 'unavailable'
                         })
@@ -523,7 +545,9 @@ def hired():
                     # Unavailable Day
                     elif member['avail_' + str(day)] == 'day':
                         session[rank_lower + "_covering_" + str(day)].append({
-                            'username': member['username'], 
+                            'id': member['id'],
+                            'first_name': member['first_name'],
+                            'last_name': member['last_name'],
                             'day': 'unavailable',
                             'night': 'available'
                         })
@@ -531,7 +555,9 @@ def hired():
                     # Unavailable Night
                     elif member['avail_' + str(day)] == 'night':
                         session[rank_lower + "_covering_" + str(day)].append({
-                            'username': member['username'], 
+                            'id': member['id'], 
+                            'first_name': member['first_name'],
+                            'last_name': member['last_name'],
                             'day': 'available',
                             'night': 'unavailable'
                         })
@@ -539,7 +565,9 @@ def hired():
                     # Available
                     elif member['avail_' + str(day)] == 'available':
                         session[rank_lower + "_covering_" + str(day)].append({
-                            'username': member['username'],
+                            'id': member['id'],
+                            'first_name': member['first_name'],
+                            'last_name': member['last_name'],
                             'day': 'available',
                             'night': 'available'
                         })
@@ -555,7 +583,8 @@ def hired():
             counter = 0
             for member in session[rnk + "_avail"]:
                 session[rnk + "_tags"].append({
-                    'username': member['username'],
+                    'id': member['id'],
+                    'name': member['first_name'] + " " + member['last_name'],
                     'tag_flipped': session[rnk + "_avail"][counter]['tag_flipped']
                 })
                 counter += 1
@@ -871,6 +900,8 @@ def add_member():
             return render_template("apology.html", type="elligibility")
 
         username = request.form.get("username")
+        first_name = request.form.get("first_name")
+        last_name = request.form.get("last_name")
         password = request.form.get("password")
         rank = request.form.get("rank")
         platoon = request.form.get("platoon")
@@ -891,7 +922,16 @@ def add_member():
         # Insert username & password into db
         db.execute(
             insert(User),
-            {"username": username, "hash": hashword, "rank": rank, "platoon": platoon, "active": active, "elligible": elligibility}
+            {
+                "username": username, 
+                "first_name": first_name,
+                "last_name": last_name,
+                "hash": hashword,
+                "rank": rank,
+                "platoon": platoon,
+                "active": active,
+                "elligible": elligibility
+            }
         )
         db.commit()
         return render_template("added.html")
