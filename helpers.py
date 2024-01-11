@@ -79,7 +79,7 @@ def find_next_up(tag_list):
     # If nobody is flipped, return first person
     for person in tag_list:
         person['tag_flipped'] = 0
-    return(tag_list[0]['id'])
+    return(tag_list[0])
 
 
 # Find this person (member_up)'s entry in the availability list  and return it
@@ -112,14 +112,13 @@ def hire(opening, availability, taglist, results, time, covering_count, shift_si
 
         # Find next person up (tag_flipped == 0)
         next_up = find_next_up(taglist)
+        print("next_up: ", next_up)
 
         # Get availability of next_up person
         avail = get_availability(next_up['id'], availability)
 
         # Flip tag of this person and increase counter
         flip_tag(taglist, next_up['id'])
-        print("tag list:", taglist)
-        print("next up:", next_up)
         covering_count += 1
 
         # If available save results and return results and number of members checked
