@@ -25,9 +25,6 @@ JavaScript:
 Python/HTML:
 - display names instead of usernames
         history b 
-        manual b 
-        Remove member
-        Delete member
 - display tag status on homepage
         get list of each platoon by rank - id, tag_flipped
         find_next_up(platon_rank) - loop platoons and rank, fill in variable name

@@ -762,7 +762,7 @@ def manual_b():
 
         # query db for list of elligible officers & firefighters and save as dicts
         covering_officers = db.execute(
-            select(User.id, User.username)
+            select(User.id, User.first_name, User.last_name)
             .where(User.platoon == session['platoon'])
             .where(User.elligible == "1")
             .where(User.active == "1")
@@ -773,7 +773,7 @@ def manual_b():
         print("covering officer:", session['covering_officer'])
 
         covering_firefighters = db.execute(
-            select(User.id, User.username, User.rank)
+            select(User.id, User.first_name, User.last_name)
             .where(User.platoon == session['platoon'])
             .where(User.elligible == "1")
             .where(User.active == "1")
@@ -814,6 +814,7 @@ def history():
 
         past_platoon = db.execute(select(Hiring.platoon).where(Hiring.hiring_id == past_id))
         past_platoon = past_platoon.scalars().all()
+        print(past_platoon)
         past_platoon = past_platoon[0]
 
         # Loop through day/rank/time
@@ -828,12 +829,13 @@ def history():
 
                     # Query db for hiring at this day/rank/time and save in session
                     past_hiring = db.execute(
-                        select(Hiring.rank, Hiring.day, Hiring.time, Hiring.member_out, Hiring.member_covering)
+                        select(Hiring.member_out, Hiring.member_covering)
                         .where(Hiring.hiring_id == past_id)
                         .where(Hiring.day == day)
                         .where(Hiring.rank == rank['tier'])
                         .where(Hiring.time == time)
                     )
+                    select(User.first_name, User.last_name)
                     past_hiring = past_hiring.mappings().all()
                     session[rnk + "_" + "past_hiring" + "_" + time + "_" + str(day)].extend(past_hiring)
                     
@@ -950,23 +952,31 @@ def remove_member():
         # Get member to be removed from html form        
         member = request.form.get("member")
         
+        # Get member's name
+        name = db.execute(
+            select(User.first_name, User.last_name)
+            .where(User.id == member)
+        )
+        name = name.mappings().all()
+        name = name[0]['first_name'] + " " + name[0]['last_name']
+
         # Update db: platoon = n/a, active = 0
         db.execute(
             update(User)
-            .where(User.username == member)
+            .where(User.id == member)
             .values(active=0, platoon=None)
         )
 
         # Display "___ removed"
-        return render_template("removed.html", member=member)
+        return render_template("removed.html", member=name)
 
     # Blank removal form
     else:
         # Query db for active members list, save in list
         member_list = db.execute(
-            select(User.username)
+            select(User.username, User.id, User.first_name, User.last_name)
             .where(User.active == '1')
-            .order_by(User.username)
+            .order_by(User.id)
         )
         member_list = member_list.mappings().all()
         db.commit()

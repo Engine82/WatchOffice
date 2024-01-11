@@ -160,3 +160,13 @@ def hire(opening, availability, taglist, results, time, covering_count, shift_si
             'rank': rank
         })
         return([results, covering_count])
+
+def find_name(member_list, member):
+    for person in member_list:
+        print(member)
+        print(person)
+        print(person['id'])
+        if person['id'] == str(member):
+            member_name = person['first_name'] + " " + person['last_name']
+            print("Name", member_name)
+            return(member_name)
