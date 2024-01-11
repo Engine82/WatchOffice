@@ -3,6 +3,8 @@ TABLES:
 CREATE TABLE users (
 id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
 username TEXT NOT NULL,
+first_name TEXT NOT NULL,
+last_name TEXT NOT NULL,
 hash TEXT NOT NULL,
 rank TEXT,
 platoon INTEGER,
@@ -11,6 +13,10 @@ elligible INTEGER NOT NULL,
 tag_flipped INT,
 created_at DATETIME DEFAULT (DATETIME(CURRENT_TIMESTAMP, 'LOCALTIME')) NOT NULL
 );
+
+** Note **
+id 0 reserved for vacancies; manually input first user as vacancy.
+
 
 CREATE TABLE hiring (
 id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
