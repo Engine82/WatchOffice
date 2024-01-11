@@ -501,7 +501,6 @@ def hired():
                         'name': opening['first_name'] + " " + opening['last_name'],
                         'shift': 'night'
                     }
-                    print("shift night: ", shift_night)
 
                     # Day
                     if opening['availability'] == 'day':
