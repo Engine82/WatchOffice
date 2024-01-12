@@ -113,6 +113,7 @@ def hire(opening, availability, taglist, results, time, covering_count, shift_si
         # Find next person up (tag_flipped == 0)
         next_up = find_next_up(taglist)
         print("next_up: ", next_up)
+        print("opening: ", opening)
 
         # Get availability of next_up person
         avail = get_availability(next_up['id'], availability)
@@ -124,41 +125,50 @@ def hire(opening, availability, taglist, results, time, covering_count, shift_si
         # If available save results and return results and number of members checked
         if avail[time] == 'available':
             results.append({
-                'person_covering': next_up['id'],
-                'covering_name': next_up['name'],
-                'person_off': opening['id'],
-                'off_name': opening['name'],
+                'covering_id': next_up['id'],
+                'covering_first': next_up['first_name'],
+                'covering_last': next_up['last_name'],
+                'out_id': opening['id'],
+                'out_first': opening['first_name'],
+                'out_last': opening['last_name'],
                 'day': day,
                 'time': time, 
                 'rank': rank
             })
+            print("results:", results)
             return([results, covering_count])
 
         # If unavailable save that result and call hiring function to fill opening
         else:
             results.append({
-                'person_covering': next_up['id'],
-                'covering_name': next_up['name'],
-                'person_off': 'unavailable',
-                'off_name': 'unavailable',
+                'covering_id': next_up['id'],
+                'covering_first': next_up['first_name'],
+                'covering_last': next_up['last_name'],
+                'out_id': '0',
+                'out_first': 'unavailable',
+                'out_last': '',
                 'day': day,
                 'time': time,
                 'rank': rank
             })
+            print("results: ", results)
             return(hire(opening, availability, taglist, results, time, covering_count, shift_size, day, rank))
 
     # If everyone has been checked and either hired or unavailable, hire from 96 off
     # Save 96 off and return results and number of members checked
     else:
         results.append({
-            'person_covering': "96 Off",
-            'covering_name': "96 Off",
-            'person_off': opening['id'],
-            'off_name': opening['name'],
+            'covering_id': 0,
+            'covering_first': '96',
+            'covering_last': 'Off',
+            'off_id': 0,
+            'off_first': 'unavailable',
+            'off_last': '',
             'day': day,
             'time': time, 
             'rank': rank
         })
+        print("results: ", results)
         return([results, covering_count])
 
 def find_name(member_list, member):

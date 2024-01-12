@@ -1,7 +1,7 @@
 from datetime import datetime, date, timedelta
 from operator import itemgetter
-from sqlalchemy import create_engine, insert, select, text, update
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy import create_engine, insert, join, select, text, update
+from sqlalchemy.orm import sessionmaker, aliased
 from flask import Flask, redirect, render_template, request, session
 from flask_session import Session
 
@@ -385,15 +385,19 @@ def hired():
                     if session[rank_lower + "_hired_" + time + "_" + str(day)] != []:
                         for shift in session[rank_lower + "_hired_" + time + "_" + str(day)]:
                             db.execute(
-                                text("INSERT INTO hiring (hiring_id, platoon, rank, day, time, member_out, member_covering) VALUES (:hiring_id, :platoon, :rank, :day, :time, :member_out, :member_covering)"),
+                                text("INSERT INTO hiring (hiring_id, platoon, rank, day, time, out_id, out_first, out_last, covering_id, covering_first, covering_last) VALUES (:hiring_id, :platoon, :rank, :day, :time, :out_id, :out_first, :out_last, :covering_id, :covering_first, :covering_last)"),
                                 [{
                                     "hiring_id": hiring_id,
                                     "platoon": session['platoon'],
                                     "rank": rank['tier'],
                                     "day": day,
                                     "time": time,
-                                    "member_out": shift['person_off'],
-                                    "member_covering": shift['person_covering']
+                                    "out_id": shift['out_id'],
+                                    "out_first": shift['out_first'],
+                                    "out_last": shift['out_last'],
+                                    "covering_id": shift['covering_id'],
+                                    "covering_first": shift['covering_first'],
+                                    "covering_last": shift['covering_last']
                                 }]
                             )
                             db.commit()
@@ -401,15 +405,19 @@ def hired():
                     # if no hiring at this day/rank/time
                     else:
                         db.execute(
-                            text("INSERT INTO hiring (hiring_id, platoon, rank, day, time, member_out, member_covering) VALUES (:hiring_id, :platoon, :rank, :day, :time, :member_out, :member_covering)"),
+                            text("INSERT INTO hiring (hiring_id,platoon, rank, day, time, out_id, out_first, out_last, covering_id, covering_first, covering_last) VALUES (:hiring_id, :platoon, :rank, :day, :time, :out_id, :out_first, :out_last, :covering_id, :covering_first, :covering_last)"),
                             [{
                                 "hiring_id": hiring_id,
                                 "platoon": session['platoon'],
                                 "rank": rank['tier'],
                                 "day": day,
                                 "time": time,
-                                "member_out": "none",
-                                "member_covering": "none"
+                                "out_id": "0",
+                                "out_first": "none",
+                                "out_last": "none",
+                                "covering_id": "0",
+                                "covering_first": "none",
+                                "covering_last": "none"
                             }]
                         )
                         db.commit()
@@ -493,12 +501,14 @@ def hired():
                     # Get this open shift's info
                     shift_day = {
                         'id': opening['id'],
-                        'name': opening['first_name'] + " " + opening['last_name'],
+                        'first_name': opening['first_name'],
+                        'last_name': opening['last_name'],
                         'shift': 'day'
                     }
                     shift_night = {
                         'id': opening['id'],
-                        'name': opening['first_name'] + " " + opening['last_name'],
+                        'first_name': opening['first_name'],
+                        'last_name': opening['last_name'],
                         'shift': 'night'
                     }
 
@@ -583,7 +593,8 @@ def hired():
             for member in session[rnk + "_avail"]:
                 session[rnk + "_tags"].append({
                     'id': member['id'],
-                    'name': member['first_name'] + " " + member['last_name'],
+                    'first_name': member['first_name'],
+                    'last_name': member['last_name'],
                     'tag_flipped': session[rnk + "_avail"][counter]['tag_flipped']
                 })
                 counter += 1
@@ -800,14 +811,22 @@ def history():
     if request.method == "POST":
 
         # Create empty past hiring lists
-        session['officers_past_hiring_day_1'] = []
-        session['officers_past_hiring_night_1'] = []
-        session['officers_past_hiring_day_2'] = []
-        session['officers_past_hiring_night_2'] = []
-        session['firefighters_past_hiring_day_1'] = []
-        session['firefighters_past_hiring_night_1'] = []
-        session['firefighters_past_hiring_day_2'] = []
-        session['firefighters_past_hiring_night_2'] = []
+        session['officers_past_hiring_day_1_out'] = []
+        session['officers_past_hiring_day_1_hired'] = []
+        session['officers_past_hiring_night_1_out'] = []
+        session['officers_past_hiring_night_1_hired'] = []
+        session['officers_past_hiring_day_2_out'] = []
+        session['officers_past_hiring_day_2_hired'] = []
+        session['officers_past_hiring_night_2_out'] = []
+        session['officers_past_hiring_night_2_hired'] = []
+        session['firefighters_past_hiring_day_1_out'] = []
+        session['firefighters_past_hiring_day_1_hired'] = []
+        session['firefighters_past_hiring_night_1_out'] = []
+        session['firefighters_past_hiring_night_1_hired'] = []
+        session['firefighters_past_hiring_day_2_out'] = []
+        session['firefighters_past_hiring_day_2_hired'] = []
+        session['firefighters_past_hiring_night_2_out'] = []
+        session['firefighters_past_hiring_night_2_hired'] = []
 
         # query db for all entries with this id at each day/rank/time, save in list
         past_id = request.form.get("past_hiring")
@@ -816,6 +835,7 @@ def history():
         past_platoon = past_platoon.scalars().all()
         print(past_platoon)
         past_platoon = past_platoon[0]
+
 
         # Loop through day/rank/time
         daynight = ["day", "night"]
@@ -828,41 +848,73 @@ def history():
                 for time in daynight:
 
                     # Query db for hiring at this day/rank/time and save in session
-                    past_hiring = db.execute(
-                        select(Hiring.member_out, Hiring.member_covering)
+                    past_out = db.execute(
+                        select(Hiring.member_out, User.first_name, User.last_name)
+                        .join(User, User.id == Hiring.member_out)
                         .where(Hiring.hiring_id == past_id)
                         .where(Hiring.day == day)
                         .where(Hiring.rank == rank['tier'])
                         .where(Hiring.time == time)
                     )
-                    select(User.first_name, User.last_name)
-                    past_hiring = past_hiring.mappings().all()
-                    session[rnk + "_" + "past_hiring" + "_" + time + "_" + str(day)].extend(past_hiring)
+                    past_out = past_out.mappings().all()
+                    
+                    print("Past out:", past_out)
+
+
+                    past_hired = db.execute(
+                        select(Hiring.member_covering, User.first_name, User.last_name)
+                        .join(User, User.id == Hiring.member_covering)
+                        .where(Hiring.hiring_id == past_id)
+                        .where(Hiring.day == day)
+                        .where(Hiring.rank == rank['tier'])
+                        .where(Hiring.time == time)
+                    )
+                    past_hired = past_hired.mappings().all()
+
+                    print("Past hired:", past_hired)
+
+                    if past_out == []:
+                        past_out = [{
+                            'first_name': 'none',
+                            'last_name': 'none'
+                        }]
+
+                    if past_hired == []:
+                        past_hired = [{
+                            'first_name': 'none',
+                            'last_name': 'none'
+                        }]
+
+                    session[rnk + "_" + "past_hiring" + "_" + time + "_" + str(day) + "_out"].extend(past_out)
+                    session[rnk + "_" + "past_hiring" + "_" + time + "_" + str(day) + "_hired"].extend(past_hired)
                     
             day += 1
         
         print(
-            "officers day 1:", session['officers_past_hiring_day_1'],
-            "officers night 1:", session['officers_past_hiring_night_1'],
-            "officers day 2", session['officers_past_hiring_day_2'],
-            "officers night 2:", session['officers_past_hiring_night_2'],
-            "firefighters day 1", session['firefighters_past_hiring_day_1'],
-            "firefighters night 1:", session['firefighters_past_hiring_night_1'],
-            "firefighters day 2:", session['firefighters_past_hiring_day_2'],
-            "firefighters night 2:", session['firefighters_past_hiring_night_2']
+            session['officers_past_hiring_day_1_out'],
+            session['officers_past_hiring_day_1_hired']
         )
 
         # display hiring results a la hired.html
         return render_template("history_found.html", 
-            officers_day_1=session['officers_past_hiring_day_1'],
-            officers_night_1=session['officers_past_hiring_night_1'],
-            officers_day_2=session['officers_past_hiring_day_2'],
-            officers_night_2=session['officers_past_hiring_night_2'],
-            firefighters_day_1=session['firefighters_past_hiring_day_1'],
-            firefighters_night_1=session['firefighters_past_hiring_night_1'],
-            firefighters_day_2=session['firefighters_past_hiring_day_2'],
-            firefighters_night_2=session['firefighters_past_hiring_night_2'],
-            platoon=past_platoon
+            officers_day_1_out=session['officers_past_hiring_day_1_out'],
+            officers_day_1_hired=session['officers_past_hiring_day_1_hired'],
+            officers_night_1_out=session['officers_past_hiring_night_1_out'],
+            officers_night_1_hired=session['officers_past_hiring_night_1_hired'],
+            officers_day_2_out=session['officers_past_hiring_day_2_out'],
+            officers_day_2_hired=session['officers_past_hiring_day_2_hired'],
+            officers_night_2_out=session['officers_past_hiring_night_2_out'],
+            officers_night_2_hired=session['officers_past_hiring_night_2_hired'],
+            firefighters_day_1_out=session['firefighters_past_hiring_day_1_out'],
+            firefighters_day_1_hired=session['firefighters_past_hiring_day_1_hired'],
+            firefighters_night_1_out=session['firefighters_past_hiring_night_1_out'],
+            firefighters_night_1_hired=session['firefighters_past_hiring_night_1_hired'],
+            firefighters_day_2_out=session['firefighters_past_hiring_day_2_out'],
+            firefighters_day_2_hired=session['firefighters_past_hiring_day_2_hired'],
+            firefighters_night_2_out=session['firefighters_past_hiring_night_2_out'],
+            firefighters_night_2_hired=session['firefighters_past_hiring_night_2_hired'],
+            platoon=past_platoon,
+            zip=zip
         )
 
     # GET get list of past hiring and feed to html select
