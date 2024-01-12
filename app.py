@@ -739,24 +739,28 @@ def manual_b():
             for rank in session['hiring_tiers']:
                 for time in daynight:
                     db.execute(
-                        text("INSERT INTO hiring (hiring_id, platoon, rank, day, time, member_out, member_covering) VALUES (:hiring_id, :platoon, :rank, :day, :time, :member_out, :member_covering)"),
+                        text("INSERT INTO hiring (hiring_id, platoon, rank, day, time, out_id, out_first, out_last, covering_id, covering_first, covering_last) VALUES (:hiring_id, :platoon, :rank, :day, :time, :out_id, :out_first, :out_last, :covering_id, :covering_first, :covering_last)"),
                         [{
                             "hiring_id": hiring_id,
                             "platoon": session['platoon'],
                             "rank": rank['tier'],
                             "day": day,
                             "time": time,
-                            "member_out": "manual override",
-                            "member_covering": "manual override"
+                            "out_id": 1,
+                            "out_first": "manual override",
+                            "out_last": "manual override",
+                            "covering_id": 1,
+                            "covering_first": "manual override",
+                            "covering_last": "manual override"
                         }]
                     )
         db.commit()
 
         # Record this "hiring" in hiring_list
         time = db.execute(
-                    select(Hiring.created_at)
-                    .where(Hiring.hiring_id == hiring_id)
-                )
+                select(Hiring.created_at)
+                .where(Hiring.hiring_id == hiring_id)
+            )
         time = time.mappings().all()
         time = time[0]['created_at']
 
