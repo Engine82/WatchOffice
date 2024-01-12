@@ -54,8 +54,12 @@ class Hiring (Base):
     rank: Mapped[str]
     day: Mapped[int]
     time: Mapped[str]
-    member_out: Mapped[str]
-    member_covering: Mapped[str]
+    out_id: Mapped[int]
+    out_first: Mapped[str]
+    out_last: Mapped[str]
+    covering_id: Mapped[int]
+    covering_first: Mapped[str]
+    covering_last: Mapped[str]
     created_at: Mapped[str]
 
 
@@ -161,9 +165,9 @@ def hire(opening, availability, taglist, results, time, covering_count, shift_si
             'covering_id': 0,
             'covering_first': '96',
             'covering_last': 'Off',
-            'off_id': 0,
-            'off_first': 'unavailable',
-            'off_last': '',
+            'out_id': 0,
+            'out_first': opening['first_name'],
+            'out_last': opening['last_name'],
             'day': day,
             'time': time, 
             'rank': rank
