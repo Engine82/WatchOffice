@@ -736,7 +736,7 @@ def manual_b():
         daynight = ['day', 'night']
 
         for day in range(DAYS_COVERED):
-            for rank in session['hiring_tiers']:
+            for rank in hiring_tiers:
                 for time in daynight:
                     db.execute(
                         text("INSERT INTO hiring (hiring_id, platoon, rank, day, time, out_id, out_first, out_last, covering_id, covering_first, covering_last) VALUES (:hiring_id, :platoon, :rank, :day, :time, :out_id, :out_first, :out_last, :covering_id, :covering_first, :covering_last)"),
@@ -747,11 +747,11 @@ def manual_b():
                             "day": day,
                             "time": time,
                             "out_id": 1,
-                            "out_first": "manual override",
-                            "out_last": "manual override",
+                            "out_first": "manual",
+                            "out_last": "override",
                             "covering_id": 1,
-                            "covering_first": "manual override",
-                            "covering_last": "manual override"
+                            "covering_first": "manual",
+                            "covering_last": "override"
                         }]
                     )
         db.commit()
@@ -815,22 +815,14 @@ def history():
     if request.method == "POST":
 
         # Create empty past hiring lists
-        session['officers_past_hiring_day_1_out'] = []
-        session['officers_past_hiring_day_1_hired'] = []
-        session['officers_past_hiring_night_1_out'] = []
-        session['officers_past_hiring_night_1_hired'] = []
-        session['officers_past_hiring_day_2_out'] = []
-        session['officers_past_hiring_day_2_hired'] = []
-        session['officers_past_hiring_night_2_out'] = []
-        session['officers_past_hiring_night_2_hired'] = []
-        session['firefighters_past_hiring_day_1_out'] = []
-        session['firefighters_past_hiring_day_1_hired'] = []
-        session['firefighters_past_hiring_night_1_out'] = []
-        session['firefighters_past_hiring_night_1_hired'] = []
-        session['firefighters_past_hiring_day_2_out'] = []
-        session['firefighters_past_hiring_day_2_hired'] = []
-        session['firefighters_past_hiring_night_2_out'] = []
-        session['firefighters_past_hiring_night_2_hired'] = []
+        session['officers_past_hiring_day_1'] = []
+        session['officers_past_hiring_night_1'] = []
+        session['officers_past_hiring_day_2'] = []
+        session['officers_past_hiring_night_2'] = []
+        session['firefighters_past_hiring_day_1'] = []
+        session['firefighters_past_hiring_night_1'] = []
+        session['firefighters_past_hiring_day_2'] = []
+        session['firefighters_past_hiring_night_2'] = []
 
         # query db for all entries with this id at each day/rank/time, save in list
         past_id = request.form.get("past_hiring")
@@ -852,73 +844,35 @@ def history():
                 for time in daynight:
 
                     # Query db for hiring at this day/rank/time and save in session
-                    past_out = db.execute(
-                        select(Hiring.member_out, User.first_name, User.last_name)
-                        .join(User, User.id == Hiring.member_out)
+                    past_hiring = db.execute(
+                        select(Hiring.covering_first, Hiring.covering_last, Hiring.out_first, Hiring.out_last)
                         .where(Hiring.hiring_id == past_id)
                         .where(Hiring.day == day)
                         .where(Hiring.rank == rank['tier'])
                         .where(Hiring.time == time)
                     )
-                    past_out = past_out.mappings().all()
-                    
-                    print("Past out:", past_out)
+                    past_hiring = past_hiring.mappings().all()
+                    print("Past hiring:", past_hiring)
 
-
-                    past_hired = db.execute(
-                        select(Hiring.member_covering, User.first_name, User.last_name)
-                        .join(User, User.id == Hiring.member_covering)
-                        .where(Hiring.hiring_id == past_id)
-                        .where(Hiring.day == day)
-                        .where(Hiring.rank == rank['tier'])
-                        .where(Hiring.time == time)
-                    )
-                    past_hired = past_hired.mappings().all()
-
-                    print("Past hired:", past_hired)
-
-                    if past_out == []:
-                        past_out = [{
-                            'first_name': 'none',
-                            'last_name': 'none'
-                        }]
-
-                    if past_hired == []:
-                        past_hired = [{
-                            'first_name': 'none',
-                            'last_name': 'none'
-                        }]
-
-                    session[rnk + "_" + "past_hiring" + "_" + time + "_" + str(day) + "_out"].extend(past_out)
-                    session[rnk + "_" + "past_hiring" + "_" + time + "_" + str(day) + "_hired"].extend(past_hired)
+                    session[rnk + "_" + "past_hiring" + "_" + time + "_" + str(day)].extend(past_hiring)
                     
             day += 1
         
         print(
-            session['officers_past_hiring_day_1_out'],
-            session['officers_past_hiring_day_1_hired']
+            session['officers_past_hiring_day_1']
         )
 
         # display hiring results a la hired.html
         return render_template("history_found.html", 
-            officers_day_1_out=session['officers_past_hiring_day_1_out'],
-            officers_day_1_hired=session['officers_past_hiring_day_1_hired'],
-            officers_night_1_out=session['officers_past_hiring_night_1_out'],
-            officers_night_1_hired=session['officers_past_hiring_night_1_hired'],
-            officers_day_2_out=session['officers_past_hiring_day_2_out'],
-            officers_day_2_hired=session['officers_past_hiring_day_2_hired'],
-            officers_night_2_out=session['officers_past_hiring_night_2_out'],
-            officers_night_2_hired=session['officers_past_hiring_night_2_hired'],
-            firefighters_day_1_out=session['firefighters_past_hiring_day_1_out'],
-            firefighters_day_1_hired=session['firefighters_past_hiring_day_1_hired'],
-            firefighters_night_1_out=session['firefighters_past_hiring_night_1_out'],
-            firefighters_night_1_hired=session['firefighters_past_hiring_night_1_hired'],
-            firefighters_day_2_out=session['firefighters_past_hiring_day_2_out'],
-            firefighters_day_2_hired=session['firefighters_past_hiring_day_2_hired'],
-            firefighters_night_2_out=session['firefighters_past_hiring_night_2_out'],
-            firefighters_night_2_hired=session['firefighters_past_hiring_night_2_hired'],
+            officers_day_1=session['officers_past_hiring_day_1'],
+            officers_night_1=session['officers_past_hiring_night_1'],
+            officers_day_2=session['officers_past_hiring_day_2'],
+            officers_night_2=session['officers_past_hiring_night_2'],
+            firefighters_day_1=session['firefighters_past_hiring_day_1'],
+            firefighters_night_1=session['firefighters_past_hiring_night_1'],
+            firefighters_day_2=session['firefighters_past_hiring_day_2'],
+            firefighters_night_2=session['firefighters_past_hiring_night_2'],
             platoon=past_platoon,
-            zip=zip
         )
 
     # GET get list of past hiring and feed to html select
