@@ -25,11 +25,15 @@ platoon INTEGER NOT NULL,
 rank TEXT NOT NULL,
 day INTEGER NOT NULL,
 time TEXT NOT NULL,
-member_out INTEGER NOT NULL,
-member_covering INTEGER NOT NULL,
+out_id INTEGER NOT NULL,
+out_first TEXT,
+out_last TEXT,
+covering_id INTEGER NOT NULL,
+covering_first TEXT,
+covering_last TEXT,
 created_at DATETIME DEFAULT (DATETIME(CURRENT_TIMESTAMP, 'LOCALTIME')) NOT NULL,
-FOREIGN KEY (member_out) REFERENCES users(id),
-FOREIGN KEY (member_covering) REFERENCES users(id)
+FOREIGN KEY (out_id) REFERENCES users(id),
+FOREIGN KEY (covering_id) REFERENCES users(id)
 );
 
 CREATE TABLE hiring_list (
@@ -39,3 +43,11 @@ created_at DATETIME NOT NULL,
 FOREIGN KEY (hiring_id) REFERENCES hiring(hiring_id),
 FOREIGN KEY (created_at) REFERENCES hiring(created_at)
 );
+
+
+SELECT h.id, u.first_name, u.last_name, c.first_name, c.last_name FROM hiring h
+JOIN users u ON u.id = member_out
+JOIN users c ON c.id = member_covering
+WHERE h.platoon = 3
+AND h.rank = "Officers"
+AND h.day = 1;
