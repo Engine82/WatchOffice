@@ -33,6 +33,8 @@ class User (Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, init=False)
     username: Mapped[str]
+    first_name: Mapped[str]
+    last_name: Mapped[str]
     hash: Mapped[str]
     rank: Mapped[str]
     platoon: Mapped[int]
@@ -52,8 +54,12 @@ class Hiring (Base):
     rank: Mapped[str]
     day: Mapped[int]
     time: Mapped[str]
-    member_out: Mapped[str]
-    member_covering: Mapped[str]
+    out_id: Mapped[int]
+    out_first: Mapped[str]
+    out_last: Mapped[str]
+    covering_id: Mapped[int]
+    covering_first: Mapped[str]
+    covering_last: Mapped[str]
     created_at: Mapped[str]
 
 
@@ -71,20 +77,20 @@ def find_next_up(tag_list):
         match person:
             case {'tag_flipped': tag_flipped} if tag_flipped != 1:
                 index = tag_list.index(person)
-                return(tag_list[index]['username'])
+                return(tag_list[index])
 
 
     # If nobody is flipped, return first person
     for person in tag_list:
         person['tag_flipped'] = 0
-    return(tag_list[0]['username'])
+    return(tag_list[0])
 
 
 # Find this person (member_up)'s entry in the availability list  and return it
 def get_availability(member_up, availability):
     for person in availability:
         match person:
-            case {'username': username} if username == member_up:
+            case {'id': id} if id == member_up:
                 return(person)
     return 1
 
@@ -93,7 +99,7 @@ def get_availability(member_up, availability):
 def flip_tag(taglist, member_up):
     for person in taglist:
         match person:
-            case {'username': username} if username == member_up:
+            case {'id': id} if id == member_up:
                 person['tag_flipped'] = 1
                 return()
 
@@ -110,44 +116,71 @@ def hire(opening, availability, taglist, results, time, covering_count, shift_si
 
         # Find next person up (tag_flipped == 0)
         next_up = find_next_up(taglist)
+        print("next_up: ", next_up)
+        print("opening: ", opening)
 
         # Get availability of next_up person
-        avail = get_availability(next_up, availability)
+        avail = get_availability(next_up['id'], availability)
 
         # Flip tag of this person and increase counter
-        flip_tag(taglist, next_up)
+        flip_tag(taglist, next_up['id'])
         covering_count += 1
 
         # If available save results and return results and number of members checked
         if avail[time] == 'available':
             results.append({
-                'person_covering': next_up,
-                'person_off': opening['username'],
+                'covering_id': next_up['id'],
+                'covering_first': next_up['first_name'],
+                'covering_last': next_up['last_name'],
+                'out_id': opening['id'],
+                'out_first': opening['first_name'],
+                'out_last': opening['last_name'],
                 'day': day,
                 'time': time, 
                 'rank': rank
             })
+            print("results:", results)
             return([results, covering_count])
 
         # If unavailable save that result and call hiring function to fill opening
         else:
             results.append({
-                'person_covering': next_up,
-                'person_off': 'unavailable',
+                'covering_id': next_up['id'],
+                'covering_first': next_up['first_name'],
+                'covering_last': next_up['last_name'],
+                'out_id': '0',
+                'out_first': 'unavailable',
+                'out_last': '',
                 'day': day,
                 'time': time,
                 'rank': rank
             })
+            print("results: ", results)
             return(hire(opening, availability, taglist, results, time, covering_count, shift_size, day, rank))
 
     # If everyone has been checked and either hired or unavailable, hire from 96 off
     # Save 96 off and return results and number of members checked
     else:
         results.append({
-            'person_covering': "96 Off",
-            'person_off': opening['username'],
+            'covering_id': 0,
+            'covering_first': '96',
+            'covering_last': 'Off',
+            'out_id': 0,
+            'out_first': opening['first_name'],
+            'out_last': opening['last_name'],
             'day': day,
             'time': time, 
             'rank': rank
         })
+        print("results: ", results)
         return([results, covering_count])
+
+def find_name(member_list, member):
+    for person in member_list:
+        print(member)
+        print(person)
+        print(person['id'])
+        if person['id'] == str(member):
+            member_name = person['first_name'] + " " + person['last_name']
+            print("Name", member_name)
+            return(member_name)

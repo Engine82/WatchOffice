@@ -25,7 +25,7 @@
                     {% for person in session['personnel'][loop.index - 1] %}
                         <tr>
                             <td>
-                                {{ person['username'] }}
+                                {{ person['first_name'] }} {{ person['last_name'] }}
                             </td>
                             <td>
                                 <select class="day" id="day_{{ i + 1 }}_{{ rank['tier'] }}_{{ loop.index }}" name="day_{{ i + 1 }}_{{ rank['tier'] }}_{{ loop.index }}" required>

@@ -3,6 +3,8 @@ TABLES:
 CREATE TABLE users (
 id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
 username TEXT NOT NULL,
+first_name TEXT NOT NULL,
+last_name TEXT NOT NULL,
 hash TEXT NOT NULL,
 rank TEXT,
 platoon INTEGER,
@@ -12,6 +14,11 @@ tag_flipped INT,
 created_at DATETIME DEFAULT (DATETIME(CURRENT_TIMESTAMP, 'LOCALTIME')) NOT NULL
 );
 
+** Note **
+id 0 reserved for vacancies; manually input first user as vacancy.
+id 1 reserved for manual override.
+
+
 CREATE TABLE hiring (
 id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
 hiring_id INTEGER NOT NULL,
@@ -19,11 +26,15 @@ platoon INTEGER NOT NULL,
 rank TEXT NOT NULL,
 day INTEGER NOT NULL,
 time TEXT NOT NULL,
-member_out INTEGER NOT NULL,
-member_covering INTEGER NOT NULL,
+out_id INTEGER NOT NULL,
+out_first TEXT,
+out_last TEXT,
+covering_id INTEGER NOT NULL,
+covering_first TEXT,
+covering_last TEXT,
 created_at DATETIME DEFAULT (DATETIME(CURRENT_TIMESTAMP, 'LOCALTIME')) NOT NULL,
-FOREIGN KEY (member_out) REFERENCES users(username),
-FOREIGN KEY (member_covering) REFERENCES users(username)
+FOREIGN KEY (out_id) REFERENCES users(id),
+FOREIGN KEY (covering_id) REFERENCES users(id)
 );
 
 CREATE TABLE hiring_list (
@@ -33,3 +44,11 @@ created_at DATETIME NOT NULL,
 FOREIGN KEY (hiring_id) REFERENCES hiring(hiring_id),
 FOREIGN KEY (created_at) REFERENCES hiring(created_at)
 );
+
+
+SELECT h.id, u.first_name, u.last_name, c.first_name, c.last_name FROM hiring h
+JOIN users u ON u.id = member_out
+JOIN users c ON c.id = member_covering
+WHERE h.platoon = 3
+AND h.rank = "Officers"
+AND h.day = 1;

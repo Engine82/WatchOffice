@@ -12,8 +12,7 @@ GOALS:
 +------------------------------------------------------------------------------------------------------------------------------+
 Things to Fix/Change:
 +------------------------------------------------------------------------------------------------------------------------------+
-TODO:
-Next Steps
+Next Steps:
 
 CSS:
 - make it pretty
@@ -24,222 +23,16 @@ JavaScript:
 - Alert "are you sure" when removing member
 
 Python/HTML:
-- Manual input of Hiring
-    - just choose who is up next and update in db   
-        - Save updated state in Users.tag_flipped
-        - Save manual override in hiring and hiring_list tables
-
-
-+------------------------------------------------------------------------------------------------------------------------------+
-
-    HIRING B - covering shift availability
-    Lists:
-    everyone: [{'username':'kyle', 'elligible':'1', 'avail_1':'1', 'avail_2':'3'}, ... ]
-        key: 0 = unavailable, 1 = available, 2 = avail. day, 3 = avail. night, 4 = hours
-    hours: [{'username':'kyle', 'hours_1_start':'07:30', hours_1_end':'12:00'}, ... ]
-    - On POST submit save input in ^ dicts
-        -create 1 per ff in everyone
-        -create 1 per ff with hours off/unavailable in hours
-    - Save dicts in session for next ROUTES
-
-    HIRING C - Absences
-    - On GET: 
-        - db query for 2 covered shifts
-        -> Display HTML forms
-    - On POST:
-        - For each covered platoon,
-            - create a list of dicts: [{'username':'kyle', 'off_day':'1', 'off_night':'0'}, ] 
-              w/ firefighters who are out full shifts (12's)
-                - automatically include vacancies to make up to shift size
-            - create two lists of dicts: [{'user':'kyle', 'hours_1_start':'0730', 'hours_1_end':'1200'}, ]
-              (same as previous page)
-                - split hours shifts at 1900 - one dict for day, one for night
-        - save all lists in session
-
-    HIRED
-    In session we have: 
-        - ff's availableshifts to be covered
-
-    To add to db: 
-    - station
-    - tag
-    - ntw
-    - medic
-
-    Hire for Full Shifts:
-    For each cover day:
-        For each full shift (12 hrs)
-            Hire from NTW's
-            Hire from available
-                If no one available:
-                    Hire of 96 off
-        For each partial shift (hours)
-            Hire from NTW's
-            Hire from available
-                If no one available:
-                    Hire of 96 off
-
-    Hire means:
-        - save in list (one list per day of all things hired for)
-        - if > 6 hours
-            - user to be flipped
-                - if all are flipped: unflip all
-
-    Once all hiring done/All shifts filled:
-    - loop through each dict in lists:
-        - enter into covered_shifts db
-            - date, shift/hours, covered ff, covering ff, hiring version, active, timestamp
-    - Check list for next-up firefghter
-    - Print/display Hiring:
-        HTML:
-            Date
-            Hiring
-            Date
-            Hiring
-            Next Up
-
-
-    Create different functions for
-        - 1st hiring
-        - re-hiring during 1st day
-        - re-hiring after 1st day
-        - hiring from 96 off
-    Then, once the calendar is implemented, just have a simple algorithm for selecting which hiring function to use.
-
-+------------------------------------------------------------------------------------------------------------------------------+
-
-
-HIRING FUNCTIONALITY MODULE:
-Automated hiring steps:
-- Create firefighter, captain, lt objects:
-    Attributes:
-    - tag (bool: flipped/not)
-    - available/elligible for OT (bool)
-    - seniority (use dept-wide seniority, and continue adding up for new members) (int)
-    - shift/platoon (have feature to change) (int)
-    - Station assignment
-
-- Create shift object:
-    Attributes:
-    - Date
-    - 24/Day/Night/Partial
-    - Firefighter/Officer
-    - Future/Current/Past - for hiring changes to determine which shifts to be filled and which stay as they were
-
-- Create list of shifts to be filled
-    - Central Officer
-    - Weirs Officer
-    - Central Firefighters
-    - Weirs Firefighters
-    - Detail/Other
-    - Hours - how to implement..?
-        - Option to desigante partial shift, automatically recognizes how to handle splits with hours
-
-- Hiring Protocol:
-    Loop through each slot, officers then firefghters, and if vacant, hire for the shift
-
-- Input Menus:
-    - Platoon dropdown - table w/ html select
-        - Auto-fill each shift with firefighter's name, based on seniority & station assignment
-        - Designate available/unavailable
-    - Initial or Update/Revision
-    - 1st/2nd cover days - table
-        - Auto-populate with members
-        - Designate on/off/partial status (default: on) & reason (radio buttons w/ text option for hours & dropdown for reason)
-
-- Output: formatted rundown of the hiring.
-    - Officer and firefighter next up
-    - When hiring on the 96 off, state enter from "96 off" - officer does manually
-    - Override feature: manually override output w/ html select
-
-
-- ROUTES:
-    - /
-        - GET: Login page
-        - POST: List of upcoming shifts
-    - /hiring
-        - GET: empty page
-        - POST: assigned shifts - printable
-    - /admin
-        - GET: current privelidges
-        - POST: update privelidges, return same page, updated
-    - /logout
-        > Log out
-        
-
-+------------------------------------------------------------------------------------------------------------------------------+
-
-
-TAGBOARD:
-Digital tag board
-- Have flipped/unflipped attribute to FF/Officer
-- Table:
-    - Columns are shifts
-    - Rows are people
-    - Graphical copper/black tag for flipped status
-
-- ROUTES:
-    - Tagboard
-        - GET: Tagboard
-
-
-+------------------------------------------------------------------------------------------------------------------------------+
-
-
-SMS Feature:
-- Text member when they are hired for an OT shift, or with entire hiring
-
-- When covering-shift is exhausted, hire from 96 off:
-    - Send SMS message to one firefighter/officer at a time with 1(?) minute timer
-    - If they do not accept shift within that time, it goes to the next person
-    - Cycle through all personnel until shift is finished, or lowest man is forced
-
-
-- ROUTES:
-    - Hiring - Update:
-        - POST: go through SMS protocol if needed, display results w/o off-shift hiring
-                then 
-        - POST?: after off-shift hiring is done, update with completed hiring
-
-
-+------------------------------------------------------------------------------------------------------------------------------+
-
-
-Calendar/Digital Pad:
-- Monthly Calendar w/ changes to normal staffing
-- Select each date to see that day's detailed staffing (including normal staffing)
-- On days you are working, can put yourself out vacation/personal/sick
-
-- Specifics of implementation: requires further research
-
-Fully automate hiring:
-- Hiring is automatically done at 8:00AM every first-day
-- If a change is made after hiring is done, it is automatically updated, and members are texted with update
-
-- Specifics are going to depend on implementation of calendar
-
-
-- ROUTES:
-    - Calendar:
-        - GET: Current calendar
-    - Add shift page
-        - GET: Form for what shift to change
-        - POST: update db's, redirect to display updated calendar
-
-
-+------------------------------------------------------------------------------------------------------------------------------+
-
-
-REPORTS:
-- Hours OT worked for the year
-
-
-- ROUTES:
-    - Reports
-        - GET: Report options
-        - POST: Report output
-
-+------------------------------------------------------------------------------------------------------------------------------+
+- display names instead of usernames
+        history b 
+- display tag status on homepage
+        get list of each platoon by rank - id, tag_flipped
+        find_next_up(platon_rank) - loop platoons and rank, fill in variable name
+        save all names in list
+        html: platoon 1: list[0], list[1]. Platoon 2: list[2], list[3], etc.
+- add username, first name, last name to change form
+- Create fun error page
+- hide password on login page
 
 
 LINKS:
@@ -248,17 +41,4 @@ LINKS:
     TEMSIS
     Protocols
     
-
-
 +------------------------------------------------------------------------------------------------------------------------------+
-
-
-UI:
-Pages:
-- Login
-- Register
-- Home page - ???
-- Hiring function
-    - Post-hiring display
-- Monthly calendar
-- Day view

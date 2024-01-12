@@ -14,7 +14,7 @@
                 <td>
                     <select id="officer" name="officer">
                         {% for officer in officers %}
-                            <option value="{{ officer['id'] }}">{{ officer['username'] }}</option>
+                            <option value="{{ officer['id'] }}">{{ officer['first_name'] }} {{ officer['last_name'] }}</option>
                         {% endfor %}
                     </select>
                 </td>
@@ -24,7 +24,7 @@
                 <td>
                     <select id="firefighter" name="firefighter">
                         {% for firefighter in firefighters %}
-                            <option value="{{ firefighter['id'] }}">{{ firefighter['username'] }}</option>
+                            <option value="{{ firefighter['id'] }}">{{ firefighter['first_name'] }} {{ firefighter['last_name'] }}</option>
                         {% endfor %}
                     </select>
                 </td>
