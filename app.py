@@ -1038,6 +1038,36 @@ def change_member():
         # Get form imput    
         member = request.form.get("member")
 
+        # Check/change username
+        username = request.form.get("username")
+        if username != None:
+            db.execute(
+                update(User)
+                .where(User.username == member)
+                .values(username=username)
+            )
+            print("username updated")
+
+        # Check/change first name
+        first = request.form.get("first")
+        if first != None:
+            db.execute(
+                update(User)
+                .where(User.first_name == first)
+                .values(first_name=first)
+            )
+            print("username updated")
+
+        # Check/change last name
+        last = request.form.get("last")
+        if last != None:
+            db.execute(
+                update(User)
+                .where(User.last_name == last)
+                .values(last_name=last)
+            )
+            print("username updated")
+
         # Check/change password
         password = request.form.get("password")
         confirm_password = request.form.get("confirm_password")
