@@ -23,8 +23,6 @@ JavaScript:
 - Alert "are you sure" when removing member
 
 Python/HTML:
-- display names instead of usernames
-        history b 
 - display tag status on homepage
         get list of each platoon by rank - id, tag_flipped
         find_next_up(platon_rank) - loop platoons and rank, fill in variable name
@@ -32,7 +30,6 @@ Python/HTML:
         html: platoon 1: list[0], list[1]. Platoon 2: list[2], list[3], etc.
 - add username, first name, last name to change form
 - Create fun error page
-- hide password on login page
 
 
 LINKS:

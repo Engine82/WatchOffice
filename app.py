@@ -35,6 +35,7 @@ PLATOON_OFFICERS = 2
 PLATOON_FIREFIGHTERS = 8
 DAYS_COVERED = 2
 HIRING_TIERS = 2
+NUM_PLATOONS = 4
 hiring_tiers = [{"tier": "Officers"}, {"tier": "Firefighters"}]
 
 # Shifts covered:
@@ -52,7 +53,39 @@ def index():
     if not session.get("user_id"):
         return redirect("/login")
     else:
-        return render_template("index.html")
+
+        # Initialize lists for html
+        offs_up = []
+        ffs_up = []
+
+        # Loop through each platoon, add next up ff and officer to list
+        for i in range(1, NUM_PLATOONS + 1):
+
+            # Initialize lists
+            officers = []
+            firefighters = []
+
+            officer = db.execute(
+                select(User.first_name, User.last_name, User.tag_flipped)
+                .where(User.platoon == i)
+                .where(User.rank != "firefighter")
+            )
+            officer = officer.mappings().all()
+            officers.append(officer)
+            off_up = find_next_up(officers[0])
+            offs_up.append(off_up)
+
+            firefighter = db.execute(
+                select(User.first_name, User.last_name, User.tag_flipped)
+                .where(User.platoon == i)
+                .where(User.rank == "firefighter")
+            )
+            firefighter = firefighter.mappings().all()
+            firefighters.append(firefighter)
+            ff_up = find_next_up(firefighters[0])
+            ffs_up.append(ff_up)
+            
+        return render_template("index.html", offs=offs_up, ffs=ffs_up)
 
 
 # HIRING
