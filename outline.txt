@@ -23,7 +23,6 @@ JavaScript:
 - Alert "are you sure" when removing member
 
 Python/HTML:
-- add username, first name, last name to change form
 - Create fun error page
 
 
