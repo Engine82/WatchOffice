@@ -361,7 +361,7 @@ def hired():
                 if member['tag_flipped'] == 1:
                     db.execute(
                         update(User)
-                        .where(User.username == member['id'])
+                        .where(User.id == member['id'])
                         .values(tag_flipped=1)
                     )
 
@@ -369,7 +369,7 @@ def hired():
                 else:
                     db.execute(
                         update(User)
-                        .where(User.username == member['id'])
+                        .where(User.id == member['id'])
                         .values(tag_flipped=0)
                     )
                     
