@@ -21,6 +21,7 @@ JavaScript:
 - Print hiring results - when submitted or with separate button?? (Or have number of copies box and can choose to print multiple?)
 - Automatically make vacancies "Out 24"
 - Alert "are you sure" when removing member
+- Limit length of add/change member fields
 
 Python/HTML:
 - Create fun error page
