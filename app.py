@@ -768,7 +768,8 @@ def manual_b():
         # Record manual override in hiring and hiring_list db's
         daynight = ['day', 'night']
 
-        for day in range(DAYS_COVERED):
+        for day in range(1, DAYS_COVERED + 1):
+            print("day:", day)
             for rank in hiring_tiers:
                 for time in daynight:
                     db.execute(
