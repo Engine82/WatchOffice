@@ -186,6 +186,7 @@ def find_name(member_list, member):
             return(member_name)
 
 # function to generate a meme with the appropriate error message
+# https://memegen.link/
 def gen_meme(reason):
     url = "https://api.memegen.link/images/custom/Error/" + reason + ".png?background=https://i.pinimg.com/originals/3a/a1/ed/3aa1ede1bdb9acaf63429593627bf2f5.jpg"
     return(url)
