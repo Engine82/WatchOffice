@@ -24,7 +24,6 @@ JavaScript:
 - Limit length of add/change member fields
 
 Python/HTML:
-- Create fun error page
 
 
 LINKS:
