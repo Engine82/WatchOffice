@@ -8,7 +8,7 @@ from flask_session import Session
 # https://pydoc.dev/werkzeug/latest/werkzeug.security.html
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from helpers import login_required
+from helpers import login_required, gen_meme
 from helpers import Base, User, Hiring, Hiring_list
 from helpers import find_next_up, hire
 
@@ -933,15 +933,21 @@ def add_member():
 
         # Check for inputs
         if not request.form.get("username"):
-            return render_template("apology.html", type="username")
+            return render_template("apology.html", source=gen_meme("username"))
+        if not request.form.get("first_name"):
+            return render_template("apology.html", source=gen_meme("first_name"))
+        if not request.form.get("last_name"):
+            return render_template("apology.html", source=gen_meme("last_name"))
         if not request.form.get("password"):
-            return render_template("apology.html", type="password")
+            return render_template("apology.html", source=gen_meme("password"))
+        if not request.form.get("rank"):
+            return render_template("apology.html", source=gen_meme("rank"))
         if not request.form.get("platoon"):
-            return render_template("apology.html", type="platoon")
+            return render_template("apology.html", source=gen_meme("platoon"))
         if not request.form.get("active"):
-            return render_template("apology.html", type="active status")
+            return render_template("apology.html", source=gen_meme("active_status"))
         if not request.form.get("elligibility"):
-            return render_template("apology.html", type="elligibility")
+            return render_template("apology.html", source=gen_meme("elligibility"))
 
         username = request.form.get("username")
         first_name = request.form.get("first_name")
@@ -958,7 +964,7 @@ def add_member():
 
         for user in users:
             if user.username == username:
-                return render_template("apology.html", type="username taken")
+                return render_template("apology.html", source=gen_meme("username_taken"))
 
         # Hash password
         hashword = generate_password_hash(password)
@@ -1074,7 +1080,7 @@ def change_member():
         if password != "":
             print("Password:", password)
             if password != confirm_password:
-                return render_template("apology.html", type="password mismatch")
+                return render_template("apology.html", source=gen_meme("password_mismatch"))
             hashword = generate_password_hash(password)
             db.execute(
                 update(User)
@@ -1158,31 +1164,33 @@ def login():
     # When login form is submitted
     if request.method == "POST":
 
+
         # Check for username and password
         if not request.form.get("username"):
-            render_template("apology.html", type="username")
+            render_template("apology.html", source=gen_meme("username"))
 
-        elif not request.form.get("password"):
-            render_template("apology.html", type="password")
+        if not request.form.get("password"):
+            render_template("apology.html", source=gen_meme("password"))
         
         # Query db for username 
         username = request.form.get("username")
         password = request.form.get("password")
+        print(username)
 
         result = db.execute(select(User.id, User.username, User.hash, User.active).where(User.username == username))
         result = result.mappings().first()
         print(result)
         # Verify username in db
         if result == None:
-            return render_template("apology.html", type="incorrect username")
+            return render_template("apology.html", source=gen_meme("incorrect_username"))
 
         # Verify user is active
         if result['active'] != 1:
-            return render_template("apology.html", type="user inactive")
+            return render_template("apology.html", source=gen_meme("user_inactive"))
 
         # Verify password is correct
         if check_password_hash(result.hash, password) == False:
-            return render_template("apology.html", type="incorrect password")
+            return render_template("apology.html", source=gen_meme("incorrect_password"))
         
         # Save user in session
         session["user_id"] = result.id
