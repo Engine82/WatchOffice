@@ -4,9 +4,14 @@
     History
 {% endblock %}
 
+{% block head %}
+    <script src="static/print.js"></script>
+{% endblock %}
+
 {% block main %}
     <!-- "Officer __ and Firefighter __ are up" -->
-    <h1>Platoon {{ platoon }} Hiring</h1>
+    <div id="printableArea">
+        <h1>Platoon {{ platoon }} Hiring</h1>
         <h2>First Cover Day</h2>
         <table>
             <tr>
@@ -173,5 +178,7 @@
                 {% endfor %}
             {% endif %}
         </table>
+    </div>
+    <button id="print" type="button">Print</button>
 
 {% endblock %}

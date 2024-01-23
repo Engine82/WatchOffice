@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     document.querySelector("#print").addEventListener('click', function(event) {
-//        event.preventDefault();
         printDiv("printableArea");
     });
 });
