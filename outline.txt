@@ -21,6 +21,9 @@ JavaScript:
 - Automatically make vacancies "Out 24"
 - Limit length of add/change member fields
 
+- Make print function work multiple times w/o reloading page
+- Add date to top of hiring and history results
+
 Python/HTML:
 
 
