@@ -4,12 +4,16 @@
     Remove Member
 {% endblock %}
 
+{% block head %}
+    <script src="static/alert.js"></script>
+{% endblock %}
+
 {% block main %}
     <h1>Remove member</h1>
-    <form action="/remove_member" method="post">
+    <form action="/remove_member" id="remove" method="post">
         <select class="member" id="member" name="member" required>
             {% for member in member_list %}
-                <option value="{{ member['id'] }}">{{ member['first_name'] }} {{ member['last_name'] }}</option>
+                <option id="{{ member['id'] }}" value="{{ member['id'] }}">{{ member['first_name'] }} {{ member['last_name'] }}</option>
             {% endfor %}
         </select>
         <button type="submit">Remove</button>
