@@ -18,7 +18,6 @@ CSS:
 - make it pretty
 
 JavaScript:
-- Print hiring results - when submitted or with separate button?? (Or have number of copies box and can choose to print multiple?)
 - Automatically make vacancies "Out 24"
 - Limit length of add/change member fields
 

@@ -10,8 +10,8 @@ document.addEventListener('DOMContentLoaded', function () {
         document.body.innerHTML = originalContents;
     }
 
-    document.querySelector("#form").addEventListener('submit', function(event) {
-        event.preventDefault();
+    document.querySelector("#print").addEventListener('click', function(event) {
+//        event.preventDefault();
         printDiv("printableArea");
     });
 });

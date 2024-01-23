@@ -10,9 +10,9 @@
 
 {% block main %}
     <!-- "Officer __ and Firefighter __ are up" -->
-    <h1>Platoon {{ platoon }} Hiring</h1>
     <form action="/hired" class="centered" id="form" method="post">
         <div id="printableArea">
+            <h1>Platoon {{ platoon }} Hiring</h1>
             <h2>First Cover Day</h2>
             <table>
                 <tr>
@@ -181,7 +181,10 @@
         <table>
             <tr>
                 <td>
-                    <button id="submit" type="submit">Print & Submit</button>
+                    <button id="print" type="button">Print</button>
+                </td>
+                <td>
+                    <button id="submit" type="submit">Submit</button>
                 </td>
             </tr>
         </table>
