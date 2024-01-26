@@ -4,10 +4,15 @@
     Add Member
 {% endblock %}
 
+{% block head %}
+    <script defer src="static/length.js"></script>
+{% endblock %}
+
 {% block main %}
     <div class="container">
         <img src="static/patch.jpg">
-        <form action="/add_member" class="centered" method="post">
+        <form action="/add_member" class="centered" id="form" method="post">
+            <div id="error"></div>
             <input autocomplete="off" class="mx-auto w-auto" id="username" name="username" placeholder="Username" type="text"><br>
             <input autocomplete="off" class="mx-auto w-auto" id="first_name" name="first_name" placeholder="First name" type="text">
             <input autocomplete="off" class="mx-auto w-auto" id="last_name" name="last_name" placeholder="Last name" type="text"><br>
