@@ -12,11 +12,37 @@
     <div class="container">
         <img src="static/patch.jpg">
         <form action="/add_member" class="centered" id="form" method="post">
-            <div id="error"></div>
-            <input autocomplete="off" class="mx-auto w-auto" id="username" name="username" placeholder="Username" type="text"><br>
-            <input autocomplete="off" class="mx-auto w-auto" id="first_name" name="first_name" placeholder="First name" type="text">
-            <input autocomplete="off" class="mx-auto w-auto" id="last_name" name="last_name" placeholder="Last name" type="text"><br>
-            <input autocomplete="off" class="mx-auto w-auto" id="password" name="password" placeholder="Password" type="text"><br>
+
+            <div class="input_control">
+                <label for="username">Username</label>
+                <input autocomplete="off" class="mx-auto w-auto" id="username" name="username" placeholder="" type="text"><br>
+                <div class="error"></div>
+            </div>
+
+            <div class="input_control">
+                <label for="first_name">First name</label>
+                <input autocomplete="off" class="mx-auto w-auto" id="first_name" name="first_name" placeholder="" type="text">
+                <div class="error"></div>
+            </div>
+            
+            <div class="input_control">
+                <label for="last_name">Last name</label>
+                <input autocomplete="off" class="mx-auto w-auto" id="last_name" name="last_name" placeholder="" type="text">
+                <div class="error"></div>
+            </div>        
+
+            <div class="input_control">
+                <label for="password">Password</label>
+                <input autocomplete="off" class="mx-auto w-auto" id="password" name="password" placeholder="" type="text"><br>
+                <div class="error"></div>
+            </div>
+
+            <div class="input_control">
+                <label for="password2">Confirm password</label>
+                <input autocomplete="off" class="mx-auto w-auto" id="password2" name="password2" placeholder="" type="text"><br>
+                <div class="error"></div>
+            </div>
+
 
             <input id="firefighter" name="rank" type="radio" value="firefighter">
                 <label for="firefighter">Firefighter &nbsp;&nbsp;</label>
