@@ -4,46 +4,89 @@
     Add Member
 {% endblock %}
 
+{% block head %}
+    <script defer src="static/inputs.js"></script>
+    <link rel="stylesheet" href="static/watchOffice.css">
+{% endblock %}
+
 {% block main %}
     <div class="container">
-        <img src="static/patch.jpg">
-        <form action="/add_member" class="centered" method="post">
-            <input autocomplete="off" class="mx-auto w-auto" id="username" name="username" placeholder="Username" type="text"><br>
-            <input autocomplete="off" class="mx-auto w-auto" id="first_name" name="first_name" placeholder="First name" type="text">
-            <input autocomplete="off" class="mx-auto w-auto" id="last_name" name="last_name" placeholder="Last name" type="text"><br>
-            <input autocomplete="off" class="mx-auto w-auto" id="password" name="password" placeholder="Password" type="text"><br>
+        <form action="/add_member" id="form" method="post">
 
-            <input id="firefighter" name="rank" type="radio" value="firefighter">
-                <label for="firefighter">Firefighter &nbsp;&nbsp;</label>
-            <input id="lieutenant" name="rank" type="radio" value="lieutenant">
-                <label for="lieutenant">Lieutenant &nbsp;&nbsp;</label>
-            <input id="captain" name="rank" type="radio" value="captain">
-                <label for="captain">Captain &nbsp;&nbsp;</label>
-            <input id="deputy" name="rank" type="radio" value="deputy">
-                <label for="deputy">Deputy Chief &nbsp;&nbsp;</label>
-            <input id="chief" name="rank" type="radio" value="chief">
-                <label for="chief">Chief </label><br>
+            <h1>Add Member</h1>
+
+            <div class="input-control">
+                <label for="username">Username</label>
+                <input autocomplete="off" id="username" name="username" placeholder="" type="text">
+                <div class="error"></div>
+            </div>
+
+            <div class="input-control">
+                <label for="first_name">First name</label>
+                <input autocomplete="off" id="first_name" name="first_name" placeholder="" type="text">
+                <div class="error"></div>
+            </div>
             
-            <input id="1" name="platoon" type="radio" value="1">
-                <label for="1">Platoon 1 &nbsp;&nbsp;</label>
-            <input id="2" name="platoon" type="radio" value="2">
-                <label for="2">Platoon 2 &nbsp;&nbsp;</label>
-            <input id="3" name="platoon" type="radio" value="3">
-                <label for="3">Platoon 3 &nbsp;&nbsp;</label>
-            <input id="4" name="platoon" type="radio" value="4">
-                <label for="4">Platoon 4 &nbsp;&nbsp;</label>
-            <input id="admin" name="platoon" type="radio" value="Admin">
-                <label for="admin">Admin </label><br>
+            <div class="input-control">
+                <label for="last_name">Last name</label>
+                <input autocomplete="off" id="last_name" name="last_name" placeholder="" type="text">
+                <div class="error"></div>
+            </div>        
 
-            <input id="active" name="active" type="radio" value="1">
-                <label for="active">Active </label>
-            <input id="inactive" name="active" type="radio" value="0">
-                <label for="inactive">Inactive </label><br>
+            <div class="input-control">
+                <label for="password">Password</label>
+                <input autocomplete="off" id="password" name="password" placeholder="" type="text">
+                <div class="error"></div>
+            </div>
 
-            <input id="elligible" name="elligibility" type="radio" value="1">
-                <label for="elligible">Elligible </label>
-            <input id="inelligible" name="elligibility" type="radio" value="0">
-                <label for="inelligible">Inelligible </label>
+            <div class="input-control">
+                <label for="password2">Confirm password</label>
+                <input autocomplete="off" id="password2" name="password2" placeholder="" type="text">
+                <div class="error"></div>
+            </div>
+
+            <div class="input-control">
+                <label for="rank">Rank</label>
+                <select id="rank" name="rank">
+                    <option value="firefighter">Firefighter</option>
+                    <option value="lieuntenant">Lieutenant</option>
+                    <option value="captain">Captain</option>
+                    <option value="deputy">Deputy Chief</option>
+                    <option value="AC">Assistant Chief</option>
+                    <option value="chief">Chief</option>
+                </select>
+                <div class="error"></div>
+            </div>
+
+            <div class="input-control">
+                <label for="platoon">Platoon</label>
+                <select id="platoon" name="platoon">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="admin">Admin</option>
+                </select>
+                <div class="error"></div>
+            </div>
+
+            <div class="input-control">
+                <label for="active">Active status</label>
+                <select id="active" name="active">
+                    <option value="active">active</option>
+                    <option value="inactive">inactive</option>
+                </select>
+                <div class="error"></div>
+            </div>
+
+            <div class="input-control">
+                <label for="elligibility">Elligible for OT:</label>
+                <select id="elligibility" name="elligibility">
+                    <option value="1">elligible</option>
+                    <option value="0">inelligible</option>
+                </select>
+                <div class="error"></div>
+            </div>
 
             <button class="button" type="submit">Register</button>
         </form>
