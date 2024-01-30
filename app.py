@@ -1046,8 +1046,9 @@ def change_member():
         member = request.form.get("member")
 
         # Check/change username
+#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! re-validate username !!!!!!!!!!!!!!!!!!!!!!!!!111111
         username = request.form.get("username")
-        if username != None:
+        if username != '':
             db.execute(
                 update(User)
                 .where(User.username == member)
@@ -1057,28 +1058,30 @@ def change_member():
 
         # Check/change first name
         first = request.form.get("first")
-        if first != None:
+        print("First name:", first)
+        if first != '':
             db.execute(
                 update(User)
                 .where(User.first_name == first)
                 .values(first_name=first)
             )
-            print("username updated")
+            print("first name updated")
 
         # Check/change last name
         last = request.form.get("last")
-        if last != None:
+        if last != '':
             db.execute(
                 update(User)
                 .where(User.last_name == last)
                 .values(last_name=last)
             )
-            print("username updated")
+            print("last name updated")
 
         # Check/change password
+#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! re-validate password !!!!!!!!!!!!!!!!!!!!!!!!!111111
         password = request.form.get("password")
         confirm_password = request.form.get("confirm_password")
-        if password != "":
+        if password != '':
             print("Password:", password)
             if password != confirm_password:
                 return render_template("apology.html", source=gen_meme("password_mismatch"))
@@ -1092,7 +1095,8 @@ def change_member():
 
         # Check/change rank
         rank = request.form.get("rank")
-        if rank != None:
+        print(rank)
+        if rank != '':
             print("Rank != none")
             print(rank)
             db.execute(
@@ -1100,9 +1104,11 @@ def change_member():
                 .where(User.username == member)
                 .values(rank=rank)
             )
+            print("rank updated")
         
         # Platoon
         platoon = request.form.get("platoon")
+        print("Platoon: ", platoon)
         if platoon != None:
             print("Platoon != none")
             print(platoon)
@@ -1111,10 +1117,12 @@ def change_member():
                 .where(User.username == member)
                 .values(platoon=platoon)
             )
+            print("platoon updated")
 
         # Active status
         active = request.form.get("active")
-        if active != None:
+        print(active)
+        if active != '':
             print("Active != none")
             print(active)
             db.execute(
@@ -1122,6 +1130,7 @@ def change_member():
                 .where(User.username == member)
                 .values(active=active)
             )
+            print("active updated")
 
         # Elligibility
         elligible = request.form.get("elligible")
@@ -1133,6 +1142,7 @@ def change_member():
                 .where(User.username == member)
                 .values(elligible=elligible)
             )
+            print("alligible updated")
         
         db.commit()
 
