@@ -4,56 +4,102 @@
     Change Member - Select Member
 {% endblock %}
 
+{% block head %}
+    <script defer src="static/change.js"></script>
+    <link rel="stylesheet" href="static/watchOffice.css">
+{% endblock %}
+
 {% block main %}
-    <h1>Change member</h1>
-    <form action="/change_member" method="post">
-        <select class="member" id="member" name="member" required>
-            {% for member in member_list %}
-                <option value="{{ member['username'] }}"">{{ member['username'] }}</option>
-            {% endfor %}
-        </select><br>
+    <div class="container">
+        <form action="/change_member" id="form" method="post">
+            <h1>Change member</h1>
 
-        <input autocomplete="off" class="mx-auto w-auto" id="username" name="username" placeholder="Username" type="text"><br>
-
-        <input autocomplete="off" class="mx-auto w-auto" id="password" name="password" placeholder="Password" type="text"><br>
-        <input autocomplete="off" class="mx-auto w-auto" id="confirm_password" name="confirm_password" placeholder="Confirm password" type="text"><br>
-
-        <input autocomplete="off" class="mx-auto w-auto" id="first" name="first" placeholder="First name" type="text"><br>
-        <input autocomplete="off" class="mx-auto w-auto" id="last" name="last" placeholder="Last name" type="text"><br>
+            <div class="input-control">
+                <label for="member">Member</label>
+                <select class="member" id="member" name="member" required>
+                    {% for member in member_list %}
+                        <option value="{{ member['username'] }}">{{ member['first_name'] }} {{ member['last_name'] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
 
 
-        <input id="firefighter" name="rank" type="radio" value="firefighter">
-            <label for="firefighter">Firefighter &nbsp;&nbsp;</label>
-        <input id="lieutenant" name="rank" type="radio" value="lieutenant">
-            <label for="lieutenant">Lieutenant &nbsp;&nbsp;</label>
-        <input id="captain" name="rank" type="radio" value="captain">
-            <label for="captain">Captain &nbsp;&nbsp;</label>
-        <input id="deputy" name="rank" type="radio" value="deputy">
-            <label for="deputy">Deputy Chief &nbsp;&nbsp;</label>
-        <input id="chief" name="rank" type="radio" value="chief">
-            <label for="chief">Chief </label><br>
+            <div class="input-control">
+                <div>
+                    <label for="username">Username</label>
+                    <input autocomplete="off" class="mx-auto w-auto" id="username" name="username" placeholder="" type="text">
+                </div>
+
+                <div>
+                    <label for="password">Password</label>
+                    <input autocomplete="off" class="mx-auto w-auto" id="password" name="password" placeholder="" type="text">
+                </div>
+
+                <div>
+                    <label for="confirm_password">Confirm password</label>
+                    <input autocomplete="off" class="mx-auto w-auto" id="confirm_password" name="confirm_password" placeholder="" type="text">
+                </div>
+
         
-        <input id="1" name="platoon" type="radio" value="1">
-            <label for="1">Platoon 1 &nbsp;&nbsp;</label>
-        <input id="2" name="platoon" type="radio" value="2">
-            <label for="2">Platoon 2 &nbsp;&nbsp;</label>
-        <input id="3" name="platoon" type="radio" value="3">
-            <label for="3">Platoon 3 &nbsp;&nbsp;</label>
-        <input id="4" name="platoon" type="radio" value="4">
-            <label for="4">Platoon 4 &nbsp;&nbsp;</label>
-        <input id="admin" name="platoon" type="radio" value="Admin">
-            <label for="admin">Admin </label><br>
+                <div>
+                    <label for="first">First name</label>
+                    <input autocomplete="off" class="mx-auto w-auto" id="first" name="first" placeholder="" type="text">                
+                </div>
 
-        <input id="active" name="active" type="radio" value="1">
-            <label for="active">Active </label>
-        <input id="inactive" name="active" type="radio" value="0">
-            <label for="inactive">Inactive </label><br>
+                <div>
+                    <label for="last">Last name</label>
+                    <input autocomplete="off" class="mx-auto w-auto" id="last" name="last" placeholder="" type="text">                    
+                </div>
 
-        <input id="elligible" name="elligibility" type="radio" value="1">
-            <label for="elligible">Elligible </label>
-        <input id="inelligible" name="elligibility" type="radio" value="0">
-            <label for="inelligible">Inelligible </label><br>
+                <div>
+                    <label for="rank">Rank</label>
+                    <input id="firefighter" name="rank" type="radio" value="firefighter">
+                        <label for="firefighter">Firefighter &nbsp;&nbsp;</label>
+                    <input id="lieutenant" name="rank" type="radio" value="lieutenant">
+                        <label for="lieutenant">Lieutenant &nbsp;&nbsp;</label>
+                    <input id="captain" name="rank" type="radio" value="captain">
+                        <label for="captain">Captain &nbsp;&nbsp;</label>
+                    <input id="deputy" name="rank" type="radio" value="deputy">
+                        <label for="deputy">Deputy Chief &nbsp;&nbsp;</label>
+                    <input id="chief" name="rank" type="radio" value="chief">
+                        <label for="chief">Chief </label>
+                </div>
+            
+                <div>
+                    <label for="platoon">Platoon</label>
+                    <input id="1" name="platoon" type="radio" value="1">
+                        <label for="1">Platoon 1 &nbsp;&nbsp;</label>
+                    <input id="2" name="platoon" type="radio" value="2">
+                        <label for="2">Platoon 2 &nbsp;&nbsp;</label>
+                    <input id="3" name="platoon" type="radio" value="3">
+                        <label for="3">Platoon 3 &nbsp;&nbsp;</label>
+                    <input id="4" name="platoon" type="radio" value="4">
+                        <label for="4">Platoon 4 &nbsp;&nbsp;</label>
+                    <input id="admin" name="platoon" type="radio" value="Admin">
+                        <label for="admin">Admin </label>            
+                </div>
 
-        <button class="button" type="submit">Update Member</button>
-    </form>
+                <div>
+                    <label for="active">Active status</label>
+                    <input id="active" name="active" type="radio" value="1">
+                        <label for="active">Active </label>
+                    <input id="inactive" name="active" type="radio" value="0">
+                        <label for="inactive">Inactive </label>            
+                </div>
+
+                <div>
+                    <label for="elligibility">Overtime elligibility</label>
+                    <input id="elligible" name="elligibility" type="radio" value="1">
+                        <label for="elligible">Elligible </label>
+                    <input id="inelligible" name="elligibility" type="radio" value="0">
+                        <label for="inelligible">Inelligible </label><br>            
+                </div>
+
+                <div class="error"></div>
+            </div>
+
+            <button class="button" type="submit">Update Member</button>
+
+        </form>
+    </div>
 {% endblock %}
