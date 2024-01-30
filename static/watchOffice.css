@@ -19,6 +19,10 @@ body {
     border-radius: 4px;
 }
 
+#master_error {
+    visibility: hidden;
+}
+
 .input-control {
     display: flex;
     flex-direction: column;
