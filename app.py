@@ -1143,9 +1143,9 @@ def change_member():
 
         # Query db for active members list, save in list
         member_list = db.execute(
-            select(User.username)
+            select(User.username, User.first_name, User.last_name)
             .where(User.active == '1')
-            .order_by(User.username)
+            .order_by(User.last_name)
         )
         member_list = member_list.mappings().all()
 
