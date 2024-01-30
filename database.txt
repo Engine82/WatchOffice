@@ -17,6 +17,7 @@ created_at DATETIME DEFAULT (DATETIME(CURRENT_TIMESTAMP, 'LOCALTIME')) NOT NULL
 ** Note **
 id 0 reserved for vacancies; manually input first user as vacancy.
 id 1 reserved for manual override.
+id 2 reserved for 96 off: username: 96off, first name: "96 Off", last name: blank
 
 
 CREATE TABLE hiring (
