@@ -52,6 +52,6 @@ body {
 .input-control .error {
     color: #ff3860;
     font-size: 10;
-    margin: 2px;
-    height: 13px;
+/*    margin: 2px;
+    height: 13px;*/
 }
