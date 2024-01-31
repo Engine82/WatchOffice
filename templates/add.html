@@ -11,8 +11,8 @@
 
 {% block main %}
     <div class="container">
-        <h1>Add Member</h1>
         <form action="/add_member" id="form" method="post">
+            <h1>Add Member</h1>
 
             <div class="input-control">
                 <label for="username">Username</label>
@@ -72,8 +72,8 @@
             <div class="input-control">
                 <label for="active">Active status</label>
                 <select id="active" name="active">
-                    <option value="active">active</option>
-                    <option value="inactive">inactive</option>
+                    <option value="1">active</option>
+                    <option value="0">inactive</option>
                 </select>
                 <div class="error"></div>
             </div>
