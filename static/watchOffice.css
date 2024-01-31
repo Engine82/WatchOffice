@@ -55,3 +55,7 @@ body {
 /*    margin: 2px;
     height: 13px;*/
 }
+
+#master_error {
+    color: #ff3860;
+}
