@@ -1,3 +1,4 @@
+const member = document.getElementById("member");
 const uName = document.getElementById("username");
 const fName = document.getElementById("first");
 const lName = document.getElementById("last");
@@ -32,7 +33,7 @@ const setSuccess = (element) => {
     const inputControl = element.parentElement;
     const errorDisplay = inputControl.querySelector(".error");
 
-    errorDisplay.innerText = 'no errors';
+    errorDisplay.innerText = '';
     inputControl.classList.add('success');
     inputControl.classList.remove('error');
 }
@@ -45,7 +46,11 @@ const setMasterError = () => {
 
 function checkInputs() {
 
+    // clear previous errors
+
+
     // get values, remove white space from ends of inputs
+    const memberV = member.value.trim();
     const uNameV = uName.value.trim();
     const fNameV = fName.value.trim();
     const lNameV = lName.value.trim();
@@ -81,42 +86,44 @@ function checkInputs() {
     var changes = 0;
 
 
+    // ensure a user has been chosen
+    if (memberV === "") {
+        setError(member, 'User must be selected');
+    } else {
+        setSuccess(member);
+    }
+
     // check each input field for a change
-    console.log(changes);
     if (uNameV != '') {
         setSuccess(uName);
         changes++;
-        console.log("username")
+    } else {
+        setSuccess(uName);
     }
 
-    console.log(fNameV);
-    console.log(changes);
     if (fNameV != '') {
-        console.log(fName, fNameV);
         setSuccess(fName);
         changes++;
-        console.log("first name")
+    } else {
+        setSuccess(fName);
     }
 
-    console.log(changes);
     if (lNameV != '') {
         setSuccess(lName);
         changes++;
-        console.log("last name")
+    } else {
+        setSuccess(lName);
     }
 
-    console.log(changes);
     if (passwordV != '') {
         if (passwordV.length < 8 || passwordV.length > 64) {
             setError(password, 'Password must be between 8 and 64 charactars long')
         } else {
             setSuccess(password);
         }
+    } else {
+        setSuccess(password);
     }
- 
-    console.log(changes);
-    console.log(passwordV, passwordV2)
-    console.log(passwordV.length, passwordV2.length)
 
     if (passwordV.length > 0 && passwordV2.length == 0) {
         setError(password2, 'Please confirm your password');
@@ -125,45 +132,34 @@ function checkInputs() {
     } else if (passwordV === passwordV2 && passwordV.length > 0 && passwordV2.length > 0) {
         setSuccess(password2);
         changes++;
-        console.log("password");
     } else {
-        console.log("Success!")
+        setSuccess(password2);
     }
 
-    console.log(changes);
     if (rankV != '') {
         setSuccess(rank);
         changes++;
-        console.log("rank")
     }
 
-    console.log(changes);
     if (platoonV != '') {
-        setSuccess(lName);
+        setSuccess(platoon);
         changes++;
-        console.log("platoon")
     }
 
-    console.log(changes);
     if (activeV != '') {
-        setSuccess(lName);
+        setSuccess(active);
         changes++;
-        console.log("active")
     }
 
-    console.log(changes);
     if (elligibleV != '') {
         setSuccess(elligible);
         changes++;
-        console.log("elligibility")
     }
 
-    console.log("Changes: ", changes);
     if (changes === 0) {
         setMasterError();
     } else {
-        //form.removeEventListener("submit", formListen);
-        //form.submit();
-        console.log("END")
+        form.removeEventListener("submit", formListen);
+        form.submit();
     }
 }
