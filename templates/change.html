@@ -16,14 +16,14 @@
 
             <div class="input-control">
                 <label for="member">Member</label>
-                <select class="member" id="member" name="member" required>
+                <select class="member" id="member" name="member">
                     <option selected value=""></option>
                     {% for member in member_list %}
                         <option value="{{ member['username'] }}">{{ member['first_name'] }} {{ member['last_name'] }}</option>
                     {% endfor %}
                 </select>
+                <div class="error"></div>
             </div>
-
 
             <div class="input-control">
                 <div class="input-control">
@@ -110,4 +110,5 @@
 
         </form>
     </div>
+
 {% endblock %}
