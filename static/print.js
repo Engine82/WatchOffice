@@ -8,6 +8,11 @@ document.addEventListener('DOMContentLoaded', function () {
         window.print();
 
         document.body.innerHTML = originalContents;
+        
+        document.querySelector("#print").addEventListener('click', function(event) {
+            printDiv("printableArea");
+        });
+
     }
 
     document.querySelector("#print").addEventListener('click', function(event) {
