@@ -866,6 +866,11 @@ def history():
         print(past_platoon)
         past_platoon = past_platoon[0]
 
+        # get date of the hiring
+        hiring_date = db.execute(select(Hiring_list.created_at).where(Hiring_list.hiring_id == past_id))
+        hiring_date = hiring_date.scalars().all()
+        hiring_datetime = datetime.strptime(hiring_date[0], '%Y-%m-%d %H:%M:%S')
+        display_date = datetime.strftime(hiring_datetime, '%-m/%-d/%Y')   
 
         # Loop through day/rank/time
         daynight = ["day", "night"]
@@ -907,6 +912,7 @@ def history():
             firefighters_day_2=session['firefighters_past_hiring_day_2'],
             firefighters_night_2=session['firefighters_past_hiring_night_2'],
             platoon=past_platoon,
+            display_date=display_date
         )
 
     # GET get list of past hiring and feed to html select
