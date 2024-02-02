@@ -1046,9 +1046,16 @@ def change_member():
         member = request.form.get("member")
 
         # Check/change username
-#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! re-validate username !!!!!!!!!!!!!!!!!!!!!!!!!111111
         username = request.form.get("username")
         if username != '':
+            # Check availability of username
+            result = db.execute(select(User.username))
+            users = result.mappings().all()
+
+            for user in users:
+                if user.username == username:
+                    return render_template("apology.html", source=gen_meme("username_taken"))
+
             db.execute(
                 update(User)
                 .where(User.username == member)
@@ -1078,13 +1085,15 @@ def change_member():
             print("last name updated")
 
         # Check/change password
-#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! re-validate password !!!!!!!!!!!!!!!!!!!!!!!!!111111
         password = request.form.get("password")
         confirm_password = request.form.get("confirm_password")
         if password != '':
             print("Password:", password)
+            if len(password) < 8 or len(password) > 64:
+                return render_template("apology.html", source=gen_meme("password_length"))
             if password != confirm_password:
                 return render_template("apology.html", source=gen_meme("password_mismatch"))
+
             hashword = generate_password_hash(password)
             db.execute(
                 update(User)
@@ -1142,7 +1151,7 @@ def change_member():
                 .where(User.username == member)
                 .values(elligible=elligible)
             )
-            print("alligible updated")
+            print("elligible updated")
         
         db.commit()
 
