@@ -20,8 +20,6 @@ CSS:
 JavaScript:
 - Automatically make vacancies "Out 24"
 
-- Add date to top of hiring and history results
-
 Python/HTML:
 
 
