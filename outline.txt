@@ -20,7 +20,6 @@ CSS:
 JavaScript:
 - Automatically make vacancies "Out 24"
 
-- Make print function work multiple times w/o reloading page
 - Add date to top of hiring and history results
 
 Python/HTML:
