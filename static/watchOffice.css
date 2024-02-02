@@ -19,6 +19,10 @@ body {
     border-radius: 4px;
 }
 
+#master_error {
+    visibility: hidden;
+}
+
 .input-control {
     display: flex;
     flex-direction: column;
@@ -48,6 +52,10 @@ body {
 .input-control .error {
     color: #ff3860;
     font-size: 10;
-    margin: 2px;
-    height: 13px;
+/*    margin: 2px;
+    height: 13px;*/
+}
+
+#master_error {
+    color: #ff3860;
 }

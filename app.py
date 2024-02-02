@@ -1047,7 +1047,15 @@ def change_member():
 
         # Check/change username
         username = request.form.get("username")
-        if username != None:
+        if username != '':
+            # Check availability of username
+            result = db.execute(select(User.username))
+            users = result.mappings().all()
+
+            for user in users:
+                if user.username == username:
+                    return render_template("apology.html", source=gen_meme("username_taken"))
+
             db.execute(
                 update(User)
                 .where(User.username == member)
@@ -1057,31 +1065,35 @@ def change_member():
 
         # Check/change first name
         first = request.form.get("first")
-        if first != None:
+        print("First name:", first)
+        if first != '':
             db.execute(
                 update(User)
                 .where(User.first_name == first)
                 .values(first_name=first)
             )
-            print("username updated")
+            print("first name updated")
 
         # Check/change last name
         last = request.form.get("last")
-        if last != None:
+        if last != '':
             db.execute(
                 update(User)
                 .where(User.last_name == last)
                 .values(last_name=last)
             )
-            print("username updated")
+            print("last name updated")
 
         # Check/change password
         password = request.form.get("password")
         confirm_password = request.form.get("confirm_password")
-        if password != "":
+        if password != '':
             print("Password:", password)
+            if len(password) < 8 or len(password) > 64:
+                return render_template("apology.html", source=gen_meme("password_length"))
             if password != confirm_password:
                 return render_template("apology.html", source=gen_meme("password_mismatch"))
+
             hashword = generate_password_hash(password)
             db.execute(
                 update(User)
@@ -1092,7 +1104,8 @@ def change_member():
 
         # Check/change rank
         rank = request.form.get("rank")
-        if rank != None:
+        print(rank)
+        if rank != '':
             print("Rank != none")
             print(rank)
             db.execute(
@@ -1100,9 +1113,11 @@ def change_member():
                 .where(User.username == member)
                 .values(rank=rank)
             )
+            print("rank updated")
         
         # Platoon
         platoon = request.form.get("platoon")
+        print("Platoon: ", platoon)
         if platoon != None:
             print("Platoon != none")
             print(platoon)
@@ -1111,10 +1126,12 @@ def change_member():
                 .where(User.username == member)
                 .values(platoon=platoon)
             )
+            print("platoon updated")
 
         # Active status
         active = request.form.get("active")
-        if active != None:
+        print(active)
+        if active != '':
             print("Active != none")
             print(active)
             db.execute(
@@ -1122,6 +1139,7 @@ def change_member():
                 .where(User.username == member)
                 .values(active=active)
             )
+            print("active updated")
 
         # Elligibility
         elligible = request.form.get("elligible")
@@ -1133,6 +1151,7 @@ def change_member():
                 .where(User.username == member)
                 .values(elligible=elligible)
             )
+            print("elligible updated")
         
         db.commit()
 
@@ -1143,9 +1162,9 @@ def change_member():
 
         # Query db for active members list, save in list
         member_list = db.execute(
-            select(User.username)
+            select(User.username, User.first_name, User.last_name)
             .where(User.active == '1')
-            .order_by(User.username)
+            .order_by(User.last_name)
         )
         member_list = member_list.mappings().all()
 
