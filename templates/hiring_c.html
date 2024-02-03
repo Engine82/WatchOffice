@@ -4,6 +4,10 @@
     Hiring: Open Shifts
 {% endblock %}
 
+{% block head %}
+    <script src="static/vacancy.js"></script>
+{% endblock %}
+
 {% block main %}
     <h1>Platoon {{ platoon }} Hiring</h1>
     <form action="/hiring_c" class="centered" method="post">  
