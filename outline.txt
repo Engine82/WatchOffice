@@ -17,10 +17,11 @@ Next Steps:
 CSS:
 - make it pretty
 
-JavaScript:
-- Automatically make vacancies "Out 24"
 
-Python/HTML:
+JavaScript:
+
+
+Python:
 
 
 +------------------------------------------------------------------------------------------------------------------------------+
