@@ -1031,6 +1031,11 @@ def remove_member():
         # If removed member is up, update db with new next-up
         if up['id'] == int(member):
             print("Success!")
+            # go through members in platoon
+                # cases to handle:
+                # if removed is last member, make all tags 0
+                # if removed is any other member member, make next-most-senior member up..
+                #which he will be simply by removing the current member, requiring no action
 
             
 
