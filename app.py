@@ -1007,6 +1007,8 @@ def remove_member():
 
         # Get member to be removed from html form        
         member = request.form.get("member")
+        member = int(member)
+        print("member:", member)
         
         # Get member's name for display
         name = db.execute(
@@ -1023,19 +1025,38 @@ def remove_member():
             .where(User.rank == name[0]['rank'])
         )
         plt_list = plt_list.mappings().all()
-        print(plt_list)
         up = find_next_up(plt_list)
         print("Next up:", up)
         print(member)
 
-        # If removed member is up, update db with new next-up
-        if up['id'] == int(member):
-            print("Success!")
-            # go through members in platoon
-                # cases to handle:
-                # if removed is last member, make all tags 0
+        # If removed member is up
+        if up['id'] == member:
+
+            # And if removed member is last on their platoon at that rank,
+            # Un-flip all the tags on that platoon at that rank status
+            if plt_list[-1]['id'] == member:
+                print("Match!!!")
+
+                # handle firefighters
+                if name[0]['rank'] == 'firefighter':
+                    db.execute(
+                        update(User)
+                        .where(User.platoon == name[0]['platoon'])
+                        .where(User.rank == 'firefighter')
+                        .values(tag_flipped=0)
+                    )
+                
+                # handle officers
+                else:
+                    db.execute(
+                        update(User)
+                        .where(User.platoon == name[0]['platoon'])
+                        .where(User.rank != 'firefighter')
+                        .values(tag_flipped=0)
+                    )
+
                 # if removed is any other member member, make next-most-senior member up..
-                #which he will be simply by removing the current member, requiring no action
+                # which he will be simply by removing the current member, requiring no action
 
             
 
@@ -1045,7 +1066,7 @@ def remove_member():
             .where(User.id == member)
             .values(active=0, platoon=None)
         )
-        # db.commit()
+        db.commit()
 
         # Display "___ removed"
         return render_template("removed.html", member=name_txt)
