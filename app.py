@@ -66,7 +66,7 @@ def index():
             firefighters = []
 
             officer = db.execute(
-                select(User.first_name, User.last_name, User.tag_flipped)
+                select(User.id, User.first_name, User.last_name, User.tag_flipped)
                 .where(User.platoon == i)
                 .where(User.rank != "firefighter")
             )
@@ -76,7 +76,7 @@ def index():
             offs_up.append(off_up)
 
             firefighter = db.execute(
-                select(User.first_name, User.last_name, User.tag_flipped)
+                select(User.id, User.first_name, User.last_name, User.tag_flipped)
                 .where(User.platoon == i)
                 .where(User.rank == "firefighter")
             )
@@ -1007,14 +1007,58 @@ def remove_member():
 
         # Get member to be removed from html form        
         member = request.form.get("member")
+        member = int(member)
+        print("member:", member)
         
-        # Get member's name
+        # Get member's name for display
         name = db.execute(
-            select(User.first_name, User.last_name)
+            select(User.first_name, User.last_name, User.platoon, User.rank)
             .where(User.id == member)
         )
         name = name.mappings().all()
-        name = name[0]['first_name'] + " " + name[0]['last_name']
+        name_txt = name[0]['first_name'] + " " + name[0]['last_name']
+
+        # update tag list for case if member was up and is lowest:
+        plt_list = db.execute(
+            select(User.id, User.tag_flipped)
+            .where(User.platoon == name[0]['platoon'])
+            .where(User.rank == name[0]['rank'])
+        )
+        plt_list = plt_list.mappings().all()
+        up = find_next_up(plt_list)
+        print("Next up:", up)
+        print(member)
+
+        # If removed member is up
+        if up['id'] == member:
+
+            # And if removed member is last on their platoon at that rank,
+            # Un-flip all the tags on that platoon at that rank status
+            if plt_list[-1]['id'] == member:
+                print("Match!!!")
+
+                # handle firefighters
+                if name[0]['rank'] == 'firefighter':
+                    db.execute(
+                        update(User)
+                        .where(User.platoon == name[0]['platoon'])
+                        .where(User.rank == 'firefighter')
+                        .values(tag_flipped=0)
+                    )
+                
+                # handle officers
+                else:
+                    db.execute(
+                        update(User)
+                        .where(User.platoon == name[0]['platoon'])
+                        .where(User.rank != 'firefighter')
+                        .values(tag_flipped=0)
+                    )
+
+                # if removed is any other member member, make next-most-senior member up..
+                # which he will be simply by removing the current member, requiring no action
+
+            
 
         # Update db: platoon = n/a, active = 0
         db.execute(
@@ -1022,9 +1066,10 @@ def remove_member():
             .where(User.id == member)
             .values(active=0, platoon=None)
         )
+        db.commit()
 
         # Display "___ removed"
-        return render_template("removed.html", member=name)
+        return render_template("removed.html", member=name_txt)
 
     # Blank removal form
     else:

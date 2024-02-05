@@ -79,7 +79,6 @@ def find_next_up(tag_list):
                 index = tag_list.index(person)
                 return(tag_list[index])
 
-
     # If nobody is flipped, return first person
     for person in tag_list:
         person['tag_flipped'] = 0
@@ -102,6 +101,7 @@ def flip_tag(taglist, member_up):
             case {'id': id} if id == member_up:
                 person['tag_flipped'] = 1
                 return()
+    return 1
 
 
 # Hire function
