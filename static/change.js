@@ -6,7 +6,6 @@ const password = document.getElementById("password");
 const password2 = document.getElementById("confirm_password");
 const rank = document.getElementById("rank");
 const platoon = document.getElementById("platoon");
-const active = document.getElementById("active");
 const elligible = document.getElementById("elligibility");
 const form = document.getElementById("form");
 const errorElement = document.getElementById('error');
@@ -76,15 +75,6 @@ function checkInputs() {
     }
     catch(err) {
         var platoonV = '';
-    }
-
-    try {
-        console.log(active)
-        var activeV = active.value;
-        console.log(activeV);
-    }
-    catch(err) {
-        var activeV = '';
     }
 
     try {
@@ -163,12 +153,6 @@ function checkInputs() {
     console.log(platoonV);
     if (platoonV != '') {
         setSuccess(platoon);
-        changes++;
-    }
-
-    console.log(activeV);
-    if (activeV != '') {
-        setSuccess(active);
         changes++;
     }
 

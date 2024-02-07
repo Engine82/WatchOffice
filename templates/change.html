@@ -19,7 +19,7 @@
                 <select class="member" id="member" name="member">
                     <option selected value=""></option>
                     {% for member in member_list %}
-                        <option value="{{ member['username'] }}">{{ member['first_name'] }} {{ member['last_name'] }}</option>
+                        <option value="{{ member['username'] }}">{{ member['last_name'] }}, {{ member['first_name'] }}</option>
                     {% endfor %}
                 </select>
                 <div class="error"></div>
@@ -84,19 +84,9 @@
                 </div>
 
                 <div class="input-control">
-                    <label for="active">Active status</label>
-                    <select id="active" name="active">
-                        <option selected name="blank" value=""></option>
-                        <option name="active" value="1">Active</option>
-                        <option name="inactive" value="0">Inactive</option>
-                    </select>          
-                    <div class="error"></div>
-                </div>
-
-                <div class="input-control">
                     <label for="elligibility">Overtime elligibility</label>
                     <select id="elligibility" name="elligible">
-                        <option selected name="blank" value=""></option>
+                        <option selected name="blank" value="2"></option>
                         <option name="elligible" value="1">Elligible</option>
                         <option name="inelligible" value="0">Inelligible</option>
                     </select>          
