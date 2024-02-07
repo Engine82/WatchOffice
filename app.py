@@ -1064,7 +1064,7 @@ def remove_member():
         db.execute(
             update(User)
             .where(User.id == member)
-            .values(active=0, platoon=None)
+            .values(active=0, platoon=0)
         )
         db.commit()
 
@@ -1077,7 +1077,7 @@ def remove_member():
         member_list = db.execute(
             select(User.username, User.id, User.first_name, User.last_name)
             .where(User.active == '1')
-            .order_by(User.id)
+            .order_by(User.last_name)
         )
         member_list = member_list.mappings().all()
         db.commit()
@@ -1181,8 +1181,9 @@ def change_member():
 
         # Elligibility
         elligible = request.form.get("elligible")
-        if elligible != None:
-            print("Elligible != none")
+        print("Elligible:", elligible, type(elligible))
+        if int(elligible) != 2:
+            print("Elligible != 2")
             print(elligible)
             db.execute(
                 update(User)
