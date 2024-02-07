@@ -77,12 +77,19 @@ def find_next_up(tag_list):
         match person:
             case {'tag_flipped': tag_flipped} if tag_flipped != 1:
                 index = tag_list.index(person)
+                print()
+                print(tag_list[index])
                 return(tag_list[index])
 
     # If nobody is flipped, return first person
-    for person in tag_list:
-        person['tag_flipped'] = 0
-    return(tag_list[0])
+    try:
+        for person in tag_list:
+            person['tag_flipped'] = 0
+            return(tag_list[0])
+    except:
+        return({'first_name': 'No members assigned to this rank/shift'})
+    
+    return({'first_name': 'No members assigned to this rank/shift'})    
 
 
 # Find this person (member_up)'s entry in the availability list  and return it
