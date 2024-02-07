@@ -1179,19 +1179,6 @@ def change_member():
             )
             print("platoon updated")
 
-        # Active status
-        active = request.form.get("active")
-        print(active)
-        if active != '':
-            print("Active != none")
-            print(active)
-            db.execute(
-                update(User)
-                .where(User.username == member)
-                .values(active=active)
-            )
-            print("active updated")
-
         # Elligibility
         elligible = request.form.get("elligible")
         if elligible != None:
