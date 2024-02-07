@@ -72,8 +72,12 @@ def index():
             )
             officer = officer.mappings().all()
             officers.append(officer)
-            off_up = find_next_up(officers[0])
-            offs_up.append(off_up)
+            if len(officers[0]) > 0:
+                off_up = find_next_up(officers[0])
+                offs_up.append(off_up)
+            else: 
+                offs_up.append({'first_name': 'No officers assigned to this platoon'})
+
 
             firefighter = db.execute(
                 select(User.id, User.first_name, User.last_name, User.tag_flipped)
@@ -82,8 +86,12 @@ def index():
             )
             firefighter = firefighter.mappings().all()
             firefighters.append(firefighter)
-            ff_up = find_next_up(firefighters[0])
-            ffs_up.append(ff_up)
+            if len(firefighters[0]) > 0:
+                ff_up = find_next_up(firefighters[0])
+                ffs_up.append(ff_up)
+            else:
+                ffs_up.append({'first_name': 'No firefighters assigned to this platoon'})
+
             
         return render_template("index.html", offs=offs_up, ffs=ffs_up)
 
@@ -682,10 +690,16 @@ def hired():
             rnk = rank['tier'].lower()
             
             # Save next up members
-            session['up_next'].append({
-                'rank': rnk,
-                'up_next': find_next_up(session[rnk + '_tags'])
-            })
+            if len( session[rnk + '_tags']) > 0:
+                session['up_next'].append({
+                    'rank': rnk,
+                    'up_next': find_next_up(session[rnk + '_tags'])
+                })
+            else:
+                session['up_next'].append({
+                    'rank': rnk,
+                    'up_next': {'first_name': 'No members at this rank'}
+                })
 
         # Display hired form with hiring results
         return render_template("hired.html", 
