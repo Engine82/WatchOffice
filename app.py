@@ -1130,7 +1130,6 @@ def change_member():
 
         # Check/change first name
         first = request.form.get("first")
-        print("First name:", first)
         if first != '':
             db.execute(
                 update(User)
@@ -1183,8 +1182,8 @@ def change_member():
         # Platoon
         platoon = request.form.get("platoon")
         print("Platoon: ", platoon)
-        if platoon != None:
-            print("Platoon != none")
+        if platoon != 0:
+            print("Platoon != 0")
             print(platoon)
             db.execute(
                 update(User)
