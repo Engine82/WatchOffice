@@ -5,7 +5,8 @@
 {% endblock %}
 
 {% block main %}
-    <h3>Select past hiring to display:</h3>
+    <h1 class="title">History</h1>
+    <h5>Select past hiring to display:</h5>
     <form action="/history" method="post">
         <select id="past_hiring" name="past_hiring">
             {% for hiring in hiring_list %}

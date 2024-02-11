@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block main %}
-    <h1>Remove member</h1>
+    <h1 class="title">Remove member</h1>
     <form action="/remove_member" id="remove" method="post">
         <select class="member" id="member" name="member" required>
             {% for member in member_list %}

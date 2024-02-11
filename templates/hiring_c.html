@@ -9,12 +9,13 @@
 {% endblock %}
 
 {% block main %}
-    <h1>Platoon {{ platoon }} Hiring</h1>
+    <h1 class="title">Platoon {{ platoon }} Hiring</h1>
+    <h5>Enter openings:</h5>
     <form action="/hiring_c" class="centered" method="post">  
         <h2>Platoon {{ days_covered['day_1'] }}</h2>
             <table>
                 <tr>
-                    <th>Officer</th>
+                    <th>Officers</th>
                     <th>Status</th>
                 </tr>
                 {% for officer in session['cover_1_officers'] %}              
@@ -34,7 +35,7 @@
                 {% endfor %}
 
                 <tr>
-                    <th>Firefighter</th>
+                    <th>Firefighters</th>
                     <th>Status</th>
                 </tr>
                 {% for firefighter in session['cover_1_firefighters'] %}              
@@ -59,7 +60,7 @@
                 <h2>Platoon {{ days_covered['day_2'] }}</h2>
             </tr>
             <tr>
-                <th>Officer</th>
+                <th>Officers</th>
                 <th>Status</th>
             </tr>
             {% for officer in session['cover_2_officers'] %}  
@@ -78,7 +79,7 @@
                 </tr>
             {% endfor %}
             <tr>
-                <th>Firefighter</th>
+                <th>Firefighters</th>
                 <th>Status</th>
             </tr>
             {% for firefighter in session['cover_2_firefighters'] %}  
