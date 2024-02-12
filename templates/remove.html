@@ -11,13 +11,15 @@
 {% block main %}
     <div class="box">
         <h1 class="title">Remove Member</h1>
+        <h5>Select member to remove:</h5>
         <form action="/remove_member" id="remove" method="post">
-            <select class="member" id="member" name="member" required>
+            <select class="member, select-main" id="member" name="member" required style="text-align: left;">
                 {% for member in member_list %}
                     <option id="{{ member['id'] }}" value="{{ member['id'] }}">{{ member['last_name'] }}, {{ member['first_name'] }}</option>
                 {% endfor %}
             </select>
-            <button type="submit">Remove</button>
+            <br/>
+            <button class="button" type="submit">Remove</button>
         </form>
     </div>
 {% endblock %}

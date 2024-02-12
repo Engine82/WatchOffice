@@ -16,12 +16,9 @@ Next Steps:
 
 CSS:
 - make it pretty:
-        buttons (incl. hover)
-        select menus
-        text entry
+        add/change forms
         login page
         mobile-responsive layout
-        spacing of hiring/history results
         logout button color?
         footer
 

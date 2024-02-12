@@ -8,10 +8,24 @@ body {
     font-family: 'Poppins', sans-serif;
 }
 
+tr {
+    margin: 0.5rem;
+}
+
+th {
+    padding-top: 0.5rem;
+    min-width: 220px;
+}
+
+td {
+    padding-right: 1rem;
+    min-width: 220px;
+}
+
 .wrapper {
     background-color: rgba(214, 214, 206, 0.87);
     margin: 0 auto;
-    min-height: 100vh;
+    min-height: 80vh;
     padding: 2rem;
     width: 700px;
 }
@@ -21,6 +35,8 @@ body {
     /*margin: 8vh auto 0 auto;*/
     padding: 20px;
     background-color: whitesmoke;
+    border: 2px solid rgb(74, 66, 53);
+    border-radius: 7px;
 }
 
 /* Text */
@@ -33,18 +49,49 @@ body {
     text-align: center;
 }
 
-/* Form validation w/ JS: */
-
-
-#form button {
-    padding: 10px;
-    margin-top: 13px;
-    width: 100%;
-    color: lightgreen;
-    border: none;
-    border-radius: 4px;
+.date {
+    text-align: center;
 }
 
+/* Buttons, selects */
+.button {
+    border: 1px solid rgb(74, 66, 53);
+    border-radius: 5px;
+    font-family: 'Poppins', sans-serif;
+    margin-top: 1rem;
+    min-width: 75px;
+    padding: 0.5rem;
+    text-align: center;
+}
+
+.select-main {
+    border: 1px solid rgb(74, 66, 53);
+    border-radius: 5px;
+    font-family: 'Poppins', sans-serif;
+    margin-top: 1rem;
+    min-width: 75px;
+    padding: 0.5rem;
+    text-align: left;
+}
+
+.select-form {
+    border: 1px solid rgb(74, 66, 53);
+    border-radius: 5px;
+    font-family: 'Poppins', sans-serif;
+    text-align: left;
+}
+
+.br-full {
+    display: block;
+    margin-bottom: 1em;
+}
+
+.br-half {
+    display: block;
+    margin-bottom: 0.5em;
+}
+
+/* Form validation w/ JS: */
 #master_error {
     visibility: hidden;
 }

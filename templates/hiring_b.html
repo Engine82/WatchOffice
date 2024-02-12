@@ -5,50 +5,53 @@
 {% endblock %}
 
 {% block main %}
-    <h1 class="title">Platoon {{ platoon }} Hiring</h1>
-    <h5>Enter availability:</h5>
-    <form action="/hiring_b" class="box" method="post">
-        <table>
-            <!-- Loop through each day and display title -->
-            {% for i in range(days_covered) %}
-            <tr>
-                <th>{{ cover_days[i]['day'] }}</th>
-            </tr>
-                
-                <!-- Loop through each tier of hiring (officer and firefighter) -->
-                {% for rank in hiring_tiers %}
-                    <tr>
-                        <th>{{ rank['tier'] }}</th>
-                        <th colspan="2">Status</th>
-                    </tr>
-
-                    <!-- Loop through each person in this tier of hiring (officer of firefighter) -->
-                    {% for person in session['personnel'][loop.index - 1] %}
+    <div class="box">
+        <h1 class="title">Platoon {{ platoon }} Hiring</h1>
+        <h5>Enter availability:</h5>
+        <form action="/hiring_b" method="post">
+            <table>
+                <!-- Loop through each day and display title -->
+                {% for i in range(days_covered) %}
+                <tr>
+                    <th>{{ cover_days[i]['day'] }}</th>
+                </tr>
+                    
+                    <!-- Loop through each tier of hiring (officer and firefighter) -->
+                    {% for rank in hiring_tiers %}
                         <tr>
-                            <td>
-                                {{ person['first_name'] }} {{ person['last_name'] }}
-                            </td>
-                            <td>
-                                <select class="day" id="day_{{ i + 1 }}_{{ rank['tier'] }}_{{ loop.index }}" name="day_{{ i + 1 }}_{{ rank['tier'] }}_{{ loop.index }}" required>
-                                    <option value="available">Available</option>
-                                    <option value="24">Unavailable 24</option>
-                                    <option value="day">Unavailable Day</option>
-                                    <option value="night">Unavailable Night</option>
-                                </select>
-                            </td>                 
+                            <th>{{ rank['tier'] }}</th>
+                            <th colspan="2">Status</th>
                         </tr>
+    
+                        <!-- Loop through each person in this tier of hiring (officer of firefighter) -->
+                        {% for person in session['personnel'][loop.index - 1] %}
+                            <tr>
+                                <td>
+                                    {{ person['first_name'] }} {{ person['last_name'] }}
+                                </td>
+                                <td>
+                                    <select class="day, select-form" id="day_{{ i + 1 }}_{{ rank['tier'] }}_{{ loop.index }}" name="day_{{ i + 1 }}_{{ rank['tier'] }}_{{ loop.index }}" required>
+                                        <option value="available">Available</option>
+                                        <option value="24">Unavailable 24</option>
+                                        <option value="day">Unavailable Day</option>
+                                        <option value="night">Unavailable Night</option>
+                                    </select>
+                                </td>                 
+                            </tr>
+                        {% endfor %}
                     {% endfor %}
                 {% endfor %}
-            {% endfor %}
-        </table>
-        <table>
-            <tr>
-                <td>
-                    <button type="submit">Submit</button>
-                </td>
-            </tr>
-        </table>
-    </form>
+            </table>
+            <table>
+                <tr>
+                    <td>
+                        <button class="button" type="submit">Submit</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+
 
 
 {% endblock %}
