@@ -6,12 +6,14 @@
 
 {% block main %}
     <div class="box">
-        <img src="static/patch.jpg">
-        <form action="/login" class="centered" method="post">
-            <input autocomplete="off" class="mx-auto w-auto" id="username" name="username" placeholder="Username" type="text">
-            <input autocomplete="off" class="mx-auto w-auto" id="password" name="password" placeholder="Password" type="password">
-            <button class="button" type="submit">Log in</button>
-        </form>
+        <div class="center">
+            <img class="login-patch" src="static/patch.png">
+            <form action="/login" class="login" method="post">
+                <input autocomplete="off" class="text" id="username" name="username" placeholder="Username" type="text">
+                <input autocomplete="off" class="text" id="password" name="password" placeholder="Password" type="password">
+                <button class="button block" type="submit">Log in</button>
+            </form>
+        </div>
     </div>
 
 {% endblock %}

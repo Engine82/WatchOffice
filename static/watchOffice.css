@@ -39,10 +39,39 @@ td {
     border-radius: 7px;
 }
 
+.center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 60vh;
+    min-height: 550px;
+}
+
+.text {
+    width: 100%;
+    border: 1px solid rgb(74, 66, 53);
+    border-radius: 5px;
+    font-family: 'Poppins', sans-serif;
+    margin-top: 1rem;
+    min-width: 75px;
+    padding: 0.5rem;
+}
+
 /* Text */
 .title {
     font-family: 'Playfair Display', serif;
     text-align: center;
+}
+
+.login {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login-patch {
+    max-height: 400px;
 }
 
 .sub-title {
