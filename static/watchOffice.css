@@ -23,9 +23,9 @@ td {
 }
 
 .wrapper {
-    background-color: rgba(214, 214, 206, 0.87);
+    background-color: rgba(214, 214, 206, 0.85);
     margin: 0 auto;
-    min-height: 80vh;
+    min-height: 85vh;
     padding: 2rem;
     width: 700px;
 }
@@ -37,6 +37,23 @@ td {
     background-color: whitesmoke;
     border: 2px solid rgb(74, 66, 53);
     border-radius: 7px;
+}
+
+.footer {
+    background-color: whitesmoke;
+    height: 90px;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    padding-bottom: 2rem;
+    margin-top: 1rem;
+    text-align: center;
+    width: 100%;
+}
+
+.footer-text {
+    padding-top: 15px;
+    text-color: rgb(144, 144, 144);
 }
 
 .center {

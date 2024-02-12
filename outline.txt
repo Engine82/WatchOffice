@@ -17,10 +17,9 @@ Next Steps:
 CSS:
 - make it pretty:
         add/change forms
-        login page
         mobile-responsive layout
         logout button color?
-        footer
+        apology
 
 
 JavaScript:
