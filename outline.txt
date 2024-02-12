@@ -15,7 +15,15 @@ Things to Fix/Change:
 Next Steps:
 
 CSS:
-- make it pretty
+- make it pretty:
+        buttons (incl. hover)
+        select menus
+        text entry
+        login page
+        mobile-responsive layout
+        spacing of hiring/history results
+        logout button color?
+        footer
 
 
 JavaScript:
