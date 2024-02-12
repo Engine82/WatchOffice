@@ -7,7 +7,7 @@
 {% block main %}
     <h1 class="title">Platoon {{ platoon }} Hiring</h1>
     <h5>Enter availability:</h5>
-    <form action="/hiring_b" class="centered" method="post">
+    <form action="/hiring_b" class="box" method="post">
         <table>
             <!-- Loop through each day and display title -->
             {% for i in range(days_covered) %}

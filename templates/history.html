@@ -5,15 +5,17 @@
 {% endblock %}
 
 {% block main %}
-    <h1 class="title">History</h1>
-    <h5>Select past hiring to display:</h5>
-    <form action="/history" method="post">
-        <select id="past_hiring" name="past_hiring">
-            {% for hiring in hiring_list %}
-                <option value="{{ hiring['hiring_id'] }}">{{ hiring['created_at'] }}</option>
-            {% endfor %}
-        </select>
-        <br>
-        <button type="submit">Submit</button>
-    </form>
+    <div class="box">
+        <h1 class="title">History</h1>
+        <h5>Select past hiring to display:</h5>
+        <form action="/history" method="post">
+            <select id="past_hiring" name="past_hiring">
+                {% for hiring in hiring_list %}
+                    <option value="{{ hiring['hiring_id'] }}">{{ hiring['created_at'] }}</option>
+                {% endfor %}
+            </select>
+            <br>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
 {% endblock %}
