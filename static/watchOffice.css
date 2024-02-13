@@ -102,6 +102,10 @@ td {
     max-height: 400px;
 }
 
+.login-text {
+    margin-top: 1rem;
+}
+
 .sub-title {
     text-align: center;
 }

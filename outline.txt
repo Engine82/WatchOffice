@@ -17,8 +17,7 @@ Next Steps:
 CSS:
 - make it pretty:
         mobile-responsive layout
-        logout button color?
-
+ 
 
 JavaScript:
 
