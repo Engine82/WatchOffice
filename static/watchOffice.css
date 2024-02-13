@@ -25,8 +25,9 @@ td {
 .wrapper {
     background-color: rgba(214, 214, 206, 0.85);
     margin: 0 auto;
-    min-height: 85vh;
+    min-height: 80vh;
     padding: 2rem;
+    padding-bottom: 120px;
     width: 700px;
 }
 
@@ -135,6 +136,10 @@ td {
 .br-half {
     display: block;
     margin-bottom: 0.5em;
+}
+
+.apology {
+    max-width: 635px;
 }
 
 /* Form validation w/ JS: */

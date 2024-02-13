@@ -19,7 +19,6 @@ CSS:
         add/change forms
         mobile-responsive layout
         logout button color?
-        apology
 
 
 JavaScript:
