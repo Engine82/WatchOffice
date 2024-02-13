@@ -16,7 +16,6 @@ Next Steps:
 
 CSS:
 - make it pretty:
-        add/change forms
         mobile-responsive layout
         logout button color?
 

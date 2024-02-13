@@ -67,13 +67,23 @@ td {
 }
 
 .text {
-    width: 100%;
     border: 1px solid rgb(74, 66, 53);
     border-radius: 5px;
     font-family: 'Poppins', sans-serif;
-    margin-top: 1rem;
     min-width: 75px;
     padding: 0.5rem;
+}
+
+.select-change {
+    border: 1px solid rgb(74, 66, 53);
+    border-radius: 5px;
+    font-family: 'Poppins', sans-serif;
+    padding: 0.5rem;
+    text-align: left;
+}
+
+.label {
+    margin-top: 0.5rem;
 }
 
 /* Text */
@@ -128,6 +138,8 @@ td {
     text-align: left;
 }
 
+
+
 .br-full {
     display: block;
     margin-bottom: 1em;
@@ -153,11 +165,7 @@ td {
 }
 
 .input-control input {
-    border: 2px solid blueviolet;
-    border-radius: 4px;
     display: block;
-    font-size: 12px;
-    padding: 10px;
     width: 100%; 
 }
 
