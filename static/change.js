@@ -151,13 +151,13 @@ function checkInputs() {
     }
 
     console.log(platoonV);
-    if (platoonV != '') {
+    if (platoonV != 0) {
         setSuccess(platoon);
         changes++;
     }
 
     console.log(elligibleV);
-    if (elligibleV != '') {
+    if (elligibleV != 2) {
         setSuccess(elligible);
         changes++;
     }
