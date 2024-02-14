@@ -68,6 +68,17 @@ head {
     text-align: center;
 }
 
+.meme {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.apology {
+    object-fit: contain;
+    width: 100%;
+}
+
 .center {
     display: flex;
     flex-direction: column;
