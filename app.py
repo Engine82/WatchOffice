@@ -1115,7 +1115,8 @@ def change_member():
         if member == str(0):
             return render_template("apology.html", source=gen_meme("select_member"))
 
-
+        # Count changes:
+        changes = 0
         # Check/change username
         username = request.form.get("username")
         if username != '':
@@ -1132,6 +1133,7 @@ def change_member():
                 .where(User.username == member)
                 .values(username=username)
             )
+            changes += 1
             print("username updated")
 
         # Check/change first name
@@ -1143,6 +1145,7 @@ def change_member():
                 .values(first_name=first)
             )
             print("first name updated")
+            changes += 1
 
         # Check/change last name
         last = request.form.get("last")
@@ -1153,6 +1156,7 @@ def change_member():
                 .values(last_name=last)
             )
             print("last name updated")
+            changes += 1
 
         # Check/change password
         password = request.form.get("password")
@@ -1171,6 +1175,7 @@ def change_member():
                 .values(hash=hashword)
             )
             print("password updated")
+            changes += 1
 
         # Check/change rank
         rank = request.form.get("rank")
@@ -1183,6 +1188,7 @@ def change_member():
                 .values(rank=rank)
             )
             print("rank updated")
+            changes += 1
         
         # Platoon
         platoon = request.form.get("platoon")
@@ -1195,6 +1201,7 @@ def change_member():
                 .values(platoon=platoon)
             )
             print("platoon updated")
+            changes += 1
 
         # Elligibility
         elligible = request.form.get("elligible")
@@ -1207,7 +1214,11 @@ def change_member():
                 .values(elligible=elligible)
             )
             print("elligible updated")
-        
+            changes += 1
+
+        if changes == 0:
+            return render_template("apology.html", source=gen_meme("no_changes_made"))
+
         db.commit()
 
         return render_template("changed.html", member=member)
