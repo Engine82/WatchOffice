@@ -68,6 +68,7 @@ def index():
             officer = db.execute(
                 select(User.id, User.first_name, User.last_name, User.tag_flipped)
                 .where(User.platoon == i)
+                .where(User.active == 1)
                 .where(User.rank != "firefighter")
             )
             officer = officer.mappings().all()
@@ -82,6 +83,7 @@ def index():
             firefighter = db.execute(
                 select(User.id, User.first_name, User.last_name, User.tag_flipped)
                 .where(User.platoon == i)
+                .where(User.active == 1)
                 .where(User.rank == "firefighter")
             )
             firefighter = firefighter.mappings().all()
@@ -1109,6 +1111,10 @@ def change_member():
 
         # Get form imput    
         member = request.form.get("member")
+        print("member:", member)
+        if member == str(0):
+            return render_template("apology.html", source=gen_meme("select_member"))
+
 
         # Check/change username
         username = request.form.get("username")
@@ -1168,7 +1174,6 @@ def change_member():
 
         # Check/change rank
         rank = request.form.get("rank")
-        print(rank)
         if rank != '':
             print("Rank != none")
             print(rank)
@@ -1181,8 +1186,7 @@ def change_member():
         
         # Platoon
         platoon = request.form.get("platoon")
-        print("Platoon: ", platoon)
-        if platoon != 0:
+        if platoon != str(0):
             print("Platoon != 0")
             print(platoon)
             db.execute(
@@ -1194,7 +1198,6 @@ def change_member():
 
         # Elligibility
         elligible = request.form.get("elligible")
-        print("Elligible:", elligible, type(elligible))
         if int(elligible) != 2:
             print("Elligible != 2")
             print(elligible)
