@@ -5,6 +5,9 @@ body {
     background-position: center;
     background-attachment: fixed;
     background-size: cover;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
     font-family: 'Poppins', sans-serif;
 }
 
@@ -24,37 +27,46 @@ td {
 
 .wrapper {
     background-color: rgba(214, 214, 206, 0.85);
+    display: flex;
     margin: 0 auto;
-    min-height: 80vh;
+    overflow: auto;
     padding: 2rem;
-    padding-bottom: 120px;
     width: 700px;
+    height: calc(100vh - 123px);
 }
 
 .box {
     /* width: 400px; */
     /*margin: 8vh auto 0 auto;*/
     padding: 20px;
+    height: calc(95.5vh - 123px)
+    margin-top: 3vh;
+    margin-bottom: 1.5vh;
     background-color: whitesmoke;
     border: 2px solid rgb(74, 66, 53);
     border-radius: 7px;
 }
 
+head {
+    height 83px;
+}
+
 .footer {
     background-color: whitesmoke;
-    height: 90px;
-    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
     left: 0;
     bottom: 0;
-    padding-bottom: 2rem;
-    margin-top: 1rem;
-    text-align: center;
+    position: relative;
+    margin-top: auto;
     width: 100%;
 }
 
 .footer-text {
-    padding-top: 15px;
     text-color: rgb(144, 144, 144);
+    text-align: center;
 }
 
 .center {
@@ -194,4 +206,36 @@ td {
 
 #master_error {
     color: #ff3860;
+}
+
+@media only screen and (max-width: 768px) {
+    /* for cell phones */    
+    [class*="wrapper"] {
+        width: 100%;
+    }
+}
+
+
+@media only screen and (max-width: 472px) {
+    [class*="login-patch"] {
+        width: 70vw;
+    }
+
+    [class*="login-text"] {
+        width: 70vw;
+    }
+
+    [class*="login-box"] {
+        height: 85vh;
+    }
+}
+
+@media (max-width: 500px) {
+    td {
+        display: block;
+    }
+
+    [class*="col2"] {
+        visibility: hidden;
+    }
 }
