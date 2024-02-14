@@ -15,12 +15,9 @@ Things to Fix/Change:
 Next Steps:
 
 CSS:
-- make it pretty:
-        mobile-responsive layout
- 
+- make it pretty: 
 
 JavaScript:
-
 
 Python:
 
