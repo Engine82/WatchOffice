@@ -11,10 +11,10 @@
 
 {% block main %}
     <!-- "Officer __ and Firefighter __ are up" -->
-    <form action="/hired" class="centered" id="" method="post">
+    <form action="/hired" class="box" id="" method="post">
         <div id="printableArea">
             <h1 class="title">Platoon {{ platoon }} Hiring</h1>
-            <h3 class="date" id="date"></h2>
+            <h3 class="date, sub-title" id="date"></h2>
             <h3>First Cover Day</h3>
             <table>
                 <tr>
@@ -38,7 +38,7 @@
                     {% endfor %}
                     {% if officers_day_1 != [] %}
                         <tr>
-                            <td><br></td>
+                            <td><br class="br-half"></td>
                         </tr>
                     {% endif %}
 
@@ -54,7 +54,9 @@
                         {% endif %}
                     {% endfor %}
                 {% endif %}
-
+                <tr>
+                    <td><br class="br-half"/></td>
+                </tr>
                 <tr>
                     <th>Firefighters</th>
                 </tr>
@@ -76,7 +78,7 @@
                     {% endfor %}
                     {% if firefighters_day_1 != [] %}
                         <tr>
-                            <td><br></td>
+                            <td><br class="br-half"/></td>
                         </tr>
                     {% endif %}
 
@@ -93,7 +95,7 @@
                     {% endfor %}
                 {% endif %}
             </table>
-            <br>
+            <br class="br-full"/>
 
             <h3>Second Cover Day</h3>
             <table>
@@ -118,7 +120,7 @@
                     {% endfor %}
                     {% if officers_day_2 != [] %}
                         <tr>
-                            <td><br></td>
+                            <td><br class="br-half"></td>
                         </tr>
                     {% endif %}
 
@@ -134,6 +136,9 @@
                         {% endif %}
                     {% endfor %}
                 {% endif %}
+                <tr>
+                    <td><br class="br-half"/></td>
+                </tr>
 
                 <tr>
                     <th>Firefighters</th>
@@ -156,7 +161,7 @@
                     {% endfor %}
                     {% if firefighters_day_2 != [] %}
                         <tr>
-                            <td><br></td>
+                        <td><br class="br-half"></td>
                         </tr>
                     {% endif %}
 
@@ -173,7 +178,7 @@
                     {% endfor %}
                 {% endif %}
                 <tr>
-                    <td><br></td>
+                    <td><br class="br-full"></td>
                 </tr>
                 <tr>
                     <td>{{ up_next[0]['up_next']['first_name'] }} {{ up_next[0]['up_next']['last_name'] }} and {{ up_next[1]['up_next']['first_name'] }} {{ up_next[1]['up_next']['last_name'] }} are up</td>
@@ -183,10 +188,9 @@
         <table>
             <tr>
                 <td>
-                    <button id="print" type="button">Print</button>
-                </td>
-                <td>
-                    <button id="submit" type="submit">Submit</button>
+                    <button class="button" id="print" type="button">Print</button>
+
+                    <button class="button" id="submit" type="submit">Submit</button>
                 </td>
             </tr>
         </table>

@@ -10,13 +10,13 @@
 {% endblock %}
 
 {% block main %}
-    <div class="container">
+    <div class="box">
         <form action="/change_member" id="form" method="post">
             <h1 class="title">Change member</h1>
 
             <div class="input-control">
-                <label for="member">Member</label>
-                <select class="member" id="member" name="member">
+                <label class="label" for="member">Member</label>
+                <select class="member, select-change" id="member" name="member">
                     <option selected value=""></option>
                     {% for member in member_list %}
                         <option value="{{ member['username'] }}">{{ member['last_name'] }}, {{ member['first_name'] }}</option>
@@ -27,38 +27,38 @@
 
             <div class="input-control">
                 <div class="input-control">
-                    <label for="username">Username</label>
-                    <input autocomplete="off" class="mx-auto w-auto" id="username" name="username" placeholder="" type="text">
+                    <label class="label" for="username">Username</label>
+                    <input autocomplete="off" class="text" id="username" name="username" placeholder="" type="text">
                     <div class="error"></div>
                 </div>
 
                 <div class="input-control">
-                    <label for="password">Password</label>
-                    <input autocomplete="off" class="mx-auto w-auto" id="password" name="password" placeholder="" type="text">
+                    <label class="label" for="password">Password</label>
+                    <input autocomplete="off" class="text" id="password" name="password" placeholder="" type="text">
                     <div class="error"></div>
                 </div>
 
                 <div class="input-control">
-                    <label for="confirm_password">Confirm password</label>
-                    <input autocomplete="off" class="mx-auto w-auto" id="confirm_password" name="confirm_password" placeholder="" type="text">
+                    <label class="label" for="confirm_password">Confirm password</label>
+                    <input autocomplete="off" class="text" id="confirm_password" name="confirm_password" placeholder="" type="text">
                     <div class="error"></div>
                 </div>
 
                 <div class="input-control">
-                    <label for="first">First name</label>
-                    <input autocomplete="off" class="mx-auto w-auto" id="first" name="first" placeholder="" type="text">                
+                    <label class="label" for="first">First name</label>
+                    <input autocomplete="off" class="text" id="first" name="first" placeholder="" type="text">                
                     <div class="error"></div>
                 </div>
 
                 <div class="input-control">
-                    <label for="last">Last name</label>
-                    <input autocomplete="off" class="mx-auto w-auto" id="last" name="last" placeholder="" type="text">                    
+                    <label class="label" for="last">Last name</label>
+                    <input autocomplete="off" class="text" id="last" name="last" placeholder="" type="text">                    
                     <div class="error"></div>
                 </div>
 
                 <div class="input-control">
-                    <label for="rank">Rank</label>
-                    <select id="rank" name="rank">
+                    <label class="label" for="rank">Rank</label>
+                    <select class="select-change" id="rank" name="rank">
                         <option selected name="blank" value=""></option>
                         <option name="firefighter" value="firefighter">Firefighter</option>
                         <option name="lieutenant" value="lieutenant">Lieutenant</option>
@@ -71,8 +71,8 @@
                 </div>
             
                 <div class="input-control">
-                    <label for="platoon">Platoon</label>
-                    <select id="platoon" name="platoon">
+                    <label class="label" for="platoon">Platoon</label>
+                    <select class="select-change" id="platoon" name="platoon">
                         <option selected name="blank" value="0"></option>
                         <option name="1" value="1">1</option>
                         <option name="2" value="2">2</option>
@@ -84,8 +84,8 @@
                 </div>
 
                 <div class="input-control">
-                    <label for="elligibility">Overtime elligibility</label>
-                    <select id="elligibility" name="elligible">
+                    <label class="label" for="elligibility">Overtime elligibility</label>
+                    <select class="select-change" id="elligibility" name="elligible">
                         <option selected name="blank" value="2"></option>
                         <option name="elligible" value="1">Elligible</option>
                         <option name="inelligible" value="0">Inelligible</option>

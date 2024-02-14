@@ -15,11 +15,9 @@ Things to Fix/Change:
 Next Steps:
 
 CSS:
-- make it pretty
-
+- make it pretty: 
 
 JavaScript:
-
 
 Python:
 

@@ -9,22 +9,43 @@
 {% endblock %}
 
 {% block main %}
-    <h1 class="title">Platoon {{ platoon }} Hiring</h1>
-    <h5>Enter openings:</h5>
-    <form action="/hiring_c" class="centered" method="post">  
-        <h2>Platoon {{ days_covered['day_1'] }}</h2>
-            <table>
-                <tr>
-                    <th>Officers</th>
-                    <th>Status</th>
-                </tr>
-                {% for officer in session['cover_1_officers'] %}              
+    <div class="box">
+        <h1 class="title">Platoon {{ platoon }} Hiring</h1>
+        <h5>Enter openings:</h5>
+        <form action="/hiring_c" method="post">  
+            <h2>Platoon {{ days_covered['day_1'] }}</h2>
+                <table>
+                    <tr>
+                        <th>Officers</th>
+                        <th class="col2">Status</th>
+                    </tr>
+                    {% for officer in session['cover_1_officers'] %}              
+                        <tr>
+                            <td>
+                                {{ officer['first_name'] }} {{ officer['last_name'] }}
+                            </td>
+                            <td>
+                                <select class="day, select-form" id="officers_1st_day_{{ loop.index }}" name="officers_1st_day_{{ loop.index }}" required>
+                                    <option selected value="working">Working</option>
+                                    <option value="24">Out 24</option>
+                                    <option value="day">Out Day</option>
+                                    <option value="night">Out Night</option>
+                                </select>
+                            </td>
+                        </tr>
+                    {% endfor %}
+    
+                    <tr>
+                        <th>Firefighters</th>
+                        <th class="col2">Status</th>
+                    </tr>
+                    {% for firefighter in session['cover_1_firefighters'] %}              
                     <tr>
                         <td>
-                            {{ officer['first_name'] }} {{ officer['last_name'] }}
+                            {{ firefighter['first_name'] }} {{ firefighter['last_name'] }}
                         </td>
                         <td>
-                            <select class="day" id="officers_1st_day_{{ loop.index }}" name="officers_1st_day_{{ loop.index }}" required>
+                            <select class="day, select-form" id="firefighters_1st_day_{{ loop.index }}" name="firefighters_1st_day_{{ loop.index }}" required>
                                 <option selected value="working">Working</option>
                                 <option value="24">Out 24</option>
                                 <option value="day">Out Day</option>
@@ -33,77 +54,58 @@
                         </td>
                     </tr>
                 {% endfor %}
-
+            </table>
+                <br/>
+            <table>
+                <tr>
+                    <h2>Platoon {{ days_covered['day_2'] }}</h2>
+                </tr>
+                <tr>
+                    <th>Officers</th>
+                    <th class="col2">Status</th>
+                </tr>
+                {% for officer in session['cover_2_officers'] %}  
+                    <tr>            
+                        <td>
+                            {{ officer['first_name'] }} {{ officer['last_name'] }}
+                        </td>
+                        <td>
+                            <select class="day, select-form" id="officers_2nd_day_{{ loop.index }}" name="officers_2nd_day_{{ loop.index }}" required>
+                                <option selected value="working">Working</option>
+                                <option value="24">Out 24</option>
+                                <option value="day">Out Day</option>
+                                <option value="night">Out Night</option>
+                            </select>
+                        </td>
+                    </tr>
+                {% endfor %}
                 <tr>
                     <th>Firefighters</th>
-                    <th>Status</th>
+                    <th class="col2">Status</th>
                 </tr>
-                {% for firefighter in session['cover_1_firefighters'] %}              
+                {% for firefighter in session['cover_2_firefighters'] %}  
+                    <tr>            
+                        <td>
+                            {{ firefighter['first_name'] }} {{ firefighter['last_name'] }}
+                        </td>
+                        <td>
+                            <select class="day, select-form" id="firefighters_2nd_day_{{ loop.index }}" name="firefighters_2nd_day_{{ loop.index }}" required>
+                                <option selected value="working">Working</option>
+                                <option value="24">Out 24</option>
+                                <option value="day">Out Day</option>
+                                <option value="night">Out Night</option>
+                            </select>
+                        </td>
+                    </tr>
+                {% endfor %}
                 <tr>
                     <td>
-                        {{ firefighter['first_name'] }} {{ firefighter['last_name'] }}
-                    </td>
-                    <td>
-                        <select class="day" id="firefighters_1st_day_{{ loop.index }}" name="firefighters_1st_day_{{ loop.index }}" required>
-                            <option selected value="working">Working</option>
-                            <option value="24">Out 24</option>
-                            <option value="day">Out Day</option>
-                            <option value="night">Out Night</option>
-                        </select>
+                        <button class="button" type="submit">Submit</button>
                     </td>
                 </tr>
-            {% endfor %}
-        </table>
-            <br/>
-        <table>
-            <tr>
-                <h2>Platoon {{ days_covered['day_2'] }}</h2>
-            </tr>
-            <tr>
-                <th>Officers</th>
-                <th>Status</th>
-            </tr>
-            {% for officer in session['cover_2_officers'] %}  
-                <tr>            
-                    <td>
-                        {{ officer['first_name'] }} {{ officer['last_name'] }}
-                    </td>
-                    <td>
-                        <select class="day" id="officers_2nd_day_{{ loop.index }}" name="officers_2nd_day_{{ loop.index }}" required>
-                            <option selected value="working">Working</option>
-                            <option value="24">Out 24</option>
-                            <option value="day">Out Day</option>
-                            <option value="night">Out Night</option>
-                        </select>
-                    </td>
-                </tr>
-            {% endfor %}
-            <tr>
-                <th>Firefighters</th>
-                <th>Status</th>
-            </tr>
-            {% for firefighter in session['cover_2_firefighters'] %}  
-                <tr>            
-                    <td>
-                        {{ firefighter['first_name'] }} {{ firefighter['last_name'] }}
-                    </td>
-                    <td>
-                        <select class="day" id="firefighters_2nd_day_{{ loop.index }}" name="firefighters_2nd_day_{{ loop.index }}" required>
-                            <option selected value="working">Working</option>
-                            <option value="24">Out 24</option>
-                            <option value="day">Out Day</option>
-                            <option value="night">Out Night</option>
-                        </select>
-                    </td>
-                </tr>
-            {% endfor %}
-            <tr>
-                <td>
-                    <button type="submit">Submit</button>
-                </td>
-            </tr>
-        </table>
-    </form>
+            </table>
+        </form>
+    </div>
 
 
 {% endblock %}

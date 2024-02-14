@@ -5,38 +5,40 @@
 {% endblock %}
 
 {% block main %}
-    <h1 class="title">Tagboard Override</h1>
-    <h3>Platoon {{ platoon }}</h3>
-    <h5>Select new next-up members:</h5>
-    <form action="/manual_b" class="centered" method="post">
-        <table>
-            <tr>
-                <td>Officers:</td>
-                <td>
-                    <select id="officer" name="officer">
-                        {% for officer in officers %}
-                            <option value="{{ officer['id'] }}">{{ officer['first_name'] }} {{ officer['last_name'] }}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>Firefighters:</td>
-                <td>
-                    <select id="firefighter" name="firefighter">
-                        {% for firefighter in firefighters %}
-                            <option value="{{ firefighter['id'] }}">{{ firefighter['first_name'] }} {{ firefighter['last_name'] }}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-            </tr>
-        </table>
-        <table>
-            <tr>
-                <td>
-                    <button type="submit">Submit</button>
-                </td>
-            </tr>
-        </table>
-    </form>
+    <div class="box">
+        <h1 class="title">Tagboard Override</h1>
+        <h3>Platoon {{ platoon }}</h3>
+        <h5>Select new next-up members:</h5>
+        <form action="/manual_b" class="centered" method="post">
+            <table>
+                <tr>
+                    <td>Officers:</td>
+                    <td>
+                        <select class="select-form" id="officer" name="officer">
+                            {% for officer in officers %}
+                                <option value="{{ officer['id'] }}">{{ officer['first_name'] }} {{ officer['last_name'] }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Firefighters:</td>
+                    <td>
+                        <select class="select-form" id="firefighter" name="firefighter">
+                            {% for firefighter in firefighters %}
+                                <option value="{{ firefighter['id'] }}">{{ firefighter['first_name'] }} {{ firefighter['last_name'] }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <td>
+                        <button class="button" type="submit">Submit</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
 {% endblock %}
