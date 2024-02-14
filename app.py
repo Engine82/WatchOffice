@@ -68,6 +68,7 @@ def index():
             officer = db.execute(
                 select(User.id, User.first_name, User.last_name, User.tag_flipped)
                 .where(User.platoon == i)
+                .where(User.active == 1)
                 .where(User.rank != "firefighter")
             )
             officer = officer.mappings().all()
@@ -82,6 +83,7 @@ def index():
             firefighter = db.execute(
                 select(User.id, User.first_name, User.last_name, User.tag_flipped)
                 .where(User.platoon == i)
+                .where(User.active == 1)
                 .where(User.rank == "firefighter")
             )
             firefighter = firefighter.mappings().all()
@@ -1109,7 +1111,12 @@ def change_member():
 
         # Get form imput    
         member = request.form.get("member")
+        print("member:", member)
+        if member == str(0):
+            return render_template("apology.html", source=gen_meme("select_member"))
 
+        # Count changes:
+        changes = 0
         # Check/change username
         username = request.form.get("username")
         if username != '':
@@ -1126,6 +1133,7 @@ def change_member():
                 .where(User.username == member)
                 .values(username=username)
             )
+            changes += 1
             print("username updated")
 
         # Check/change first name
@@ -1137,6 +1145,7 @@ def change_member():
                 .values(first_name=first)
             )
             print("first name updated")
+            changes += 1
 
         # Check/change last name
         last = request.form.get("last")
@@ -1147,6 +1156,7 @@ def change_member():
                 .values(last_name=last)
             )
             print("last name updated")
+            changes += 1
 
         # Check/change password
         password = request.form.get("password")
@@ -1165,10 +1175,10 @@ def change_member():
                 .values(hash=hashword)
             )
             print("password updated")
+            changes += 1
 
         # Check/change rank
         rank = request.form.get("rank")
-        print(rank)
         if rank != '':
             print("Rank != none")
             print(rank)
@@ -1178,11 +1188,11 @@ def change_member():
                 .values(rank=rank)
             )
             print("rank updated")
+            changes += 1
         
         # Platoon
         platoon = request.form.get("platoon")
-        print("Platoon: ", platoon)
-        if platoon != 0:
+        if platoon != str(0):
             print("Platoon != 0")
             print(platoon)
             db.execute(
@@ -1191,10 +1201,10 @@ def change_member():
                 .values(platoon=platoon)
             )
             print("platoon updated")
+            changes += 1
 
         # Elligibility
         elligible = request.form.get("elligible")
-        print("Elligible:", elligible, type(elligible))
         if int(elligible) != 2:
             print("Elligible != 2")
             print(elligible)
@@ -1204,7 +1214,11 @@ def change_member():
                 .values(elligible=elligible)
             )
             print("elligible updated")
-        
+            changes += 1
+
+        if changes == 0:
+            return render_template("apology.html", source=gen_meme("no_changes_made"))
+
         db.commit()
 
         return render_template("changed.html", member=member)

@@ -17,7 +17,7 @@
             <div class="input-control">
                 <label class="label" for="member">Member</label>
                 <select class="member, select-change" id="member" name="member">
-                    <option selected value=""></option>
+                    <option selected value="0"></option>
                     {% for member in member_list %}
                         <option value="{{ member['username'] }}">{{ member['last_name'] }}, {{ member['first_name'] }}</option>
                     {% endfor %}
