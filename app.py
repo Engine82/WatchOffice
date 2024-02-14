@@ -1236,22 +1236,19 @@ def login():
     # When login form is submitted
     if request.method == "POST":
 
-
         # Check for username and password
         if not request.form.get("username"):
-            render_template("apology.html", source=gen_meme("username"))
+            return render_template("apology.html", source=gen_meme("username"))
 
         if not request.form.get("password"):
-            render_template("apology.html", source=gen_meme("password"))
+            return render_template("apology.html", source=gen_meme("password"))
         
         # Query db for username 
         username = request.form.get("username")
         password = request.form.get("password")
-        print(username)
 
         result = db.execute(select(User.id, User.username, User.hash, User.active).where(User.username == username))
         result = result.mappings().first()
-        print(result)
         # Verify username in db
         if result == None:
             return render_template("apology.html", source=gen_meme("incorrect_username"))
