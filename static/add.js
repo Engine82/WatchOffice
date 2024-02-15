@@ -1,3 +1,6 @@
+// Form validation for add form
+
+// Get user input
 const uName = document.getElementById("username");
 const fName = document.getElementById("first_name");
 const lName = document.getElementById("last_name");
@@ -7,15 +10,16 @@ const form = document.getElementById("form");
 const errorElement = document.getElementById('error');
 
 
+// Prevent form from submitting when button clicked
 let formListen = (event) => {
     event.preventDefault();
-    console.log("preventDefaults")
     checkInputs();
 }
 
 form.addEventListener("submit", formListen);
 
 
+// Function to display error message
 const setError = (element, message) => {
     const inputControl = element.parentElement;
     const errorDisplay = inputControl.querySelector(".error");
@@ -25,6 +29,7 @@ const setError = (element, message) => {
     inputControl.classList.remove('success');
 }
 
+// Function to show input is accepted
 const setSuccess = (element) => {
     const inputControl = element.parentElement;
     const errorDisplay = inputControl.querySelector(".error");
@@ -34,6 +39,7 @@ const setSuccess = (element) => {
     inputControl.classList.remove('error')    ;
 }
 
+// Function - validate each input field
 function checkInputs() {
 
     // get values, remove white space from ends of inputs
@@ -44,6 +50,7 @@ function checkInputs() {
     const passwordV2 = password2.value.trim();
     let successes = 0;
 
+    // Username
     if (uNameV === '') {
         setError(uName, 'Username is required');
     } else {
@@ -51,6 +58,7 @@ function checkInputs() {
         successes++;
     }
 
+    // First name
     if (fNameV === '') {
         setError(fName, 'First name is required');
     } else {
@@ -58,6 +66,7 @@ function checkInputs() {
         successes++;
     }
 
+    // Last name
     if (lNameV === '') {
         setError(lName, 'Last name is required');
     } else {
@@ -65,6 +74,7 @@ function checkInputs() {
         successes++;
     }
 
+    // Password
     if (passwordV === '') {
         setError(password, 'Password is required');
     } else if (passwordV.length < 8 || passwordV.length > 64) {
@@ -83,11 +93,9 @@ function checkInputs() {
         successes++;
     }
 
-    console.log("Successes: ", successes);
+    // If everything is accepted, submit the form
     if (successes === 5) {
         form.removeEventListener("submit", formListen);
-        console.log("Listener removed")
         form.submit();
-        console.log("form submitted");
     }
 }

@@ -1,3 +1,6 @@
+// Validate user inputs from change form
+
+// Get user inputs
 const member = document.getElementById("member");
 const uName = document.getElementById("username");
 const fName = document.getElementById("first");
@@ -12,6 +15,7 @@ const errorElement = document.getElementById('error');
 const masterError = document.getElementById("master_error");
 
 
+// Prevent form from being submitted prior to validation
 let formListen = (event) => {
     event.preventDefault();
     console.log("preventDefaults")
@@ -20,6 +24,8 @@ let formListen = (event) => {
 
 form.addEventListener("submit", formListen);
 
+
+// Function to set error messages
 const setError = (element, message) => {
     const inputControl = element.parentElement;
     const errorDisplay = inputControl.querySelector(".error");
@@ -29,6 +35,8 @@ const setError = (element, message) => {
     inputControl.classList.remove('success');
 }
 
+
+// Function to set success feedback
 const setSuccess = (element) => {
     const inputControl = element.parentElement;
     const errorDisplay = inputControl.querySelector(".error");
@@ -38,6 +46,8 @@ const setSuccess = (element) => {
     inputControl.classList.remove('error');
 }
 
+
+// Function to display/hide errors
 const setMasterError = (type) => {
     if (type === 1) {
         masterError.style.visibility = "visible";
@@ -46,6 +56,8 @@ const setMasterError = (type) => {
     }
 }
 
+
+// Function to validate the user's inputs
 function checkInputs() {
 
     // clear previous errors
@@ -91,7 +103,7 @@ function checkInputs() {
 
 
     // ensure a user has been chosen
-    if (memberV === "") {
+    if (memberV === "0") {
         setError(member, 'User must be selected');
         errors++;
     } else {
@@ -99,6 +111,7 @@ function checkInputs() {
     }
 
     // check each input field for a change
+    // Username
     if (uNameV != '') {
         setSuccess(uName);
         changes++;
@@ -106,6 +119,7 @@ function checkInputs() {
         setSuccess(uName);
     }
 
+    // First name
     if (fNameV != '') {
         setSuccess(fName);
         changes++;
@@ -113,6 +127,7 @@ function checkInputs() {
         setSuccess(fName);
     }
 
+    // Last name
     if (lNameV != '') {
         setSuccess(lName);
         changes++;
@@ -120,6 +135,7 @@ function checkInputs() {
         setSuccess(lName);
     }
 
+    // Password
     if (passwordV != '') {
         if (passwordV.length < 8 || passwordV.length > 64) {
             setError(password, 'Password must be between 8 and 64 charactars long')
@@ -144,24 +160,25 @@ function checkInputs() {
         setSuccess(password2);
     }
 
-    console.log(rankV);
+    // Rank
     if (rankV != '') {
         setSuccess(rank);
         changes++;
     }
 
-    console.log(platoonV);
+    // Platoon
     if (platoonV != 0) {
         setSuccess(platoon);
         changes++;
     }
 
-    console.log(elligibleV);
+    // Eligibility
     if (elligibleV != 2) {
         setSuccess(elligible);
         changes++;
     }
 
+    // If there are changes and no errors, submit the form
     if (changes === 0 && errors === 0) {
         setMasterError(1);
     } else if (errors > 0) {

@@ -1,15 +1,8 @@
-/*
-loop through each row and column in table
-    if cell has "vacancy"
-        if element.innerText == "vacancy"
-        cell + 1 make "24" selected set element.????? = "24" 
-
-*/
-
+// Automatically select "Out 24" for vacancies in hiring_c
 document.addEventListener('DOMContentLoaded', function () {
+    
     // iterate through each table in the page
     let tables = document.getElementsByTagName("table");
-
     for (let table of tables) {
 
         // iterate through each cell in the table
@@ -22,7 +15,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     nextCell = row.cells[j+1]
                     nextCell.children[0].value = '24';
                 }
-                
             }
         }
     }
