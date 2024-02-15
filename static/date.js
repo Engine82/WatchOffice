@@ -1,8 +1,6 @@
+// Add today's date to the top of the hiring results
 document.addEventListener('DOMContentLoaded', function () {
-    // display date
     var today = new Date().toLocaleDateString()
-    console.log(today);
     const dateElem = document.getElementById("date")  
-    
     dateElem.textContent = today;
 })
