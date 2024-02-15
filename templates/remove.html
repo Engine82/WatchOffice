@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Remove Member
+    WatchOffice: Remove Member
 {% endblock %}
 
 {% block head %}
@@ -12,6 +12,7 @@
     <div class="box">
         <h1 class="title">Remove Member</h1>
         <h5>Select member to remove:</h5>
+
         <form action="/remove_member" id="remove" method="post">
             <select class="member, select-main" id="member" name="member" required style="text-align: left;">
                 {% for member in member_list %}
@@ -21,5 +22,6 @@
             <br/>
             <button class="button" type="submit">Remove</button>
         </form>
+        
     </div>
 {% endblock %}

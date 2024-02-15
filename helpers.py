@@ -7,10 +7,6 @@ from sqlalchemy import func
 from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase, MappedAsDataclass
 
 
-# Apology function for errors
-def apology():
-    return render_template("apology.html")
-
 # Login required decorator
 # Reference: https://flask.palletsprojects.com/en/3.0.x/patterns/viewdecorators/
 def login_required(f):
@@ -22,10 +18,10 @@ def login_required(f):
     return decorated_function
 
 
-
 # SQLAlchemy declarative base - enables ORM mapping
 class Base(MappedAsDataclass, DeclarativeBase):
     pass
+
 
 # SQLAlchemy User class for users table
 class User (Base):
@@ -84,8 +80,9 @@ def find_next_up(tag_list):
         for person in tag_list:
             person['tag_flipped'] = 0
         return(tag_list[0])
+
     else:
-        return(1)
+        return 1
     
 
 # Find this person (member_up)'s entry in the availability list  and return it
@@ -119,8 +116,6 @@ def hire(opening, availability, taglist, results, time, covering_count, shift_si
 
         # Find next person up (tag_flipped == 0)
         next_up = find_next_up(taglist)
-        print("next_up: ", next_up)
-        print("opening: ", opening)
 
         # Get availability of next_up person
         avail = get_availability(next_up['id'], availability)
@@ -142,7 +137,6 @@ def hire(opening, availability, taglist, results, time, covering_count, shift_si
                 'time': time, 
                 'rank': rank
             })
-            print("results:", results)
             return([results, covering_count])
 
         # If unavailable save that result and call hiring function to fill opening
@@ -158,7 +152,6 @@ def hire(opening, availability, taglist, results, time, covering_count, shift_si
                 'time': time,
                 'rank': rank
             })
-            print("results: ", results)
             return(hire(opening, availability, taglist, results, time, covering_count, shift_size, day, rank))
 
     # If everyone has been checked and either hired or unavailable, hire from 96 off
@@ -175,18 +168,15 @@ def hire(opening, availability, taglist, results, time, covering_count, shift_si
             'time': time, 
             'rank': rank
         })
-        print("results: ", results)
         return([results, covering_count])
 
 def find_name(member_list, member):
     for person in member_list:
-        print(member)
-        print(person)
-        print(person['id'])
+
         if person['id'] == str(member):
             member_name = person['first_name'] + " " + person['last_name']
-            print("Name", member_name)
             return(member_name)
+
 
 # function to generate a meme with the appropriate error message
 # https://memegen.link/

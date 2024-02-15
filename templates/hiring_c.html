@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Hiring: Open Shifts
+    WatchOffice: Hiring Open Shifts
 {% endblock %}
 
 {% block head %}
@@ -19,6 +19,7 @@
                         <th>Officers</th>
                         <th class="col2">Status</th>
                     </tr>
+
                     {% for officer in session['cover_1_officers'] %}              
                         <tr>
                             <td>
@@ -39,6 +40,7 @@
                         <th>Firefighters</th>
                         <th class="col2">Status</th>
                     </tr>
+
                     {% for firefighter in session['cover_1_firefighters'] %}              
                     <tr>
                         <td>
@@ -55,15 +57,19 @@
                     </tr>
                 {% endfor %}
             </table>
+
                 <br/>
+                
             <table>
                 <tr>
                     <h2>Platoon {{ days_covered['day_2'] }}</h2>
                 </tr>
+
                 <tr>
                     <th>Officers</th>
                     <th class="col2">Status</th>
                 </tr>
+
                 {% for officer in session['cover_2_officers'] %}  
                     <tr>            
                         <td>
@@ -79,10 +85,12 @@
                         </td>
                     </tr>
                 {% endfor %}
+
                 <tr>
                     <th>Firefighters</th>
                     <th class="col2">Status</th>
                 </tr>
+
                 {% for firefighter in session['cover_2_firefighters'] %}  
                     <tr>            
                         <td>
@@ -98,14 +106,14 @@
                         </td>
                     </tr>
                 {% endfor %}
+
                 <tr>
                     <td>
                         <button class="button" type="submit">Submit</button>
                     </td>
                 </tr>
+
             </table>
         </form>
     </div>
-
-
 {% endblock %}
