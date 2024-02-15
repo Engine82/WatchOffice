@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    History
+    WatchOffice: History
 {% endblock %}
 
 {% block head %}
@@ -19,10 +19,12 @@
                 <tr>
                     <th>Officers</th>
                 </tr>
+
                 {% if officers_day_1[0]['out_first'] == 'none' and officers_night_1[0]['out_first']== 'none' %}
                     <tr>
                         <td>No officers hiring</td>
                     </tr>
+
                 {% else %}
                     {% for opening in officers_day_1 %}
                         {% if opening['out_first'] == 'unavailable' %}
@@ -36,6 +38,7 @@
                             </tr>
                         {% endif %}
                     {% endfor %}
+
                     {% if officers_day_1 != [] %}
                         <tr>
                             <td><br class="br-half"></td>
@@ -47,33 +50,37 @@
                             <tr>
                                 <td> {{ opening['covering_first'] }} {{ opening['covering_last'] }} unavailable - Night</td>
                             </tr>      
-                            {% elif opening['out_first'] == 'none' %} 
-                            {% else %}
+                        {% elif opening['out_first'] == 'none' %} 
+                        {% else %}
                             <tr>
                                 <td> {{ opening['covering_first'] }} {{ opening['covering_last'] }} hired for {{ opening['out_first'] }} {{ opening['out_last'] }}  - Night</td>
                             </tr>
                         {% endif %}
                     {% endfor %}
+
                 {% endif %}
     
                 <tr>
                     <td><br class="br-half"/></td>
                 </tr>
+
                 <tr>
                     <th>Firefighters</th>
                 </tr>
+
                 {% if firefighters_day_1[0]['out_first'] == 'none' and firefighters_night_1[0]['out_first']== 'none' %}
                     <tr>
                         <td>No officers hiring</td>
                     </tr>
+
                 {% else %}
                     {% for opening in firefighters_day_1 %}
                         {% if opening['out_first'] == 'unavailable' %}
                             <tr>
                                 <td> {{ opening['covering_first'] }} {{ opening['covering_last'] }} unavailable - Day</td>
                             </tr>      
-                            {% elif opening['out_first'] == 'none' %} 
-                            {% else %}
+                        {% elif opening['out_first'] == 'none' %} 
+                        {% else %}
                             <tr>
                                 <td> {{ opening['covering_first'] }} {{ opening['covering_last'] }} hired for {{ opening['out_first'] }} {{ opening['out_last'] }}  - Day</td>
                             </tr>
@@ -90,39 +97,45 @@
                             <tr>
                                 <td> {{ opening['covering_first'] }} {{ opening['covering_last'] }} unavailable - Night</td>
                             </tr>      
-                            {% elif opening['out_first'] == 'none' %} 
-                            {% else %}
+                        {% elif opening['out_first'] == 'none' %} 
+                        {% else %}
                             <tr>
                                 <td> {{ opening['covering_first'] }} {{ opening['covering_last'] }} hired for {{ opening['out_first'] }} {{ opening['out_last'] }}  - Night</td>
                             </tr>
                         {% endif %}
                     {% endfor %}
+
                 {% endif %}
             </table>
+
             <br class="br-full">
     
             <h3>Second Cover Day</h3>
             <table>
+
                 <tr>
                     <th>Officers</th>
                 </tr>
+
                 {% if officers_day_2[0]['out_first'] == 'none' and officers_night_2[0]['out_first']== 'none' %}
                     <tr>
                         <td>No officers hiring</td>
                     </tr>
                 {% else %}
+
                     {% for opening in officers_day_2 %}
                         {% if opening['out_first'] == 'unavailable' %}
                             <tr>
                                 <td> {{ opening['covering_first'] }} {{ opening['covering_last'] }} unavailable - Day</td>
                             </tr>      
-                            {% elif opening['out_first'] == 'none' %} 
-                            {% else %}
+                        {% elif opening['out_first'] == 'none' %} 
+                        {% else %}
                             <tr>
                                 <td> {{ opening['covering_first'] }} {{ opening['covering_last'] }} hired for {{ opening['out_first'] }} {{ opening['out_last'] }}  - Day</td>
                             </tr>
                         {% endif %}
                     {% endfor %}
+
                     {% if officers_day_2 != [] %}
                         <tr>
                             <td><br class="br-half"></td>
@@ -134,13 +147,14 @@
                             <tr>
                                 <td> {{ opening['covering_first'] }} {{ opening['covering_last'] }} unavailable - Night</td>
                             </tr>      
-                            {% elif opening['out_first'] == 'none' %} 
-                            {% else %}
+                        {% elif opening['out_first'] == 'none' %} 
+                        {% else %}
                             <tr>
                                 <td> {{ opening['covering_first'] }} {{ opening['covering_last'] }} hired for {{ opening['out_first'] }} {{ opening['out_last'] }}  - Night</td>
                             </tr>
                         {% endif %}
                     {% endfor %}
+
                 {% endif %}
                 <tr>
                     <td><br class="br-half"/></td>
@@ -149,23 +163,26 @@
                 <tr>
                     <th>Firefighters</th>
                 </tr>
+
                 {% if firefighters_day_2[0]['out_first'] == 'none' and firefighters_night_2[0]['out_first']== 'none' %}
                     <tr>
                         <td>No officers hiring</td>
                     </tr>
                 {% else %}
+
                     {% for opening in firefighters_day_2 %}
                         {% if opening['out_first'] == 'unavailable' %}
                             <tr>
                                 <td> {{ opening['covering_first'] }} {{ opening['covering_last'] }} unavailable - Day</td>
                             </tr>      
-                            {% elif opening['out_first'] == 'none' %} 
-                            {% else %}
+                        {% elif opening['out_first'] == 'none' %} 
+                        {% else %}
                             <tr>
                                 <td> {{ opening['covering_first'] }} {{ opening['covering_last'] }} hired for {{ opening['out_first'] }} {{ opening['out_last'] }}  - Day</td>
                             </tr>
                         {% endif %}
                     {% endfor %}
+
                     {% if firefighters_day_2 != [] %}
                         <tr>
                             <td><br class="br-half"></td>
@@ -177,17 +194,20 @@
                             <tr>
                                 <td> {{ opening['covering_first'] }} {{ opening['covering_last'] }} unavailable - Night</td>
                             </tr>      
-                            {% elif opening['out_first'] == 'none' %} 
-                            {% else %}
+                        {% elif opening['out_first'] == 'none' %} 
+                        {% else %}
                             <tr>
                                 <td> {{ opening['covering_first'] }} {{ opening['covering_last'] }} hired for {{ opening['out_first'] }} {{ opening['out_last'] }}  - Night</td>
                             </tr>
                         {% endif %}
                     {% endfor %}
+
                 {% endif %}
             </table>
         </div>
+
         <button class="button" id="print" type="button">Print</button>
+        
     </div>
 
 {% endblock %}

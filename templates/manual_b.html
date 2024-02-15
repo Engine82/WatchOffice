@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Hiring: Select Availability
+    WatchOffice: Manual Hiring
 {% endblock %}
 
 {% block main %}
@@ -9,8 +9,10 @@
         <h1 class="title">Tagboard Override</h1>
         <h3>Platoon {{ platoon }}</h3>
         <h5>Select new next-up members:</h5>
+
         <form action="/manual_b" class="centered" method="post">
             <table>
+
                 <tr>
                     <td>Officers:</td>
                     <td>
@@ -21,6 +23,7 @@
                         </select>
                     </td>
                 </tr>
+
                 <tr>
                     <td>Firefighters:</td>
                     <td>
@@ -31,7 +34,9 @@
                         </select>
                     </td>
                 </tr>
+                
             </table>
+
             <table>
                 <tr>
                     <td>
@@ -39,6 +44,7 @@
                     </td>
                 </tr>
             </table>
+
         </form>
     </div>
 {% endblock %}

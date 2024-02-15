@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Hiring: Select Availability
+    WatchOffice: Hiring Availability
 {% endblock %}
 
 {% block main %}
@@ -10,6 +10,7 @@
         <h5>Enter availability:</h5>
         <form action="/hiring_b" method="post">
             <table>
+
                 <!-- Loop through each day and display title -->
                 {% for i in range(days_covered) %}
                 <tr>
@@ -41,7 +42,9 @@
                         {% endfor %}
                     {% endfor %}
                 {% endfor %}
+
             </table>
+
             <table>
                 <tr>
                     <td>
@@ -49,9 +52,7 @@
                     </td>
                 </tr>
             </table>
+
         </form>
     </div>
-
-
-
 {% endblock %}

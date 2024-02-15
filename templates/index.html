@@ -1,13 +1,14 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Home
+    WatchOffice: Home
 {% endblock %}
 
 {% block main %}
     <div class="box">
         <h1 class="title">Tag Board:</h1>
         <table>
+
             <tr>
                 <td>
                     <h5>Platoon 1:</h5>
@@ -18,6 +19,7 @@
                     <p>{{ offs[0]['first_name'] }} {{ offs[0]['last_name'] }} and {{ ffs[0]['first_name'] }} {{ ffs[0]['last_name'] }} are up</p>
                 </td>
             </tr>
+
             <tr>
                 <td>
                     <h5>Platoon 2:</h5>
@@ -28,6 +30,7 @@
                     <p>{{ offs[1]['first_name'] }} {{ offs[1]['last_name'] }} and {{ ffs[1]['first_name'] }} {{ ffs[1]['last_name'] }} are up</p>
                 </td>
             </tr>
+
             <tr>
                 <td>
                     <h5>Platoon 3:</h5>
@@ -38,6 +41,7 @@
                     <p>{{ offs[2]['first_name'] }} {{ offs[2]['last_name'] }} and {{ ffs[2]['first_name'] }} {{ ffs[2]['last_name'] }} are up</p>
                 </td>
             </tr>
+
             <tr>
                 <td>
                     <h5>Platoon 4:</h5>
@@ -48,6 +52,7 @@
                     <p>{{ offs[3]['first_name'] }} {{ offs[3]['last_name'] }} and {{ ffs[3]['first_name'] }} {{ ffs[3]['last_name'] }} are up</p>
                 </td>
             </tr>
+            
         </table>
     </div>
 {% endblock %}

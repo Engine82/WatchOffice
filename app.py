@@ -1119,7 +1119,9 @@ def add_member():
             }
         )
         db.commit()
-        return render_template("added.html")
+
+        fullname = first_name + " " + last_name
+        return render_template("added.html", member=fullname)
 
     # Blank add member form
     else:
