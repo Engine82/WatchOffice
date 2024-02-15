@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.body.innerHTML = originalContents;
         
         document.querySelector("#print").addEventListener('click', function(event) {
-            printDiv("printableArea");
+            printDiv(divName);
         });
 
     }
