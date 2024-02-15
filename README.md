@@ -1,8 +1,10 @@
 # Watch Office
 
+#### Video Demo: <>
+
 ## Introduction and History
 
-Watch office is a tool to automate hiring for overtime at the Laconia, NH fire department. Overtime is assigned on the first day of a shift's "tour," on a rotating basis by seniority. Historically this has been done manually by the on-duty officer, and Watch Office's purpose is to automate this process, saving time and making shift officers available to accomplish more meaningful tasks.
+Watch office is a tool to simplify hiring for overtime at the Laconia, NH fire department. Overtime is assigned on the first day of a shift's "tour," on a rotating basis by seniority. Historically this has been done manually by the on-duty officer, and Watch Office's purpose is to automate this process, saving time and making shift officers available to accomplish more meaningful tasks.
 
 The name Watch Office comes from the room in many firehouses referred to as the "watch office" or "watch desk." Before electronic alerting systems, one firefighter would be assigned to "house watch" 24 hours a day, where they would listen to the dispatch radio and alert crews when they were dispatched to an emergency.  
 
@@ -15,7 +17,24 @@ Newly hired firefighters are not elligible for overtime for their first four mon
 
 ## Features Overview
 
-The main feature of WatchOffice is the Hiring """"function"""". This """function""" takes series of inputs from the user, assigns open shifts to available members, and saves submitted results in a database. The history function allows the user to recall previous hiring results. Manual Hiring allows the user to assign the next-up officer and firefighter for instances where the hiring """"function""""" does not yet account for. Additionally, there are features that allow a user to create new user accounts, change attributes of a user's account, and delete user accounts.  
+The main feature of WatchOffice is the Hiring function This function takes series of inputs from the user, assigns open shifts to available members, and saves submitted results in a database. The history function allows the user to recall previous hiring results. Manual Hiring allows the user to assign the next-up officer and firefighter for instances where the hiring """"function""""" does not yet account for. Additionally, there are features that allow a user to create new user accounts, change attributes of a user's account, and delete user accounts.  
+
+## Files
+
+app.py file runs the backend of the application, serving web pages and processing data. This is where the processing of data for assigning overtime shifts, saving hiring instances, recalling previous hirings, and adding, changing, and removing members.
+
+helpers.py file stores the necessary definitions for SQLAlchemy to talk to the database. It is also where functions are defined, to be used by app.py, which is mainly functions handling tasks associated with the hiring algorithm.
+
+database.db is the SQLite3 database used to store user info, save hiring results, and a list of hirings done.
+
+requirements.txt is a text file that lists all the required programs and files for the application to run.
+
+/templates directory houses all of the .html files used to form the basis of the frontend.
+layout.html is the main .html file, which includes the header/navbar, footer, and links for fonts, the stylesheet, etc.
+All other .html files correspond to their specific page.
+
+/static directory holds the CSS, JavaScript and image files used by the application.
+    
 
 ## Design Rationale
 
