@@ -1,7 +1,6 @@
-from datetime import datetime, date, timedelta
-from operator import itemgetter
+from datetime import datetime
 from sqlalchemy import create_engine, insert, join, select, text, update
-from sqlalchemy.orm import sessionmaker, aliased
+from sqlalchemy.orm import sessionmaker
 from flask import Flask, redirect, render_template, request, session
 from flask_session import Session
 
@@ -49,11 +48,11 @@ PLT_4 = {'first_day': '3', 'second_day': '1'}
 # Login / List upcoming shifts
 @app.route("/", methods=["GET", "POST"])
 def index():
-    # If logged in, display schedule
+    # If logged in, display schedule; if not logged in, redirect to login page
     if not session.get("user_id"):
         return redirect("/login")
-    else:
 
+    else:
         # Initialize lists for html
         offs_up = []
         ffs_up = []
@@ -65,6 +64,7 @@ def index():
             officers = []
             firefighters = []
 
+            # get next-up members for this platoon and save in corresponding lists
             officer = db.execute(
                 select(User.id, User.first_name, User.last_name, User.tag_flipped)
                 .where(User.platoon == i)
@@ -78,7 +78,6 @@ def index():
                 offs_up.append(off_up)
             else: 
                 offs_up.append({'first_name': 'No officers assigned to this platoon'})
-
 
             firefighter = db.execute(
                 select(User.id, User.first_name, User.last_name, User.tag_flipped)
@@ -94,7 +93,6 @@ def index():
             else:
                 ffs_up.append({'first_name': 'No firefighters assigned to this platoon'})
 
-            
         return render_template("index.html", offs=offs_up, ffs=ffs_up)
 
 
@@ -107,13 +105,15 @@ def hiring_a():
 
     # After platoon is selected
     if request.method == "POST":
-        # Save platoon choice for next route
-        session["platoon"] = request.form.get("platoon")
 
+        # Save platoon choice in session
+        session["platoon"] = request.form.get("platoon")
         return redirect("/hiring_b")
 
     # If starting new hiring
     else:
+
+        # Render the hiring_a page
         return render_template("hiring_a.html")
 
 
@@ -139,9 +139,7 @@ def hiring_b():
                 
                 # Create html tag id and collect this firefighter's availability
                 day_1 = "day_1_" + session['hiring_tiers'][tier - 1]['tier'] + "_" + str(person_counter)
-                ntw_1 = "ntw_1_" + session['hiring_tiers'][tier - 1]['tier'] + "_" + str(person_counter)
                 day_2 = "day_2_" + session['hiring_tiers'][tier - 1]['tier'] + "_" + str(person_counter)
-                ntw_2 = "ntw_2_" + session['hiring_tiers'][tier - 1]['tier'] + "_" + str(person_counter)
 
                 results_avail = {
                     'id': person['id'],
@@ -151,9 +149,11 @@ def hiring_b():
                     'avail_2': request.form.get(day_2),
                     'tag_flipped': session['personnel'][tier - 1][person_counter - 1]['tag_flipped']
                 }
+
                 # Add results to firefighters list
                 if tier == 1:
                     officers_availability.append(results_avail)
+
                 elif tier  == 2:
                     firefighters_availability.append(results_avail)
 
@@ -170,11 +170,37 @@ def hiring_b():
     # Display the availability form
     else:
 
-        # query db for list of elligible officers & firefighters and save as dicts
-        officers = db.execute(select(User.id, User.first_name, User.last_name, User.rank, User.tag_flipped).where(User.platoon == session['platoon']).where(User.elligible == "1").where(User.active == "1").where(User.rank != "firefighter").order_by(User.id))
+        # query db for list of elligible officers & firefighters from this platoon, and save as dicts
+        officers = db.execute(
+            select(
+                User.id,
+                User.first_name,
+                User.last_name,
+                User.rank,
+                User.tag_flipped
+            )
+            .where(User.platoon == session['platoon'])
+            .where(User.elligible == "1")
+            .where(User.active == "1")
+            .where(User.rank != "firefighter")
+            .order_by(User.id)
+        )
         officers = officers.mappings().all()
 
-        firefighters = db.execute(select(User.id, User.first_name, User.last_name, User.rank, User.tag_flipped).where(User.platoon == session['platoon']).where(User.elligible == "1").where(User.active == "1").where(User.rank == "firefighter").order_by(User.id))
+        firefighters = db.execute(
+            select(
+                User.id,
+                User.first_name,
+                User.last_name,
+                User.rank,
+                User.tag_flipped
+            )
+            .where(User.platoon == session['platoon'])
+            .where(User.elligible == "1")
+            .where(User.active == "1")
+            .where(User.rank == "firefighter")
+            .order_by(User.id)
+        )
         firefighters = firefighters.mappings().all()
 
         session['personnel'] = [officers, firefighters]
@@ -183,7 +209,14 @@ def hiring_b():
         session['cover_days'] = [{"day": "First Cover Day"}, {"day": "Second Cover Day"}]
         session['hiring_tiers'] = [{"tier": "Officers"}, {"tier": "Firefighters"}]
 
-        return render_template("hiring_b.html", cover_days=session['cover_days'], days_covered=DAYS_COVERED, firefighters=session['personnel'], hiring_tiers=session['hiring_tiers'], platoon=session['platoon'])
+        return render_template(
+            "hiring_b.html",
+            cover_days=session['cover_days'],
+            days_covered=DAYS_COVERED,
+            firefighters=session['personnel'],
+            hiring_tiers=session['hiring_tiers'],
+            platoon=session['platoon']
+        )
 
 
 # Load the two platoons to be covered for; select which members are out
@@ -331,7 +364,7 @@ def hiring_c():
         cover_2_officers = cover_2_officers.mappings().all()
 
 
-        # Add vacancies to shifts up to full-size
+        # For each cover day and rank, add vacancies to shifts up to full-size
         while len(cover_1_firefighters) < PLATOON_FIREFIGHTERS:
             cover_1_firefighters.append({'id': '0', 'first_name': 'vacancy', 'last_name': " "})
         session['cover_1_firefighters'] = cover_1_firefighters
@@ -348,10 +381,18 @@ def hiring_c():
             cover_2_officers.append({'id': '0', 'first_name': 'vacancy', 'last_name': " "})
         session['cover_2_officers'] = cover_2_officers
 
-        return render_template("hiring_c.html", cover_1_firefighters=cover_1_firefighters, cover_1_officers=cover_1_officers, cover_2_firefighters=cover_2_firefighters, cover_2_officers=cover_2_officers, days_covered=days_covered, platoon=session['platoon'])
+        return render_template(
+            "hiring_c.html",
+            cover_1_firefighters=cover_1_firefighters,
+            cover_1_officers=cover_1_officers,
+            cover_2_firefighters=cover_2_firefighters,
+            cover_2_officers=cover_2_officers,
+            days_covered=days_covered,
+            platoon=session['platoon']
+        )
 
 
-"""Hire for shifts, return hiring list"""
+# Hire for shifts, return hiring list
 @app.route("/hired", methods=["GET", "POST"])
 @login_required
 def hired():
@@ -359,7 +400,7 @@ def hired():
     # POST: Save approved hiring in db and print results
     if request.method == "POST":
 
-        ''' UPDATE TAGS IN DB '''
+        # UPDATE TAGS IN DB
         # Go through each rank
         for index, rank in enumerate(session['hiring_tiers']):
             rnk = rank['tier'].lower()
@@ -386,7 +427,7 @@ def hired():
         # Commit all updates to db
         db.commit()
 
-        ''' SAVE RESULTS IN DB '''
+        # SAVE RESULTS IN DB
         # Create list of hiring lists:
         hiring_lists = [
             'officers_hired_day_1', 
@@ -401,7 +442,11 @@ def hired():
 
         # Get hiring id and increase by one
         try:
-            hiring_id = db.execute(select(Hiring.hiring_id).order_by(Hiring.hiring_id.desc()).limit(1))
+            hiring_id = db.execute(
+                select(Hiring.hiring_id)
+                .order_by(Hiring.hiring_id.desc())
+                .limit(1)
+            )
             hiring_id = hiring_id.mappings().all()
             hiring_id = hiring_id[0]['hiring_id']
             hiring_id += 1
@@ -410,26 +455,47 @@ def hired():
         except:
             hiring_id = 0
 
-
         # Iterate through each hiring entry and save it in db, or if no hiring, save that
         daynight = ['day', 'night']
 
-        # Iterate through each day
+        # Iterate through each day and rank
         day = 1
         while day <= DAYS_COVERED:
-
             for rank in session['hiring_tiers']:
 
                 # Iterate through each opening
                 rank_lower = rank['tier'].lower()
                 for time in daynight:
 
-                    # If hiring at this day/rank/time has been done
+                    # If hiring at this day/rank/time has been done,
                     if session[rank_lower + "_hired_" + time + "_" + str(day)] != []:
                         for shift in session[rank_lower + "_hired_" + time + "_" + str(day)]:
                             db.execute(
-                                text("INSERT INTO hiring (hiring_id, platoon, rank, day, time, out_id, out_first, out_last, covering_id, covering_first, covering_last) VALUES (:hiring_id, :platoon, :rank, :day, :time, :out_id, :out_first, :out_last, :covering_id, :covering_first, :covering_last)"),
-                                [{
+                                text("""INSERT INTO hiring (
+                                    hiring_id,
+                                    platoon,
+                                    rank,
+                                    day,
+                                    time,
+                                    out_id,
+                                    out_first,
+                                    out_last,
+                                    covering_id,
+                                    covering_first,
+                                    covering_last
+                                ) VALUES (
+                                    :hiring_id,
+                                    :platoon,
+                                    :rank,
+                                    :day,
+                                    :time,
+                                    :out_id,
+                                    :out_first,
+                                    :out_last,
+                                    :covering_id,
+                                    :covering_first,
+                                    :covering_last)
+                                """), [{
                                     "hiring_id": hiring_id,
                                     "platoon": session['platoon'],
                                     "rank": rank['tier'],
@@ -448,8 +514,31 @@ def hired():
                     # if no hiring at this day/rank/time
                     else:
                         db.execute(
-                            text("INSERT INTO hiring (hiring_id,platoon, rank, day, time, out_id, out_first, out_last, covering_id, covering_first, covering_last) VALUES (:hiring_id, :platoon, :rank, :day, :time, :out_id, :out_first, :out_last, :covering_id, :covering_first, :covering_last)"),
-                            [{
+                            text("""INSERT INTO hiring (
+                                hiring_id,
+                                platoon,
+                                rank,
+                                day,
+                                time,
+                                out_id,
+                                out_first,
+                                out_last,
+                                covering_id,
+                                covering_first,
+                                covering_last
+                            ) VALUES (
+                                :hiring_id,
+                                :platoon,
+                                :rank,
+                                :day,
+                                :time,
+                                :out_id,
+                                :out_first,
+                                :out_last,
+                                :covering_id,
+                                :covering_first,
+                                :covering_last)
+                            """), [{
                                 "hiring_id": hiring_id,
                                 "platoon": session['platoon'],
                                 "rank": rank['tier'],
@@ -481,12 +570,12 @@ def hired():
         )
         db.commit()
 
-        ''' PRINT OPTIONS ?????? '''
-
+        # redirect to homepage, where user will see the updated tagboard
         return redirect("/")
 
     # GET: Assign shifts & Display completed hiring
     else:
+        
         # Break hiring lists down into day/night
         # Create lists for covered shifts
         session['officers_covered_day_1'] = []
@@ -541,7 +630,7 @@ def hired():
                 rank_lower = rank['tier'].lower()
                 for opening in session[rank_lower + "_openings_" + str(day)]:
 
-                    # Get this open shift's info
+                    # Get this open shift's info - who's out 
                     shift_day = {
                         'id': opening['id'],
                         'first_name': opening['first_name'],
@@ -642,7 +731,6 @@ def hired():
                 })
                 counter += 1
 
-
         """ HIRE """
         # Loop through each day/rank/time/opening from above, and fill each opening with next available person or from 96-off
 
@@ -653,7 +741,7 @@ def hired():
             # RANK - Iterate through each rank: [{"tier": "Officers"}, {"tier": "Firefighters"}]
             for rank in session['hiring_tiers']:
                 
-                # create lowercase rank name for use in variables, get number of people on covering shift for future use
+                # Create lowercase rank name for use in variables, get number of people on covering shift for future use
                 rnk = rank['tier'].lower()
                 shift_size = len(session[rnk + "_covering_" + str(day)])
 
@@ -687,7 +775,7 @@ def hired():
 
             day += 1
 
-        # Save next-up officer & firefighter and update taglist in db
+        # Save next-up officer & firefighter, and update taglist in db
         for rank in session['hiring_tiers']:
             rnk = rank['tier'].lower()
             
@@ -704,7 +792,8 @@ def hired():
                 })
 
         # Display hired form with hiring results
-        return render_template("hired.html", 
+        return render_template(
+            "hired.html", 
             officers_day_1=session['officers_hired_day_1'],
             officers_night_1=session['officers_hired_night_1'],
             officers_day_2=session['officers_hired_day_2'],
@@ -714,7 +803,8 @@ def hired():
             firefighters_day_2=session['firefighters_hired_day_2'],
             firefighters_night_2=session['firefighters_hired_night_2'],
             up_next=session['up_next'],
-            platoon=session['platoon'])    
+            platoon=session['platoon']
+        )    
 
 
 # Manual hiring input
@@ -749,7 +839,6 @@ def manual_b():
             {"rank": "officer", "id": officer},
             {"rank": "firefighter", "id": firefighter}
         ]
-        print(ids)
 
         # Update tag_flipped status in db:
         for entry in ids:
@@ -789,8 +878,31 @@ def manual_b():
             for rank in hiring_tiers:
                 for time in daynight:
                     db.execute(
-                        text("INSERT INTO hiring (hiring_id, platoon, rank, day, time, out_id, out_first, out_last, covering_id, covering_first, covering_last) VALUES (:hiring_id, :platoon, :rank, :day, :time, :out_id, :out_first, :out_last, :covering_id, :covering_first, :covering_last)"),
-                        [{
+                        text("""INSERT INTO hiring (
+                            hiring_id,
+                            platoon,
+                            rank,
+                            day,
+                            time,
+                            out_id,
+                            out_first,
+                            out_last,
+                            covering_id,
+                            covering_first,
+                            covering_last
+                        ) VALUES (
+                            :hiring_id,
+                            :platoon,
+                            :rank,
+                            :day,
+                            :time,
+                            :out_id,
+                            :out_first,
+                            :out_last,
+                            :covering_id,
+                            :covering_first,
+                            :covering_last)
+                        """), [{
                             "hiring_id": hiring_id,
                             "platoon": session['platoon'],
                             "rank": rank['tier'],
@@ -879,7 +991,6 @@ def history():
 
         past_platoon = db.execute(select(Hiring.platoon).where(Hiring.hiring_id == past_id))
         past_platoon = past_platoon.scalars().all()
-        print(past_platoon)
         past_platoon = past_platoon[0]
 
         # get date of the hiring
@@ -918,7 +1029,8 @@ def history():
         )
 
         # display hiring results a la hired.html
-        return render_template("history_found.html", 
+        return render_template(
+            "history_found.html", 
             officers_day_1=session['officers_past_hiring_day_1'],
             officers_night_1=session['officers_past_hiring_night_1'],
             officers_day_2=session['officers_past_hiring_day_2'],
@@ -948,7 +1060,7 @@ def history():
 # SETTINGS
 # Add member
 @app.route("/add_member", methods=["GET", "POST"])
-# @login_required
+@login_required
 def add_member():
 
     # Add member to db
@@ -1024,7 +1136,6 @@ def remove_member():
         # Get member to be removed from html form        
         member = request.form.get("member")
         member = int(member)
-        print("member:", member)
         
         # Get member's name for display
         name = db.execute(
@@ -1042,8 +1153,6 @@ def remove_member():
         )
         plt_list = plt_list.mappings().all()
         up = find_next_up(plt_list)
-        print("Next up:", up)
-        print(member)
 
         # If removed member is up
         if up['id'] == member:
@@ -1051,7 +1160,6 @@ def remove_member():
             # And if removed member is last on their platoon at that rank,
             # Un-flip all the tags on that platoon at that rank status
             if plt_list[-1]['id'] == member:
-                print("Match!!!")
 
                 # handle firefighters
                 if name[0]['rank'] == 'firefighter':
@@ -1075,7 +1183,6 @@ def remove_member():
                 # which he will be simply by removing the current member, requiring no action
 
             
-
         # Update db: platoon = n/a, active = 0
         db.execute(
             update(User)
@@ -1084,21 +1191,26 @@ def remove_member():
         )
         db.commit()
 
-        # Display "___ removed"
+        # Display "[member] removed"
         return render_template("removed.html", member=name_txt)
 
     # Blank removal form
     else:
         # Query db for active members list, save in list
         member_list = db.execute(
-            select(User.username, User.id, User.first_name, User.last_name)
+            select(
+                User.username,
+                User.id,
+                User.first_name,
+                User.last_name
+            )
             .where(User.active == '1')
             .order_by(User.last_name)
         )
         member_list = member_list.mappings().all()
         db.commit()
 
-        # Feed list to html
+        # Render html with list of members to be selected
         return render_template("remove.html", member_list=member_list)
 
 
@@ -1106,12 +1218,12 @@ def remove_member():
 @app.route("/change_member", methods=["GET", "POST"])
 @login_required
 def change_member():
+
     # Remove member from active status
     if request.method == "POST":
 
         # Get form imput    
         member = request.form.get("member")
-        print("member:", member)
         if member == str(0):
             return render_template("apology.html", source=gen_meme("select_member"))
 
@@ -1134,7 +1246,6 @@ def change_member():
                 .values(username=username)
             )
             changes += 1
-            print("username updated")
 
         # Check/change first name
         first = request.form.get("first")
@@ -1144,7 +1255,6 @@ def change_member():
                 .where(User.first_name == first)
                 .values(first_name=first)
             )
-            print("first name updated")
             changes += 1
 
         # Check/change last name
@@ -1155,14 +1265,12 @@ def change_member():
                 .where(User.last_name == last)
                 .values(last_name=last)
             )
-            print("last name updated")
             changes += 1
 
         # Check/change password
         password = request.form.get("password")
         confirm_password = request.form.get("confirm_password")
         if password != '':
-            print("Password:", password)
             if len(password) < 8 or len(password) > 64:
                 return render_template("apology.html", source=gen_meme("password_length"))
             if password != confirm_password:
@@ -1174,48 +1282,39 @@ def change_member():
                 .where(User.username == member)
                 .values(hash=hashword)
             )
-            print("password updated")
             changes += 1
 
         # Check/change rank
         rank = request.form.get("rank")
         if rank != '':
-            print("Rank != none")
-            print(rank)
             db.execute(
                 update(User)
                 .where(User.username == member)
                 .values(rank=rank)
             )
-            print("rank updated")
             changes += 1
         
         # Platoon
         platoon = request.form.get("platoon")
         if platoon != str(0):
-            print("Platoon != 0")
-            print(platoon)
             db.execute(
                 update(User)
                 .where(User.username == member)
                 .values(platoon=platoon)
             )
-            print("platoon updated")
             changes += 1
 
         # Elligibility
         elligible = request.form.get("elligible")
         if int(elligible) != 2:
-            print("Elligible != 2")
-            print(elligible)
             db.execute(
                 update(User)
                 .where(User.username == member)
                 .values(elligible=elligible)
             )
-            print("elligible updated")
             changes += 1
 
+        # Ensure something has been submitted to change before moving forward
         if changes == 0:
             return render_template("apology.html", source=gen_meme("no_changes_made"))
 
@@ -1238,7 +1337,6 @@ def change_member():
         return render_template("change.html", member_list=member_list)
 
         
-
 # Session
 # Login
 @app.route("/login", methods=["GET", "POST"])
@@ -1247,7 +1345,7 @@ def login():
     # Forget any user_id
     session.clear()
 
-    # When login form is submitted
+    # POST: When login form is submitted
     if request.method == "POST":
 
         # Check for username and password
@@ -1263,6 +1361,7 @@ def login():
 
         result = db.execute(select(User.id, User.username, User.hash, User.active).where(User.username == username))
         result = result.mappings().first()
+
         # Verify username in db
         if result == None:
             return render_template("apology.html", source=gen_meme("incorrect_username"))
@@ -1280,7 +1379,8 @@ def login():
 
         # Send to homepage
         return redirect("/") 
-    # 
+    
+    # GET: Display login form
     else:
         return render_template("login.html")
 
@@ -1288,5 +1388,9 @@ def login():
 # Log out
 @app.route("/logout")
 def logout():
+
+    # Remove user from session
     session["user_id"] = None
-    return redirect("/")
+
+    # Send to login
+    return redirect("/login")
