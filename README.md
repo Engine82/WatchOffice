@@ -48,3 +48,8 @@ The main feature of WatchOffice is the Hiring function This function takes serie
 ## Design Rationale
 
 WatchOffice uses the [Flask](https://flask.palletsprojects.com/en/1.1.x/quickstart/) framework for [Python](https://docs.python.org/3/) for the backend, [SQLite3](https://www.sqlite.org/docs.html) for the database, and [HTML](https://html.spec.whatwg.org/)/[CSS](https://www.w3.org/TR/CSS/#css)/[JavaScript](https://developer.mozilla.org/en-US/docs/Web/javascript) for the frontend. All of these were chosen because at the time of writing they were all the most fammiliar options, having been covered in [cs50](https://cs50.harvard.edu/x/2023/). Additionally, Python is a modern, widely used language with an abundance of freely available resources. This is a low-traffic application, and SQLite is more than capable of handling WatchOffice's anticipated traffic and data-storage needs. HTML, CSS and JavaScript are all standard for web programming, and a natural choice, especially for a new developer.
+
+
+## Reflection
+
+Throughout the course of building this app I have learned a tremendous amount. At the beginning of this project I had a grasp of python and the basics of programming. Now, after building this entire application from scratch, I have learned how to take these individual components and form them together into a cohesive and functional whole. Along the way I was confronted with many problems I did not yet know how to handle. Through the course of solving them I not only learned how to accomplish these various tasks, but also how to find answers and solve these problems in increasingle efficient ways, with increasing levels of comfort and knowledge. 
