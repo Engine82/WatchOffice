@@ -1,6 +1,9 @@
 # Watch Office
 
-#### Video Demo: <https://youtu.be/2pG_GVW6l5g>
+#### Video Demo: [![Watch the video](https://img.youtube.com/vi/<VIDEO_ID>/hqdefault.jpg)](https://www.youtube.com/embed/https://youtu.be/2pG_GVW6l5g)
+
+[<img src="https://img.youtube.com/vi/https://youtu.be/2pG_GVW6l5g/hqdefault.jpg" width="600" height="300"
+/>](https://www.youtube.com/embed/https://youtu.be/2pG_GVW6l5g)
 
 ## Introduction and History
 
