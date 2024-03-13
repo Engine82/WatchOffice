@@ -1396,3 +1396,24 @@ def logout():
 
     # Send to login
     return redirect("/login")
+
+
+# 96-Off
+@app.route("/off_shift", methods=["GET", "POST"])
+def off_shift():
+
+    # GET: Serve form
+
+    # POST:
+        # Loop through each shift to be hired for
+            # Create text for call
+            # Assemble list of numbers to call
+                # Loop through each platoon in ordered list (for platoon 3 day 2: [1, 2, 4])
+            # Make calls
+                # Log results of each call
+                # If shift is taken, save and display results
+            # If no one takes the shift, render mandatory page/form
+
+    # Also create feature to send text with a message (fior disregard or testing messaging for example)
+    # Will have to add phone numbers to users table in db
+    # For now, add column in hirings table for off-shift usage
