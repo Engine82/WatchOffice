@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    WatchOffice: Off-Shift Hiring: Select Shifts
+{% endblock %}
+
+{% block main %}
+    <div class="box">
+        <h1 class="title">96-Off Hiring</h1>
+        <h5>Select shifts to be hired for from the 96-off:</h5>
+
+        <form action="/off_shift" method="post">
+            <select class="select-main" id="past_hiring" name="past_hiring">
+                
+            </select>
+            <br>
+            <button class="button" type="submit">Submit</button>
+        </form>
+        
+    </div>
+{% endblock %}
