@@ -1402,9 +1402,9 @@ def logout():
 @app.route("/off_shift", methods=["GET", "POST"])
 def off_shift():
 
-    # GET: Serve form
-
-    # POST:
+    # POST make calls, save results:
+    if request.method == "POST":
+    
         # Loop through each shift to be hired for
             # Create text for call
             # Assemble list of numbers to call
@@ -1413,6 +1413,11 @@ def off_shift():
                 # Log results of each call
                 # If shift is taken, save and display results
             # If no one takes the shift, render mandatory page/form
+
+    # GET: Serve form
+    else:
+        return render_template("off_shift_a.html")
+    
 
     # Also create feature to send text with a message (fior disregard or testing messaging for example)
     # Will have to add phone numbers to users table in db
