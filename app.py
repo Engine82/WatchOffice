@@ -1413,10 +1413,22 @@ def off_shift():
                 # Log results of each call
                 # If shift is taken, save and display results
             # If no one takes the shift, render mandatory page/form
+        return redirect("/")
 
     # GET: Serve form
     else:
-        return render_template("off_shift_a.html")
+
+        # Query db for active members list, save in list
+        members = db.execute(
+            select(User.id, User.first_name, User.last_name)
+            .where(User.active == '1')
+            .order_by(User.last_name)
+        )
+        members = members.mappings().all()
+
+        # Feed list to html
+        return render_template("off_shift_a.html", members=members)
+
     
 
     # Also create feature to send text with a message (fior disregard or testing messaging for example)
