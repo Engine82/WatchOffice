@@ -10,10 +10,20 @@
         <h5>Select shifts to be hired for from the 96-off:</h5>
 
         <form action="/off_shift" method="post">
-            <select class="select-main" id="past_hiring" name="past_hiring">
-                
+            <label for="person">Member:</label>
+            <select class="select-main" id="person" name="past_hiring">
+                {% for member in members %}
+                    <option value="{{ member['id'] }}">{{ member['last_name'] }}, {{ member['first_name'] }}</option>
+                {% endfor %}
             </select>
-            <br>
+
+            <label for="shift">Shift:</label>
+            <select class="select-main" id="shift" name="past_hiring">
+                <option value="1">Day</option>
+                <option value="2">Night</option>
+                <option value="3">Hours</option>
+            </select>
+
             <button class="button" type="submit">Submit</button>
         </form>
         
