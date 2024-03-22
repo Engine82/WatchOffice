@@ -11,8 +11,8 @@
 
         <form action="/off_shift" method="post">
             <div>
-                <label for="person">Member:</label>
-                <select class="select-main" id="person" name="past_hiring">
+                <label for="member">Member:</label>
+                <select class="select-main" id="member" name="member">
                     {% for member in members %}
                         <option value="{{ member['id'] }}">{{ member['last_name'] }}, {{ member['first_name'] }}</option>
                     {% endfor %}
@@ -20,13 +20,13 @@
             </div>
 
             <div>
-                <label for="date" id="date" class="label">Date:</label>
-                <input class="text" id="date" name="date" type="date">
+                <label for="date" class="label">Date:</label>
+                <input class="text" name="date" type="date">
             </div>
 
             <div>
                 <label for="shift">Shift:</label>
-                <select class="select-main" id="shift" name="past_hiring">
+                <select class="select-main" name="shift">
                     <option value="1">Day</option>
                     <option value="2">Night</option>
                     <option value="3">Hours</option>
@@ -35,9 +35,9 @@
 
             <div class="off_shift_hours">
                 <label for="hours_start">Hours: </label>
-                <input class="text" id="hours_start" type="time">
+                <input class="text" name="hours_start" type="time">
                 <label for="hours_end"> to </label>
-                <input class="text" id="hours_end" type="time">
+                <input class="text" name="hours_end" type="time">
             </div>
 
             <button class="button" type="submit">Submit</button>
