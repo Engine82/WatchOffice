@@ -1405,16 +1405,33 @@ def off_shift():
     # POST make calls, save results:
     if request.method == "POST":
     
-        # validate date is in the future (front-end too)
-        date_input = request.form.get("date")
-        print(date_input)
+        # Get shift info
+        member = request.form.get("member")
+        if not member:
+            return render_template('apology.html', source=gen_meme("member required"))
 
+        date = request.form.get('date')
+        if not date:
+            return render_template('apology.html', source=gen_meme("date required"))
+        
+        # Validate date is in the future (front-end too)
         date_today = datetime.today()
         date_today = date_today.strftime('%Y-%m-%d')
-        print(date_today)
-
-        if date_input < date_today:
+        if date < date_today:
             return render_template('apology.html', source=gen_meme("shift date is in the past"))
+            
+        shift = request.form.get('shift')
+        if not shift:
+            return render_template('apology.html', source=gen_meme("shift required"))
+
+        if shift == "3": #hours
+            start_time = request.form.get('hours_start')
+            if not start_time:
+                return render_template('apology.html', source=gen_meme("start time required"))
+
+            end_time = request.form.get('hours_end')
+            if not end_time:
+                return render_template('apology.html', source=gen_meme("end time required"))
 
         # Loop through each shift to be hired for
             # Create text for call
