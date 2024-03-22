@@ -7,29 +7,38 @@
 {% block main %}
     <div class="box">
         <h1 class="title">96-Off Hiring</h1>
-        <h5>Select shifts to be hired for from the 96-off:</h5>
+        <h5>Enter shift to be hired for from the 96-off:</h5>
 
         <form action="/off_shift" method="post">
-            <label for="person">Member:</label>
-            <select class="select-main" id="person" name="past_hiring">
-                {% for member in members %}
-                    <option value="{{ member['id'] }}">{{ member['last_name'] }}, {{ member['first_name'] }}</option>
-                {% endfor %}
-            </select>
-
-            <label for="shift">Shift:</label>
-            <select class="select-main" id="shift" name="past_hiring">
-                <option value="1">Day</option>
-                <option value="2">Night</option>
-                <option value="3">Hours</option>
-            </select>
-            <div class="off_shift_hours">
-                <input class="text" id="hours_start" type="time">
-                <p id="to"> to </p>
-                <input class="text" id="hours_end" type="time">
+            <div>
+                <label for="person">Member:</label>
+                <select class="select-main" id="person" name="past_hiring">
+                    {% for member in members %}
+                        <option value="{{ member['id'] }}">{{ member['last_name'] }}, {{ member['first_name'] }}</option>
+                    {% endfor %}
+                </select>
             </div>
 
+            <div>
+                <label for="date" id="date" class="label">Date:</label>
+                <input class="text" name="date" type="date">
+            </div>
 
+            <div>
+                <label for="shift">Shift:</label>
+                <select class="select-main" id="shift" name="past_hiring">
+                    <option value="1">Day</option>
+                    <option value="2">Night</option>
+                    <option value="3">Hours</option>
+                </select>
+            </div>
+
+            <div class="off_shift_hours">
+                <label for="hours_start">Hours: </label>
+                <input class="text" id="hours_start" type="time">
+                <label for="hours_end"> to </label>
+                <input class="text" id="hours_end" type="time">
+            </div>
 
             <button class="button" type="submit">Submit</button>
         </form>
