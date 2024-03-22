@@ -1405,6 +1405,17 @@ def off_shift():
     # POST make calls, save results:
     if request.method == "POST":
     
+        # validate date is in the future (front-end too)
+        date_input = request.form.get("date")
+        print(date_input)
+
+        date_today = datetime.today()
+        date_today = date_today.strftime('%Y-%m-%d')
+        print(date_today)
+
+        if date_input < date_today:
+            return render_template('apology.html', source=gen_meme("shift date is in the past"))
+
         # Loop through each shift to be hired for
             # Create text for call
             # Assemble list of numbers to call
