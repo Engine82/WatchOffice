@@ -178,6 +178,10 @@ head {
     max-width: 635px;
 }
 
+.off_shift_hours #to {
+    display: inline;
+}
+
 /* Form validation w/ JS: */
 #master_error {
     visibility: hidden;
