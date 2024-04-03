@@ -3,3 +3,4 @@ flask_session
 requests
 SQLAlchemy 2.0
 SQLAlchemy ORM 2.0
+twilio: pip install twilio
