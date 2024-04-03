@@ -11,6 +11,13 @@
 
         <form action="/off_shift" method="post">
             <div>
+                <label for="in_station">Is the covering platoon currently on duty at the station?</label>
+                <select class="select-main" name="in_station">
+                    <option value="1">Yes: on duty</option>
+                    <option value="2">No:  off duty</option>
+                </select>                
+            </div>
+            <div>
                 <label for="member">Member:</label>
                 <select class="select-main" id="member" name="member">
                     {% for member in members %}
@@ -38,6 +45,14 @@
                 <input class="text" name="hours_start" type="time">
                 <label for="hours_end"> to </label>
                 <input class="text" name="hours_end" type="time">
+            </div>
+
+            <div>
+                <label for="day_out">Day member is out:</label>
+                <select class="select-main" name="day_out">
+                    <option value="1">First day</option>
+                    <option value="2">Second day</option>
+                </select>
             </div>
 
             <button class="button" type="submit">Submit</button>
