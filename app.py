@@ -11,6 +11,8 @@ from helpers import login_required, gen_meme
 from helpers import Base, User, Hiring, Hiring_list
 from helpers import find_next_up, hire
 
+from helpers import make_phone_call
+
 
 # Configure app
 app = Flask(__name__)
@@ -1404,10 +1406,13 @@ def off_shift():
 
     # POST make calls, save results:
     if request.method == "POST":
+
+        # Create calling results list:
+        calling_results = []
     
         # Get shift info
-        member = request.form.get("member")
-        if not member:
+        member_out = request.form.get("member")
+        if not member_out:
             return render_template('apology.html', source=gen_meme("member required"))
 
         date = request.form.get('date')
@@ -1433,12 +1438,47 @@ def off_shift():
             if not end_time:
                 return render_template('apology.html', source=gen_meme("end time required"))
 
+        day_out = request.form.get('day_out')
+        if not day_out:
+            return render_template('apology.html', source=gen_meme("day out required"))
+
+        # Determine order in which to call shifts:
+        plt_1_1st = []
+        plt_1_2nd = []
+
+        plt_2_1st = []
+        plt_2_2nd = []
+        
+        plt_3_1st = []
+        plt_3_2nd = []
+        
+        plt_4_1st = []
+        plt_4_2nd = []
+
         # Loop through each shift to be hired for
-            # Create text for call
             # Assemble list of numbers to call
                 # Loop through each platoon in ordered list (for platoon 3 day 2: [1, 2, 4])
             # Make calls
+                to_number = input("Enter the phone number to call: ")
+                
+                # Create text for call
+                if shift == 3:
+                    message = "You are elligible for an overtime shift with the Laconia Fire Department. This shift is for hours from " + start_time + "to " + end_time + 
+                    "on" + date + ". Please call the central station if you want to accept this shift."
+                else:
+                    message = "You are elligible for an overtime shift with the Laconia Fire Department. This shift is for hours from " + start_time + "to " + end_time + 
+                    "on" + date + ". Please call the central station if you want to accept this shift."
+
+                call_success = make_phone_call(to_number, message)
+                
                 # Log results of each call
+                if call_success:
+                    calling_results.append({'time': time, 'member out': member, 'member called': member_id, 'call successful': 1})
+
+                else:
+                    calling_results.append({'time': time, 'member out': member, 'member called': member_id, 'call successful': 0})
+                    return redirect("/calling_error")
+
                 # If shift is taken, save and display results
             # If no one takes the shift, render mandatory page/form
         return redirect("/")
@@ -1456,6 +1496,16 @@ def off_shift():
 
         # Feed list to html
         return render_template("off_shift_a.html", members=members)
+
+@app.route("/calling_error", methods=["GET", "POST"])
+def off_shift():
+
+    # POST
+    if request.method == "POST":
+        return redirect("/")
+        
+    else:
+        return redirect("/")
 
     
 
