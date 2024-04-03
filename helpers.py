@@ -6,6 +6,13 @@ from typing import Optional
 from sqlalchemy import func
 from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase, MappedAsDataclass
 
+from twilio.rest import Client
+
+# Twilio credentials
+account_sid = 'your_account_sid'
+auth_token = 'your_auth_token'
+twilio_phone_number = 'your_twilio_phone_number'
+
 
 # Login required decorator
 # Reference: https://flask.palletsprojects.com/en/3.0.x/patterns/viewdecorators/
@@ -183,3 +190,26 @@ def find_name(member_list, member):
 def gen_meme(reason):
     url = "https://api.memegen.link/images/custom/Error/" + reason + ".png?background=https://i.pinimg.com/originals/3a/a1/ed/3aa1ede1bdb9acaf63429593627bf2f5.jpg"
     return(url)
+
+
+# Place phone call function with Twilio
+def make_phone_call(to_number, message):
+    # Initialize Twilio client
+    client = Client(account_sid, auth_token)
+    
+    try:
+        # Make the phone call
+        call = client.calls.create(
+            to=to_number,
+            from_=twilio_phone_number,
+            url='http://demo.twilio.com/docs/voice.xml',  # URL to TwiML script for call handling
+            method='GET'
+        )
+
+        print("Phone call placed successfully to", to_number)
+        print("Call SID:", call.sid)
+        return True
+
+    except Exception as e:
+        print("Failed to place the phone call:", e)
+        return False
