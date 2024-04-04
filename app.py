@@ -1424,7 +1424,7 @@ def off_shift():
         date_today = date_today.strftime('%Y-%m-%d')
         if date < date_today:
             return render_template('apology.html', source=gen_meme("shift date is in the past"))
-            
+
         shift = request.form.get('shift')
         if not shift:
             return render_template('apology.html', source=gen_meme("shift required"))
@@ -1442,42 +1442,56 @@ def off_shift():
         if not day_out:
             return render_template('apology.html', source=gen_meme("day out required"))
 
-        # Determine order in which to call shifts:
-        plt_1_1st = []
-        plt_1_2nd = []
+        # Get info of member who is out
+        member_info = db.execute(
+            select(User.first_name, User.last_name, User.rank, User.platoon)
+            .where(User.id == member_out)
+        )
+        member_info = member_info.mappings().all()
+        print(member_info)
 
-        plt_2_1st = []
-        plt_2_2nd = []
+        # Determine order in which to call shifts:
+        plt = member_info[0].platoon
+        print(plt)
+
+        plt_1_1st = [1, 2]
+        plt_1_2nd = [1, 2]
+
+        plt_2_1st = [1, 2]
+        plt_2_2nd = [1, 2]
         
-        plt_3_1st = []
-        plt_3_2nd = []
+        plt_3_1st = [1, 2]
+        plt_3_2nd = [1, 2]
         
-        plt_4_1st = []
-        plt_4_2nd = []
+        plt_4_1st = [1, 2]
+        plt_4_2nd = [1, 2]
+
 
         # Loop through each shift to be hired for
-            # Assemble list of numbers to call
-                # Loop through each platoon in ordered list (for platoon 3 day 2: [1, 2, 4])
-            # Make calls
-                to_number = input("Enter the phone number to call: ")
-                
-                # Create text for call
-                if shift == 3:
-                    message = "You are elligible for an overtime shift with the Laconia Fire Department. This shift is for hours from " + start_time + "to " + end_time + 
-                    "on" + date + ". Please call the central station if you want to accept this shift."
-                else:
-                    message = "You are elligible for an overtime shift with the Laconia Fire Department. This shift is for hours from " + start_time + "to " + end_time + 
-                    "on" + date + ". Please call the central station if you want to accept this shift."
+        # for platoon in plt_1_1st:
 
-                call_success = make_phone_call(to_number, message)
-                
-                # Log results of each call
-                if call_success:
-                    calling_results.append({'time': time, 'member out': member, 'member called': member_id, 'call successful': 1})
+        # # Assemble list of numbers to call
+        #     # Loop through each platoon in ordered list (for platoon 3 day 2: [1, 2, 4])
+        # # Make calls
+        #     to_number = input("Enter the phone number to call: ")
+            
+        #     # Create text for call
+        #     if shift == 3:
+        #         message = "You are elligible for an overtime shift with the Laconia Fire Department. This shift is for hours from " + start_time + "to " + end_time + 
+        #         "on" + date + ". Please call the central station if you want to accept this shift."
+        #     else:
+        #         message = "You are elligible for an overtime shift with the Laconia Fire Department. This shift is for hours from " + start_time + "to " + end_time + 
+        #         "on" + date + ". Please call the central station if you want to accept this shift."
 
-                else:
-                    calling_results.append({'time': time, 'member out': member, 'member called': member_id, 'call successful': 0})
-                    return redirect("/calling_error")
+        #     call_success = make_phone_call(to_number, message)
+            
+        #     # Log results of each call
+        #     if call_success:
+        #         calling_results.append({'time': time, 'member out': member, 'member called': member_id, 'call successful': 1})
+
+        #     else:
+        #         calling_results.append({'time': time, 'member out': member, 'member called': member_id, 'call successful': 0})
+        #         return redirect("/calling_error")
 
                 # If shift is taken, save and display results
             # If no one takes the shift, render mandatory page/form
@@ -1498,7 +1512,7 @@ def off_shift():
         return render_template("off_shift_a.html", members=members)
 
 @app.route("/calling_error", methods=["GET", "POST"])
-def off_shift():
+def off_shift_2():
 
     # POST
     if request.method == "POST":
