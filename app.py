@@ -1411,6 +1411,10 @@ def off_shift():
         calling_results = []
     
         # Get shift info
+        in_station = request.form.get("in_station")
+        if not in_station:
+            return render_template('apology.html', source=gen_meme("on duty status required"))
+
         member_out = request.form.get("member")
         if not member_out:
             return render_template('apology.html', source=gen_meme("member required"))
@@ -1441,6 +1445,7 @@ def off_shift():
         day_out = request.form.get('day_out')
         if not day_out:
             return render_template('apology.html', source=gen_meme("day out required"))
+        print("Day out: ", day_out)
 
         # Get info of member who is out
         member_info = db.execute(
@@ -1454,17 +1459,36 @@ def off_shift():
         plt = member_info[0].platoon
         print(plt)
 
-        plt_1_1st = [1, 2]
-        plt_1_2nd = [1, 2]
+        # Day out; 1 = on duty, 2 = off duty
+        match (plt, day_out):
+            
+            # Platoon 1: 
+            case(1, 1)
+                plt_order = [1, 2]
+            
+            case(1, 2)
+                plt_order = [1, 2]
 
-        plt_2_1st = [1, 2]
-        plt_2_2nd = [1, 2]
+            # Platoon 2
+            case(2, 1)
+                plt_order = [1, 2]
+            
+            case(2, 2)
+                plt_order = [1, 2]
+
+            # Platoon 3
+            case(3, 1)
+                plt_order = [1, 2]
+
+            case(3, 2)
+                plt_order = [1, 2]
         
-        plt_3_1st = [1, 2]
-        plt_3_2nd = [1, 2]
-        
-        plt_4_1st = [1, 2]
-        plt_4_2nd = [1, 2]
+            # Platoon 4
+            case(4, 1)    
+                plt_order = [1, 2]
+
+            case(4, 2)
+                plt_order = [1, 2]
 
 
         # Loop through each shift to be hired for
