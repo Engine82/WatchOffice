@@ -53,3 +53,13 @@ JOIN users c ON c.id = member_covering
 WHERE h.platoon = 3
 AND h.rank = "Officers"
 AND h.day = 1;
+
+
+CREATE TABLE phone_numbers (
+id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+member_id INTEGER NOT NULL,
+platoon INTEGER NOT NULL,
+phone_number INTEGER NOT NULL,
+FOREIGN KEY (member_id) REFERENCES users(id),
+FOREIGN KEY (platoon) REFERENCES users(platoon)
+)
