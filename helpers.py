@@ -41,6 +41,7 @@ class User (Base):
     first_name: Mapped[str]
     last_name: Mapped[str]
     hash: Mapped[str]
+    phone_number: Mapped[str]
     rank: Mapped[str]
     platoon: Mapped[int]
     active: Mapped[int]
