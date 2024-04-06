@@ -2,6 +2,8 @@ from functools import wraps
 from flask import redirect, session
 
 from datetime import datetime
+import time
+
 from typing import Optional
 from sqlalchemy import func
 from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase, MappedAsDataclass
@@ -213,3 +215,12 @@ def make_phone_call(to_number, message):
     except Exception as e:
         print("Failed to place the phone call:", e)
         return False
+
+
+# countdown timer
+def countdown(seconds):
+    while seconds > 0:
+        print(f"Time left: {seconds} seconds")
+        time.sleep(1)
+        seconds -= 1
+    print("Time's up!")
