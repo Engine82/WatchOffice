@@ -1436,7 +1436,7 @@ def off_shift():
         if not shift:
             return render_template('apology.html', source=gen_meme("shift required"))
 
-        if shift == "3": #hours
+        if shift == "hours": #hours
             start_time = request.form.get('hours_start')
             if not start_time:
                 return render_template('apology.html', source=gen_meme("start time required"))
@@ -1448,7 +1448,7 @@ def off_shift():
         day_out = request.form.get('day_out')
         if not day_out:
             return render_template('apology.html', source=gen_meme("day out required"))
-        print("Day out: ", day_out)
+        print("Day out:", day_out)
 
         # Get info of member who is out
         member_info = db.execute(
@@ -1463,7 +1463,7 @@ def off_shift():
         print(plt)
 
         # Day out; 1 = on duty, 2 = off duty
-        match (plt, day_out):
+        match (plt, int(day_out)):
             
             # Platoon 1: 
             case(1, 1):
@@ -1516,10 +1516,11 @@ def off_shift():
             to_number = input("Enter the phone number to call: ")
             
             # Create text for call
-            if shift == 3:
+            print("Shift:", shift)
+            if shift == "hours":
                 message = "You are elligible for an overtime shift with the Laconia Fire Department. This shift is for hours from " + str(start_time) + "to " + str(end_time) + "on" + str(date) + ". Please call the central station if you want to accept this shift."
             else:
-                message = "You are elligible for an overtime shift with the Laconia Fire Department. This shift is for hours from " + str(start_time) + "to " + str(end_time) + "on" + str(date) + ". Please call the central station if you want to accept this shift."
+                message = "You are elligible for an overtime shift with the Laconia Fire Department. This shift is for the " + shift + "on" + str(date) + ". Please call the central station if you want to accept this shift."
 
             call_success = make_phone_call(to_number, message)
             
