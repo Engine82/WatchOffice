@@ -1,6 +1,8 @@
 from datetime import datetime
+
 from sqlalchemy import create_engine, insert, join, select, text, update
 from sqlalchemy.orm import sessionmaker
+
 from flask import Flask, redirect, render_template, request, session
 from flask_session import Session
 
@@ -10,6 +12,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from helpers import login_required, gen_meme
 from helpers import Base, User, Hiring, Hiring_list
 from helpers import find_next_up, hire
+from helpers import countdown
 
 from helpers import make_phone_call
 
@@ -1408,7 +1411,7 @@ def off_shift():
     if request.method == "POST":
 
         # Create calling results list:
-        calling_results = []
+        session['calling_results'] = []
     
         # Get shift info
         in_station = request.form.get("in_station")
@@ -1463,61 +1466,76 @@ def off_shift():
         match (plt, day_out):
             
             # Platoon 1: 
-            case(1, 1)
+            case(1, 1):
                 plt_order = [1, 2]
             
-            case(1, 2)
+            case(1, 2):
                 plt_order = [1, 2]
 
             # Platoon 2
-            case(2, 1)
+            case(2, 1):
                 plt_order = [1, 2]
             
-            case(2, 2)
+            case(2, 2):
                 plt_order = [1, 2]
 
             # Platoon 3
-            case(3, 1)
-                plt_order = [1, 2]
+            case(3, 1):
+                plt_order = [2, 4, 1]
 
-            case(3, 2)
-                plt_order = [1, 2]
+            case(3, 2):
+                plt_order = [1, 2, 4]
         
             # Platoon 4
-            case(4, 1)    
+            case(4, 1):
                 plt_order = [1, 2]
 
-            case(4, 2)
+            case(4, 2):
                 plt_order = [1, 2]
 
+            # Error
+            case _:
+                print("platoon calling order error")
+                return render_template('apology.html', source=gen_meme("platoon calling order error"))
 
-        # Loop through each shift to be hired for
-        # for platoon in plt_1_1st:
+        print("Plt order:", plt_order)
+        
+        # Loop through each platoon in ordered list (for platoon 3 day 2: [1, 2, 4])
+        for platoon in plt_order:
 
-        # # Assemble list of numbers to call
-        #     # Loop through each platoon in ordered list (for platoon 3 day 2: [1, 2, 4])
-        # # Make calls
-        #     to_number = input("Enter the phone number to call: ")
+            # Assemble list of numbers to call
+            call_list = db.execute(
+                select(User.first_name, User.last_name, User.phone_number)
+                .where(User.platoon == platoon)
+            )
+            call_list = call_list.mappings().all()
+
+            print("Call list:", call_list)
+
+            # Make calls
+            to_number = input("Enter the phone number to call: ")
             
-        #     # Create text for call
-        #     if shift == 3:
-        #         message = "You are elligible for an overtime shift with the Laconia Fire Department. This shift is for hours from " + start_time + "to " + end_time + 
-        #         "on" + date + ". Please call the central station if you want to accept this shift."
-        #     else:
-        #         message = "You are elligible for an overtime shift with the Laconia Fire Department. This shift is for hours from " + start_time + "to " + end_time + 
-        #         "on" + date + ". Please call the central station if you want to accept this shift."
+            # Create text for call
+            if shift == 3:
+                message = "You are elligible for an overtime shift with the Laconia Fire Department. This shift is for hours from " + str(start_time) + "to " + str(end_time) + "on" + str(date) + ". Please call the central station if you want to accept this shift."
+            else:
+                message = "You are elligible for an overtime shift with the Laconia Fire Department. This shift is for hours from " + str(start_time) + "to " + str(end_time) + "on" + str(date) + ". Please call the central station if you want to accept this shift."
 
-        #     call_success = make_phone_call(to_number, message)
+            call_success = make_phone_call(to_number, message)
             
-        #     # Log results of each call
-        #     if call_success:
-        #         calling_results.append({'time': time, 'member out': member, 'member called': member_id, 'call successful': 1})
+            # Log results of each call
+            if call_success:
+                calling_results.append({'time': time, 'member out': member, 'member called': member_id, 'call successful': 1})
 
-        #     else:
-        #         calling_results.append({'time': time, 'member out': member, 'member called': member_id, 'call successful': 0})
-        #         return redirect("/calling_error")
+            else:
+                calling_results.append({'time': time, 'member out': member, 'member called': member_id, 'call successful': 0})
+                print("Calling error member id:", {member_id})
+                return redirect("/calling_error")
 
-                # If shift is taken, save and display results
+            # Wait 2 minutes before calling the next member
+            countdown(120)
+
+            # If shift is taken, save and display results
             # If no one takes the shift, render mandatory page/form
         return redirect("/")
 
