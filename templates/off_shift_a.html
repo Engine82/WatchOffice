@@ -11,13 +11,6 @@
 
         <form action="/off_shift" method="post">
             <div>
-                <label for="in_station">Is the covering platoon currently on duty at the station?</label>
-                <select class="select-main" name="in_station">
-                    <option value="1">Yes: on duty</option>
-                    <option value="2">No:  off duty</option>
-                </select>                
-            </div>
-            <div>
                 <label for="member">Member:</label>
                 <select class="select-main" id="member" name="member">
                     {% for member in members %}
@@ -49,11 +42,31 @@
             </div>
 
             <div>
-                <label for="day_out">Day member is out:</label>
-                <select class="select-main" name="day_out">
-                    <option value="1">First day</option>
-                    <option value="2">Second day</option>
-                </select>
+                <label for="day_out">Enter platoon calling order:</label>
+                <div class="platoon_order">
+                    <select class="select-main" name="1st_platoon">
+                        <option value="0">-</option>
+                        <option value="1">Platoon 1</option>
+                        <option value="2">Platoon 2</option>
+                        <option value="3">Platoon 3</option>
+                        <option value="4">Platoon 4</option>
+                    </select>
+                    <select class="select-main" name="2nd_platoon">
+                        <option value="0">-</option>
+                        <option value="1">Platoon 1</option>
+                        <option value="2">Platoon 2</option>
+                        <option value="3">Platoon 3</option>
+                        <option value="4">Platoon 4</option>
+                    </select>
+                    <select class="select-main" name="3rd_platoon">
+                        <option value="0">-</option>
+                        <option value="1">Platoon 1</option>
+                        <option value="2">Platoon 2</option>
+                        <option value="3">Platoon 3</option>
+                        <option value="4">Platoon 4</option>
+                    </select>
+                </div>
+
             </div>
 
             <button class="button" type="submit">Submit</button>
