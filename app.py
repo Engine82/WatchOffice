@@ -1462,6 +1462,9 @@ def off_shift():
         plt = member_info[0].platoon
         print(plt)
 
+        # TO DO: instead of this with who's on-duty and in the station and all that,
+        # just ask what platoons to call and then call the specified platoons. A lot simpler
+    
         # Day out; 1 = on duty, 2 = off duty
         match (plt, int(day_out)):
             
@@ -1519,6 +1522,7 @@ def off_shift():
             print("Shift:", shift)
             if shift == "hours":
                 message = "You are elligible for an overtime shift with the Laconia Fire Department. This shift is for hours from " + str(start_time) + "to " + str(end_time) + "on" + str(date) + ". Please call the central station if you want to accept this shift."
+
             else:
                 message = "You are elligible for an overtime shift with the Laconia Fire Department. This shift is for the " + shift + "on" + str(date) + ". Please call the central station if you want to accept this shift."
 
@@ -1553,6 +1557,7 @@ def off_shift():
 
         # Feed list to html
         return render_template("off_shift_a.html", members=members)
+
 
 @app.route("/calling_error", methods=["GET", "POST"])
 def off_shift_2():
