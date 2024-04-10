@@ -1491,7 +1491,6 @@ def off_shift():
             print("Call list:", call_list)
 
             # Make calls
-            to_number = input("Enter the phone number to call: ")
             
             # Create text for call
             print("Shift:", shift)
@@ -1502,6 +1501,7 @@ def off_shift():
                 message = "You are elligible for an overtime shift with the Laconia Fire Department. This shift is for the " + shift + "on" + str(date) + ". Please call the central station if you want to accept this shift."
 
             for member in call_list:
+                to_number = input("Enter the phone number to call: ")
                 call_success = make_phone_call(to_number, message)
                 
                 # Log results of each call
@@ -1521,10 +1521,10 @@ def off_shift():
                         'call successful': 0
                     })
                     print("Calling error member id:", member['id'])
-                    return redirect("/calling_error")
+                    #return redirect("/calling_error")
 
                 # Wait 2 minutes before calling the next member
-                countdown(120)
+                countdown(5)
 
                 # If shift is taken, save and display results
                 # If no one takes the shift, render mandatory page/form
