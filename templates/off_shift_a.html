@@ -12,7 +12,7 @@
         <form action="/off_shift" method="post">
             <div>
                 <label for="member">Member:</label>
-                <select class="select-main" id="member" name="member">
+                <select class="select-main" id="member_out" name="member_out">
                     {% for member in members %}
                         <option value="{{ member['id'] }}">{{ member['last_name'] }}, {{ member['first_name'] }}</option>
                     {% endfor %}
