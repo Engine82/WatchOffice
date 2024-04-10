@@ -1414,11 +1414,7 @@ def off_shift():
         session['calling_results'] = []
     
         # Get shift info
-        in_station = request.form.get("in_station")
-        if not in_station:
-            return render_template('apology.html', source=gen_meme("on duty status required"))
-
-        member_out = request.form.get("member")
+        member_out = request.form.get("member_out")
         if not member_out:
             return render_template('apology.html', source=gen_meme("member required"))
 
@@ -1445,10 +1441,20 @@ def off_shift():
             if not end_time:
                 return render_template('apology.html', source=gen_meme("end time required"))
 
-        day_out = request.form.get('day_out')
-        if not day_out:
-            return render_template('apology.html', source=gen_meme("day out required"))
-        print("Day out:", day_out)
+        first_platoon = int(request.form.get('1st_platoon'))
+        if first_platoon < 1 or first_platoon > 4:
+            return render_template('apology.html', source=gen_meme("first platoon required"))
+        print("First platoon:", first_platoon)
+
+        second_platoon = int(request.form.get('2nd_platoon'))
+        if second_platoon < 0 or second_platoon > 4:
+            return render_template('apology.html', source=gen_meme("first platoon required"))
+        print("Second platoon:", second_platoon)
+
+        third_platoon = int(request.form.get('3rd_platoon'))
+        if third_platoon < 0 or third_platoon > 4:
+            return render_template('apology.html', source=gen_meme("first platoon required"))
+        print("Third platoon:", third_platoon)
 
         # Get info of member who is out
         member_info = db.execute(
@@ -1462,47 +1468,14 @@ def off_shift():
         plt = member_info[0].platoon
         print(plt)
 
-        # TO DO: instead of this with who's on-duty and in the station and all that,
-        # just ask what platoons to call and then call the specified platoons. A lot simpler
-    
-        # Day out; 1 = on duty, 2 = off duty
-        match (plt, int(day_out)):
-            
-            # Platoon 1: 
-            case(1, 1):
-                plt_order = [1, 2]
-            
-            case(1, 2):
-                plt_order = [1, 2]
+        # Assemble list of platoons in order to be called
+        plt_order = []
+        plt_order.append(first_platoon)
+        if second_platoon > 0:
+            plt_order.append(second_platoon)
+        if third_platoon > 0:
+            plt_order.append(third_platoon)
 
-            # Platoon 2
-            case(2, 1):
-                plt_order = [1, 2]
-            
-            case(2, 2):
-                plt_order = [1, 2]
-
-            # Platoon 3
-            case(3, 1):
-                plt_order = [2, 4, 1]
-
-            case(3, 2):
-                plt_order = [1, 2, 4]
-        
-            # Platoon 4
-            case(4, 1):
-                plt_order = [1, 2]
-
-            case(4, 2):
-                plt_order = [1, 2]
-
-            # Error
-            case _:
-                print("platoon calling order error")
-                return render_template('apology.html', source=gen_meme("platoon calling order error"))
-
-        print("Plt order:", plt_order)
-        
         # Loop through each platoon in ordered list (for platoon 3 day 2: [1, 2, 4])
         for platoon in plt_order:
 
