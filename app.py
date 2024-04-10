@@ -1478,7 +1478,7 @@ def off_shift():
 
         print("Platoon order:", plt_order)
 
-        # Loop through each platoon in ordered list (for platoon 3 day 2: [1, 2, 4])
+        # Loop through each platoon in ordered list
         for platoon in plt_order:
 
             # Assemble list of numbers to call
@@ -1501,23 +1501,34 @@ def off_shift():
             else:
                 message = "You are elligible for an overtime shift with the Laconia Fire Department. This shift is for the " + shift + "on" + str(date) + ". Please call the central station if you want to accept this shift."
 
-            call_success = make_phone_call(to_number, message)
-            
-            # Log results of each call
-            if call_success:
-                calling_results.append({'shift': shift, 'member out': member_out, 'member called': member_id, 'call successful': 1})
+            for member in call_list:
+                call_success = make_phone_call(to_number, message)
+                
+                # Log results of each call
+                if call_success:
+                    session['calling_results'].append({
+                        'shift': shift,
+                        'member out': member_out,
+                        'member called': member['id'],
+                        'call successful': 1
+                    })
 
-            else:
-                session['calling_results'].append({'shift': shift, 'member out': member_out, 'member called': member_id, 'call successful': 0})
-                print("Calling error member id:", {member_id})
-                return redirect("/calling_error")
+                else:
+                    session['calling_results'].append({
+                        'shift': shift,
+                        'member out': member_out,
+                        'member called': member['id'],
+                        'call successful': 0
+                    })
+                    print("Calling error member id:", member['id'])
+                    return redirect("/calling_error")
 
-            # Wait 2 minutes before calling the next member
-            countdown(120)
+                # Wait 2 minutes before calling the next member
+                countdown(120)
 
-            # If shift is taken, save and display results
-            # If no one takes the shift, render mandatory page/form
-        return redirect("/")
+                # If shift is taken, save and display results
+                # If no one takes the shift, render mandatory page/form
+            return redirect("/")
 
     # GET: Serve form
     else:
@@ -1542,6 +1553,7 @@ def off_shift_2():
         return redirect("/")
         
     else:
+        print(session['calling_results'])
         return redirect("/")
 
     
