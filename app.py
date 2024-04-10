@@ -1476,12 +1476,14 @@ def off_shift():
         if third_platoon > 0:
             plt_order.append(third_platoon)
 
+        print("Platoon order:", plt_order)
+
         # Loop through each platoon in ordered list (for platoon 3 day 2: [1, 2, 4])
         for platoon in plt_order:
 
             # Assemble list of numbers to call
             call_list = db.execute(
-                select(User.first_name, User.last_name, User.phone_number)
+                select(User.id, User.phone_number)
                 .where(User.platoon == platoon)
             )
             call_list = call_list.mappings().all()
@@ -1503,10 +1505,10 @@ def off_shift():
             
             # Log results of each call
             if call_success:
-                calling_results.append({'time': time, 'member out': member, 'member called': member_id, 'call successful': 1})
+                calling_results.append({'shift': shift, 'member out': member_out, 'member called': member_id, 'call successful': 1})
 
             else:
-                calling_results.append({'time': time, 'member out': member, 'member called': member_id, 'call successful': 0})
+                session['calling_results'].append({'shift': shift, 'member out': member_out, 'member called': member_id, 'call successful': 0})
                 print("Calling error member id:", {member_id})
                 return redirect("/calling_error")
 
