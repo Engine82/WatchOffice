@@ -26,7 +26,7 @@ Newly hired firefighters are not elligible for overtime for their first four mon
 
 ## Features Overview
 
-The main feature of WatchOffice is the Hiring function This function takes series of inputs from the user, assigns open shifts to available members, and saves submitted results in a database. The history function allows the user to recall previous hiring results. Manual Hiring allows the user to assign the next-up officer and firefighter for instances where the hiring """"function""""" does not yet account for. Additionally, there are features that allow a user to create new user accounts, change attributes of a user's account, and delete user accounts.  
+The main feature of WatchOffice is the Hiring function This function takes series of inputs from the user, assigns open shifts to available members, and saves submitted results in a database. The history function allows the user to recall previous hiring results. Manual Hiring allows the user to assign the next-up officer and firefighter for instances where the hiring function does not yet account for. Additionally, there are features that allow a user to create new user accounts, change attributes of a user's account, and delete user accounts.  
 
 ## Files
 
