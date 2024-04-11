@@ -54,8 +54,7 @@ The main feature of WatchOffice is the Hiring function This function takes serie
     - watchOffice.css holds all styling for the application, including media queries to adapt to mobile devices.
     
 
-## Reflection and Thank You
+## Reflection
 
 Throughout the course of building this app I have learned a tremendous amount. At the beginning of this project I had a grasp of python and the basics of programming. Now, after building this entire application from scratch, I have learned how to take these individual components and form them together into a cohesive and functional whole. Along the way I was confronted with many problems I did not yet know how to handle; through the course of solving them I not only learned how to accomplish these various tasks, but also how to find answers and solve these problems in increasingly efficient ways, with increasing levels of comfort and knowledge.
 
-February 18, 2024
