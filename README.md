@@ -13,6 +13,11 @@ Watch Office is a tool to simplify hiring for overtime at the Laconia, NH fire d
 The name Watch Office comes from the room in many firehouses referred to as the "watch office" or "watch desk." Before electronic alerting systems, one firefighter would be assigned to "house watch" 24 hours a day, where they would listen to the dispatch radio and alert crews when they were dispatched to an emergency.  
 
 
+## Design Rationale
+
+WatchOffice uses the [Flask](https://flask.palletsprojects.com/en/1.1.x/quickstart/) framework for [Python](https://docs.python.org/3/) for the backend, [SQLite3](https://www.sqlite.org/docs.html) for the database, and [HTML](https://html.spec.whatwg.org/)/[CSS](https://www.w3.org/TR/CSS/#css)/[JavaScript](https://developer.mozilla.org/en-US/docs/Web/javascript) for the frontend. Python is a modern, widely used language with an abundance of freely available resources. This is a low-traffic application, and SQLite is more than capable of handling WatchOffice's anticipated traffic and data-storage needs. HTML, CSS and JavaScript are all standard for web programming, and a natural choice, especially for a new developer.
+
+
 ## Background: Schedule & Overtime Hiring Rules
 
 [The Laconia Fire Department](https://www.laconianh.gov/1002/Fire-Department) is divided into four platoons, working 24 hour shifts on an eight day rotation. Firefighters work one 24 hour shift, have 48 hours off, work another 24 hour shift, and then have 96 hours off. It may also be charactarized as 1-2-1-4: 1 day on duty, 2 off, 1 on, and 4 off. The 1-2-1 portion is referred to as a platoon's "tour." On the first day of a tour, overtime is assigned for the next two days, which is internally referred to as "the hiring"; hire and hiring refer to a member being assigned an overtime shift, not hiring someone from outside the organization. Overtime is mandatory and assigned by seniority, with the first shift assigned to the last person to not be hired (however assigned shifts may be given away freely to other qualified members). For example, if the senior-most firefighter was hired last during the current tour, the second-most senior firefighter would be hired first on the next tour. All overtime is mandatory; if a member does not wish to work their assigned overtime shift they may give it away to any other qualified member.
@@ -48,11 +53,6 @@ The main feature of WatchOffice is the Hiring function This function takes serie
     - vacancy.js automatically sets vacancies' status' to "out 24" because a vacancy will always need 24-hour coverage.
     - watchOffice.css holds all styling for the application, including media queries to adapt to mobile devices.
     
-
-## Design Rationale
-
-WatchOffice uses the [Flask](https://flask.palletsprojects.com/en/1.1.x/quickstart/) framework for [Python](https://docs.python.org/3/) for the backend, [SQLite3](https://www.sqlite.org/docs.html) for the database, and [HTML](https://html.spec.whatwg.org/)/[CSS](https://www.w3.org/TR/CSS/#css)/[JavaScript](https://developer.mozilla.org/en-US/docs/Web/javascript) for the frontend. All of these were chosen because at the time of writing they were all the most fammiliar options, having been covered in [cs50](https://cs50.harvard.edu/x/2023/). Additionally, Python is a modern, widely used language with an abundance of freely available resources. This is a low-traffic application, and SQLite is more than capable of handling WatchOffice's anticipated traffic and data-storage needs. HTML, CSS and JavaScript are all standard for web programming, and a natural choice, especially for a new developer.
-
 
 ## Reflection and Thank You
 
