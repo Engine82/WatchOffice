@@ -1,5 +1,5 @@
-flask
-flask_session
-requests
-SQLAlchemy 2.0
-SQLAlchemy ORM 2.0
+Flask==3.0.0
+Flask-Session==0.5.0
+requests==2.25.1
+SQLAlchemy==2.0.23
+Werkzeug==3.0.0
