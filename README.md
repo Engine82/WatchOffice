@@ -52,3 +52,8 @@ The main feature of WatchOffice is the Hiring function This function takes serie
     - print.js alters the .html and prints the window to facilitate easier printing of new hiring results, and results from past hirings.
     - vacancy.js automatically sets vacancies' status' to "out 24" because a vacancy will always need 24-hour coverage.
     - watchOffice.css holds all styling for the application, including media queries to adapt to mobile devices.
+ 
+## Setup Instructions
+
+
+    
