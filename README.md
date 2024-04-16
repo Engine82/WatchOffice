@@ -55,5 +55,44 @@ The main feature of WatchOffice is the Hiring function This function takes serie
  
 ## Setup Instructions
 
+To clone, set up and run Watch Office on your machine:
 
+1. Clone the Repo:
+   - Navigate to the directory where you want to save Watch Office:
+   
+     `git clone https://github.com/Engine82/WatchOffice.git`
+  
+2. Install Dependencies:
+   - Navigate to the WatchOffice directory:
+     
+     `cd WatchOffice`
+
+   - Install dependencies:
+  
+     `pip install -r requirements.txt`
+
+3. Create tables and Initial Users in Database:
+   Note: These instructions are to esablish a new db. A db with users already entered is currently saved in this repo because the functionality of the application is dependent on having multiple users in each platoon and rank, and when switching between machines during development (which I frequently do) it is more efficient to bring the db along with the rest of the repo.
+   
+   - Create a new db:
+
+     `touch database.db`
+
+   - Open the db:
+
+     `sqlite3 database.db`
+
+   - Open the database.txt file in the WatchOffice directory, and copy/paste the create table statements into SQLite to create the required tables.
+   - Create the first three administrative users per the instructions in database.txt.
+   - Create the initial user account.
+
+5. Run the Application:
+   - To run the application:
+  
+     `flask run`
+
+6. Access the Application:
+   - Once the app is running you should see a line in your terminal on how to access it. Typically: "Running on http://127.0.0.1:5000"
+   - Ctrl + click on the link, or open whichever IP address you have configured Flask to run the application.
+   - Log in with your previously entered credentials.
     
