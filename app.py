@@ -1492,10 +1492,17 @@ def off_shift():
 
             # Make calls
             
-            # Create text for call
-            print("Shift:", shift)
-            message = make_call_message(shift)
+            # Create text for call:
+            # If no hours, create null start & end time variables for make_call_message function
+            if "start_time" not in locals():
+                start_time = None
+                
+            if "end_time" not in locals():
+                end_time = None
 
+            print("Shift:", shift)
+            message = make_call_message(shift, date, start_time, end_time)
+            print(message)
 
             for member in call_list:
                 to_number = input("Enter the phone number to call: ")
