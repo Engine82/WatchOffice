@@ -14,7 +14,7 @@ from helpers import Base, User, Hiring, Hiring_list
 from helpers import find_next_up, hire
 from helpers import countdown
 
-from helpers import make_phone_call
+from helpers import make_phone_call, make_call_message
 
 
 # Configure app
@@ -1494,11 +1494,8 @@ def off_shift():
             
             # Create text for call
             print("Shift:", shift)
-            if shift == "hours":
-                message = "You are elligible for an overtime shift with the Laconia Fire Department. This shift is for hours from " + str(start_time) + "to " + str(end_time) + "on" + str(date) + ". Please call the central station if you want to accept this shift."
+            message = make_call_message(shift)
 
-            else:
-                message = "You are elligible for an overtime shift with the Laconia Fire Department. This shift is for the " + shift + "on" + str(date) + ". Please call the central station if you want to accept this shift."
 
             for member in call_list:
                 to_number = input("Enter the phone number to call: ")
