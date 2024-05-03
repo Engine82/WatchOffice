@@ -195,6 +195,9 @@ def gen_meme(reason):
     return(url)
 
 
+
+""" 96-OFF CALLING FUNCTIONS """
+
 # Place phone call function with Twilio
 def make_phone_call(to_number, message):
     # Initialize Twilio client
@@ -225,3 +228,17 @@ def countdown(seconds):
         time.sleep(1)
         seconds -= 1
     print("Time's up!")
+
+
+def make_call_message(shift):
+
+    # Message for hours shift
+    if shift == "hours":
+        message = "You are elligible for an overtime shift with the Laconia Fire Department. This shift is for hours from " + str(start_time) + "to " + str(end_time) + "on" + str(date) + ". Please call the central station if you want to accept this shift."
+
+    # MEssage for day/night/24 shift
+    else:
+        message = "You are elligible for an overtime shift with the Laconia Fire Department. This shift is for the " + shift + "on" + str(date) + ". Please call the central station if you want to accept this shift."
+
+    # Return message
+    return(message)
