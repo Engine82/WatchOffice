@@ -230,15 +230,15 @@ def countdown(seconds):
     print("Time's up!")
 
 
-def make_call_message(shift):
+def make_call_message(shift, date, start_time, end_time):
 
     # Message for hours shift
     if shift == "hours":
-        message = "You are elligible for an overtime shift with the Laconia Fire Department. This shift is for hours from " + str(start_time) + "to " + str(end_time) + "on" + str(date) + ". Please call the central station if you want to accept this shift."
+        message = "You are elligible for an overtime shift with the Laconia Fire Department. This shift is for hours from " + str(start_time) + " until " + str(end_time) + " on " + str(date) + ". Please call the central station if you want to accept this shift."
 
     # MEssage for day/night/24 shift
     else:
-        message = "You are elligible for an overtime shift with the Laconia Fire Department. This shift is for the " + shift + "on" + str(date) + ". Please call the central station if you want to accept this shift."
+        message = "You are elligible for an overtime shift with the Laconia Fire Department. This shift is for the " + shift + " on " + str(date) + ". Please call the central station if you want to accept this shift."
 
     # Return message
     return(message)
