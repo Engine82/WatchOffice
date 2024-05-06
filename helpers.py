@@ -10,6 +10,8 @@ from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase, MappedAsDatac
 
 from twilio.rest import Client
 
+from flask import request
+
 # Twilio credentials
 account_sid = 'your_account_sid'
 auth_token = 'your_auth_token'
@@ -197,6 +199,13 @@ def gen_meme(reason):
 
 
 """ 96-OFF CALLING FUNCTIONS """
+
+# Get 96-off inputs
+def get_96_inputs():
+    member_out = request.form.get("member_out")
+    if not member_out:
+        return render_template('apology.html', source=gen_meme("member required"))
+    return(member_out)
 
 # Place phone call function with Twilio
 def make_phone_call(to_number, message):
