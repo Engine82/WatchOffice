@@ -14,7 +14,7 @@ from helpers import Base, User, Hiring, Hiring_list
 from helpers import find_next_up, hire
 from helpers import countdown
 
-from helpers import get_96_inputs, make_phone_call, make_call_message
+from helpers import check_input, make_phone_call, make_call_message
 
 
 # Configure app
@@ -1414,7 +1414,7 @@ def off_shift():
         session['calling_results'] = []
     
         # Get shift info
-        member_out = get_96_inputs()
+        member_out = check_input("member_out")
 
         date = request.form.get('date')
         if not date:

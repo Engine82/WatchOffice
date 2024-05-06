@@ -201,11 +201,12 @@ def gen_meme(reason):
 """ 96-OFF CALLING FUNCTIONS """
 
 # Get 96-off inputs
-def get_96_inputs():
-    member_out = request.form.get("member_out")
-    if not member_out:
-        return render_template('apology.html', source=gen_meme("member required"))
-    return(member_out)
+def check_input(input):
+    user_input = request.form.get(input)
+    if not user_input:
+        return render_template('apology.html', source=gen_meme(user_input))
+    return(user_input)
+
 
 # Place phone call function with Twilio
 def make_phone_call(to_number, message):
