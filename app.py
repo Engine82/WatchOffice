@@ -1416,9 +1416,7 @@ def off_shift():
         # Get shift info
         member_out = check_input("member_out")
 
-        date = request.form.get('date')
-        if not date:
-            return render_template('apology.html', source=gen_meme("date required"))
+        date = check_input('date')
         
         # Validate date is in the future (front-end too)
         date_today = datetime.today()
@@ -1426,9 +1424,7 @@ def off_shift():
         if date < date_today:
             return render_template('apology.html', source=gen_meme("shift date is in the past"))
 
-        shift = request.form.get('shift')
-        if not shift:
-            return render_template('apology.html', source=gen_meme("shift required"))
+        shift = check_input('shift')
 
         if shift == "hours": #hours
             start_time = request.form.get('hours_start')

@@ -1,5 +1,5 @@
 from functools import wraps
-from flask import redirect, session
+from flask import redirect, session, request, render_template
 
 from datetime import datetime
 import time
@@ -10,7 +10,6 @@ from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase, MappedAsDatac
 
 from twilio.rest import Client
 
-from flask import request
 
 # Twilio credentials
 account_sid = 'your_account_sid'
@@ -204,7 +203,9 @@ def gen_meme(reason):
 def check_input(input):
     user_input = request.form.get(input)
     if not user_input:
+        print("No input:", user_input)
         return render_template('apology.html', source=gen_meme(user_input))
+    print("Input:", user_input)
     return(user_input)
 
 
