@@ -4,7 +4,7 @@ from flask import redirect, session
 from datetime import datetime
 from typing import Optional
 from sqlalchemy import func
-from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase, MappedAsDataclass
+from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase, MappedAsDataclass, relationship
 
 
 # Login required decorator
