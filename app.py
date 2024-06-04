@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import create_engine, insert, join, select, text, update
+from sqlalchemy import create_engine, insert, join, select, text, update, desc
 from sqlalchemy.orm import sessionmaker
 from flask import Flask, redirect, render_template, request, session
 from flask_session import Session
@@ -1047,8 +1047,17 @@ def history():
     else:
 
         # query db for hiring id's
+
+# SELECT DISTINCT hiring.hiring_id, hiring.created_at, platoon
+# from hiring_list
+# INNER JOIN hiring on hiring.hiring_id = hiring_list.hiring_id;
+
         hiring_list = db.execute(
-            select(Hiring_list.hiring_id, Hiring_list.created_at).order_by(Hiring_list.hiring_id.desc())
+            select(Hiring_list.hiring_id, Hiring_list.created_at, Hiring.platoon)
+            .join(Hiring, Hiring_list.hiring_id == Hiring.hiring_id)
+            .distinct()
+            .order_by(Hiring_list.hiring_id.desc())
+            .limit(30)
         )
         hiring_list = hiring_list.mappings().all()
 
