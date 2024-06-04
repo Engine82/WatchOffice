@@ -12,7 +12,7 @@
         <form action="/history" method="post">
             <select class="select-main" id="past_hiring" name="past_hiring">
                 {% for hiring in hiring_list %}
-                    <option value="{{ hiring['hiring_id'] }}">{{ hiring['created_at'] }}</option>
+                    <option value="{{ hiring['hiring_id'] }}">Platoon {{ hiring['platoon'] }} &nbsp - &nbsp {{ hiring['created_at'] }}</option>
                 {% endfor %}
             </select>
             <br>
