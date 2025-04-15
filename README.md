@@ -1,5 +1,9 @@
 # Watch Office
 
+## Note to the reader:
+
+This was my first real coding project. Knowing what I know now, there are many things I would do differently than I did here, especially with regard to breaking code into smaller functions and the use of data structures.
+
 ## Video Demo:
 
 [![Watch the video](https://img.youtube.com/vi/2pG_GVW6l5g/hqdefault.jpg)](https://www.youtube.com/embed/2pG_GVW6l5g)
