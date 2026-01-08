@@ -1,6 +1,6 @@
 # Watch Office
 
-## Note to the reader:
+## Baby's first web app: a note to the reader
 
 This was my first real coding project. Knowing what I know now, there are many things I would do differently than I did here, especially with regard to breaking code into smaller functions and the use of data structures.
 
